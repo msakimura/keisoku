@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+
+  <div fxLayout="column">
+
+    <mat-form-field>
+
+      <input matInput placeholder="ユーザID" [(ngModel)]="userid" name="userid" [formControl]="useridFormControl" required>
+
+      <mat-error *ngIf="useridFormControl.hasError('required')">
+
+        ユーザIDは<strong>必須です</strong>
+
+      </mat-error>
+
+    </mat-form-field>
+
+    <mat-form-field>
+
+      <input matInput placeholder="パスワード" [(ngModel)]="password" type="password" name="password" [formControl]="passwordFormControl" required>
+
+      <mat-error *ngIf="passwordFormControl.hasError('required')">
+
+        パスワードは<strong>必須です</strong>
+
+      </mat-error>
+
+    </mat-form-field>
+
+    <div *ngIf="error" class="alert alert-danger">ログイン失敗</div>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+  <button mat-raised-button color="primary" mat-dialog-close>キャンセル</button>
+
+  <button mat-raised-button color="primary" (click)="onLogin()">ログイン</button>
+
+</mat-dialog-actions>

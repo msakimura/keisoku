@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Router } from '@angular/router';
 
 export interface AnkenElement {
   name: string;
@@ -30,6 +31,8 @@ export class AnkenListComponent implements OnInit {
 
   selection = new SelectionModel<AnkenElement>(true, []);
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -46,9 +49,10 @@ export class AnkenListComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+    this.dataSource.paginator = this.paginator;
   }
-
+  
 }

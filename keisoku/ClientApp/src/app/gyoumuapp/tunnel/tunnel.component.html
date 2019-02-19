@@ -1,0 +1,97 @@
+<mat-sidenav-container>
+
+  <mat-sidenav #sidenav mode="over" position="end">
+
+    <div class="mat-headline">oo-001　プレビュー</div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+    <button mat-button><mat-icon color="primary">arrow_back_ios</mat-icon>前の画像</button>
+
+    <button mat-button><mat-icon color="primary">arrow_forward_ios</mat-icon>次の画像</button>
+
+    <mat-divider></mat-divider>
+
+    <mat-card>
+
+      <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-000.jpg">
+
+    </mat-card>
+
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+
+    <div class="mat-headline">XX工事 > AAトンネル</div>
+
+    <mat-divider></mat-divider>
+
+    <a routerLink="../tunnellist" mat-button><mat-icon color="primary">arrow_back</mat-icon>戻る</a>
+
+    <button mat-button><mat-icon color="primary">cloud_upload</mat-icon>アップロード</button>
+
+    <button mat-button><mat-icon color="primary">cloud_download</mat-icon>ダウンロード</button>
+
+    <button mat-button><mat-icon color="primary">assignment_returned</mat-icon>Excel台帳ダウンロード</button>
+
+    <button mat-button><mat-icon color="primary">picture_as_pdf</mat-icon>印刷用PDFダウンロード</button>
+
+    <button mat-button><mat-icon color="primary">view_list</mat-icon>サマリー</button>
+
+    <mat-divider></mat-divider>
+
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="画像名でフィルタ">
+    </mat-form-field>
+
+
+    <div class="mat-elevation-z8">
+      <mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> 画像名 </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button mat-button (click)="sidenav.toggle()" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.name}}</button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="width">
+          <mat-header-cell *matHeaderCellDef> 横幅 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.width}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="height">
+          <mat-header-cell *matHeaderCellDef> 縦幅 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.height}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="hibiChushutsu">
+          <mat-header-cell *matHeaderCellDef> ひび抽出 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.hibiChushutsu}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="sonshou">
+          <mat-header-cell *matHeaderCellDef> 損傷 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.sonshou}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="hibiBunrui">
+          <mat-header-cell *matHeaderCellDef> ひび分類 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.hibiBunrui}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

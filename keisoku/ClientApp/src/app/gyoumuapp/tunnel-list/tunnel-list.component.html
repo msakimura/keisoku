@@ -1,3 +1,77 @@
-<p>
-  tunnel-list works!
-</p>
+<div class="mat-headline">XX工事</div>
+
+<mat-divider></mat-divider>
+
+<a routerLink="../" mat-button><mat-icon color="primary">arrow_back</mat-icon>戻る</a>
+
+<button mat-button><mat-icon color="primary">add</mat-icon>追加</button>
+
+<button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
+
+<button mat-button><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+
+<mat-divider></mat-divider>
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="トンネル名でフィルタ">
+</mat-form-field>
+
+
+<div class="mat-elevation-z8">
+  <mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> トンネル名 </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <a routerLink="../tunnel" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.name}}</a>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="enchou">
+      <mat-header-cell *matHeaderCellDef> トンネル延長 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.enchou}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="yoteiImageNum">
+      <mat-header-cell *matHeaderCellDef> 予定画像数 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.yoteiImageNum}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="image">
+      <mat-header-cell *matHeaderCellDef> 画像 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.image}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ai">
+      <mat-header-cell *matHeaderCellDef> AI済 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.ai}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <mat-header-cell *matHeaderCellDef> 作成日 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"
+             (click)="selection.toggle(row)">
+    </mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

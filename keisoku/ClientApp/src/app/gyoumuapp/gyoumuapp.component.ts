@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./gyoumuapp.component.css']
 })
 export class GyoumuappComponent implements OnInit {
-
+  
   constructor() { }
 
   ngOnInit() {

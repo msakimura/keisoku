@@ -7,13 +7,15 @@ import { MaterialModule } from '../shared/material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AnkenListComponent } from './anken-list/anken-list.component';
 import { TunnelListComponent } from './tunnel-list/tunnel-list.component';
+import { TunnelComponent } from './tunnel/tunnel.component';
 
 @NgModule({
   declarations: [
     GyoumuappComponent,
     GyoumuHeaderComponent,
     AnkenListComponent,
-    TunnelListComponent
+    TunnelListComponent,
+    TunnelComponent
   ],
 
   imports: [
@@ -25,7 +27,8 @@ import { TunnelListComponent } from './tunnel-list/tunnel-list.component';
         path: '', component: GyoumuappComponent,
         children: [
           { path: '', component: AnkenListComponent, pathMatch: 'full' },
-          { path: 'tunnel', component: TunnelListComponent }
+          { path: 'tunnellist', component: TunnelListComponent },
+          { path: 'tunnel', component: TunnelComponent }
         ]
       }
       

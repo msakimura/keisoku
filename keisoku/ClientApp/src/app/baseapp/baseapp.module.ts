@@ -5,22 +5,34 @@ import { BaseappComponent } from './baseapp.component';
 import { BaseHeaderComponent } from './base-header/base-header.component';
 import { MaterialModule } from '../shared/material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TopComponent } from './top/top.component';
+import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     BaseappComponent,
-    BaseHeaderComponent
+    BaseHeaderComponent,
+    TopComponent,
+    LoginDialogComponent
   ],
 
   imports: [
     CommonModule,
     MaterialModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
-      { path: '', component: BaseappComponent, pathMatch: 'full' }
+      {
+        path: '', component: BaseappComponent,
+        children: [
+          { path: '', component: TopComponent, pathMatch: 'full' }
+        ]
+      }
     ])
   ],
 
-  exports: [RouterModule]
+  exports: [RouterModule],
+  entryComponents: [LoginDialogComponent]
 })
 export class BaseappModule { }

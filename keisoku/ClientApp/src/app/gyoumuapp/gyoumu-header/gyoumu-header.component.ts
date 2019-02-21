@@ -13,5 +13,8 @@ export class GyoumuHeaderComponent implements OnInit {
 
   ngOnInit() {
   }
-  
+
+  baseJump() {
+    this.router.navigate(["/"]);
+  }
 }

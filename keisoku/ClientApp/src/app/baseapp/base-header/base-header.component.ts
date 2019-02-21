@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from "@angular/material";
-import { LoginComponent } from '../../login/login.component';
 import { Router } from '@angular/router';
+import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 
 @Component({
   selector: 'app-base-header',
@@ -22,7 +22,7 @@ export class BaseHeaderComponent implements OnInit {
   openSignin(): void {
 
     // ダイアログの表示
-    let dialog = this.matDialog.open(LoginComponent, {
+    let dialog = this.matDialog.open(LoginDialogComponent, {
       'data': { 'title': 'ログイン' },
       'disableClose': false
     });

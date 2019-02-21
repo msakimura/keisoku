@@ -1,0 +1,58 @@
+<div class="grid-container">
+
+  <h1 class="mat-h1">サービス内容</h1>
+
+  <div fxLayout="row" fxLayoutAlign="space-around">
+
+    <div>
+
+      <mat-icon mat-list-icon color="primary">flash_on</mat-icon>
+      <h4 mat-line>ひび割れ抽出</h4>
+
+    </div>
+
+    <div>
+
+      <mat-icon mat-list-icon color="primary">photo_album</mat-icon>
+      <h4 mat-line>ひび割れ幅分類</h4>
+
+    </div>
+
+    <div>
+
+      <mat-icon mat-list-icon color="primary">texture</mat-icon>
+      <h4 mat-line>その他変状抽出</h4>
+
+    </div>
+
+  </div>
+
+  <h1 class="mat-h1">ニュース</h1>
+
+  <mat-grid-list cols="3" rowHeight="500px">
+
+    <mat-grid-tile *ngFor="let card of cards" [colspan]="card.cols" [rowspan]="card.rows">
+
+      <mat-card class="dashboard-card">
+
+        <mat-card-header>
+
+          <mat-card-title>{{card.title}}</mat-card-title>
+
+        </mat-card-header>
+
+        <img mat-card-image src="{{card.image}}">
+
+        <mat-card-content class="dashboard-card-content">
+
+          <p>{{card.content}}</p>
+
+        </mat-card-content>
+
+      </mat-card>
+
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+</div>

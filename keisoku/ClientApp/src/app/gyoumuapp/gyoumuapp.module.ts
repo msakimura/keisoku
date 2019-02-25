@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AnkenListComponent } from './anken-list/anken-list.component';
 import { TunnelListComponent } from './tunnel-list/tunnel-list.component';
 import { TunnelComponent } from './tunnel/tunnel.component';
+import { FormsModule  } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { TunnelComponent } from './tunnel/tunnel.component';
     CommonModule,
     MaterialModule,
     FlexLayoutModule,
+    FormsModule ,
     RouterModule.forChild([
       {
         path: '', component: GyoumuappComponent,

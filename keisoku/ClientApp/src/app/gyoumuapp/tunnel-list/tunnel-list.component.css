@@ -1,4 +1,17 @@
+.image-add-divider {
+  border-top-width: 1px;
+  border-top-color: darkgray;
+}
+
 .mat-form-field {
   font-size: 14px;
   width: 100%;
+}
+
+.ng-hide:not(.ng-hide-animate) {
+  /* These are just alternative ways of hiding an element */
+  display: block !important;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
 }

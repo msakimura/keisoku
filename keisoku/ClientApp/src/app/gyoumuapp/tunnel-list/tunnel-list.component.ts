@@ -4,6 +4,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { forEach } from '@angular/router/src/utils/collection';
+import { TunnelService, TunnelModel } from 'src/app/services/tunnel.service';
 
 export interface TunnelElement {
   name: string;
@@ -66,7 +67,7 @@ export class TunnelListComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private tunnelService: TunnelService) {
   }
 
   ngOnInit() {
@@ -92,11 +93,15 @@ export class TunnelListComponent implements OnInit {
     }
 
     const data = this.typesOfImages;
-    for (let file of files)
-    {
-      var newData: Section = { name:file.name,data:file };
+    for (let file of files) {
+      var newData: Section = { name: file.name, data: file };
 
       data.push(newData);
+
+
+      var tunnelData: TunnelModel = { name: file.name, data: file };
+
+      this.tunnelService.tunnelModel.push(tunnelData);
     }
 
     this.typesOfImages = data;

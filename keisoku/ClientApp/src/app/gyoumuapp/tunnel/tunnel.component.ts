@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
 import { HttpClient, HttpEventType } from '@angular/common/http';
+import { TunnelService } from 'src/app/services/tunnel.service';
 
 export interface TunnelImageElement {
   name: string;
@@ -40,7 +41,7 @@ export class TunnelComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient, private tunnelService: TunnelService) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
@@ -48,27 +49,22 @@ export class TunnelComponent implements OnInit {
 
   uploadFile()
   {
-    var blb = new Blob();
-
-    var b: any = blb;
-    b.lastModifiedDate = new Date();
-    b.name = "C:\Users\manabu_sakimura\Pictures\keisoku\二尾U-005.jpg";
-
-    var file = new File([""], "二尾U-005.jpg");
-
-    var reader = new FileReader();
-    reader.onload = function () {
-      var buffer = reader.result; // String
-    };
-    reader.readAsDataURL(file);
-
-   
-
-    let fileToUpload = <File>file;
     const formData = new FormData();
-    formData.append('file', fileToUpload, fileToUpload.name);
+
+    this.tunnelService.tunnelModel.forEach(function (value) {
+
+      formData.append('uploadFile', value.data, value.name);
+    });
 
     this.http.post('api/upload', formData)
       .subscribe();
+  }
+
+  downloadFile() {
+    var filename: string = "DXF.dxf";
+
+    var data = this.http.get('/api/download/' + filename)
+      .subscribe();
+
   }
 }

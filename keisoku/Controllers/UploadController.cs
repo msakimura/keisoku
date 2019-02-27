@@ -29,31 +29,29 @@ namespace keisoku.Controllers
             //container
             CloudBlobContainer container = blobClient.GetContainerReference("tunnel");
 
-            var file = Request.Form.Files[0];
-
-            if (file.Length > 0)
+            foreach (var file in Request.Form.Files)
             {
-                //アップロード後のファイル名を指定（無くてよい）
-                CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(file.FileName);
 
-                //アップロード処理
-                //アップロードしたいローカルのファイルを指定
-                using (var fileStream = file.OpenReadStream())
+                if (file.Length > 0)
                 {
-                    System.Diagnostics.Trace.WriteLine(DateTime.Now.ToLongTimeString());
+                    //アップロード後のファイル名を指定（無くてよい）
+                    CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(file.FileName);
 
-                    await blockBlob_upload.UploadFromStreamAsync(fileStream);
-                    System.Diagnostics.Trace.WriteLine(DateTime.Now.ToLongTimeString());
+                    //アップロード処理
+                    //アップロードしたいローカルのファイルを指定
+                    using (var fileStream = file.OpenReadStream())
+                    {
+                        System.Diagnostics.Trace.WriteLine(DateTime.Now.ToLongTimeString());
+
+                        await blockBlob_upload.UploadFromStreamAsync(fileStream);
+                        System.Diagnostics.Trace.WriteLine(DateTime.Now.ToLongTimeString());
+
+                    }
 
                 }
-
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
             }
 
+            return Ok();
         }
     }
 }

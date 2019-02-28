@@ -18,7 +18,7 @@ export class UserKanriComponent implements OnInit {
 
   userId: string;
 
-  passward: string;
+  password: string;
 
   kengen: string;
 
@@ -63,7 +63,7 @@ export class UserKanriComponent implements OnInit {
       customerId: '',
       userId: '',
       loginId: '',
-      passward: this.passward,
+      password: this.password,
       userName: this.userName,
       email: this.email
     };

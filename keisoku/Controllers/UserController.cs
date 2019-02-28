@@ -28,10 +28,9 @@ namespace keisoku.Controllers
             _signInManager = signInManager;
             _config = config;
         }
-
-        [Route("api/[controller]/register")]
+        
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody]UserModel userModel)
+        public async Task<IActionResult> Create([FromBody]UserModel userModel)
         {
             var user = new IdentityUser
             {

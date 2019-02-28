@@ -26,7 +26,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       {
         path: '', component: BaseappComponent,
         children: [
-          { path: '', component: TopComponent, pathMatch: 'full' }
+          { path: '', component: TopComponent, pathMatch: 'full'}
         ]
       }
     ])

@@ -5,7 +5,7 @@ export interface UserModel {
   customerId: string;
   userId: string;
   loginId: string;
-  passward: string;
+  password: string;
   userName: string;
   email: string;
 }
@@ -21,7 +21,7 @@ export class UserService {
 
   registerUser(user: UserModel) {
     
-    this.http.post('api/user/register', user)
+    this.http.post('api/user', user)
       .subscribe();
   }
 

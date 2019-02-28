@@ -21,6 +21,7 @@ import { AuthorizationCheckService } from './services/authorization-check.servic
 import { AuthenticationService } from './services/authentication.service'
 import { TunnelService } from './services/tunnel.service';
 import { UserService } from './services/user.service';
+import { CaptionService } from './services/caption.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material/material.module';
@@ -57,6 +58,7 @@ import { SpinnerdialogComponent } from './shared/spinnerdialog/spinnerdialog.com
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true },
     AuthorizationCheckService,
     AuthenticationService,
+    CaptionService,
     TunnelService,
     UserService],
   bootstrap: [AppComponent],

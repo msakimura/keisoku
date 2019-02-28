@@ -13,13 +13,14 @@ import { SpinnerdialogComponent } from '../../shared/spinnerdialog/spinnerdialog
   templateUrl: './login-dialog.component.html',
   styleUrls: ['./login-dialog.component.css']
 })
+
 export class LoginDialogComponent implements OnInit {
-  returnUrl: string;
+
   error = '';
 
   userid: string;
   password: string;
-
+  
   useridFormControl = new FormControl('', [
     Validators.required
   ]);
@@ -41,66 +42,52 @@ export class LoginDialogComponent implements OnInit {
 
   ngOnInit() {
 
-    // reset login status
+    // アクセストークン削除
     this.authenticationService.logout();
-
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-
+    
   }
 
-  async onLogin() {
+  /**
+   *  onLogin
+   *
+   *  入力した項目が、oauth認証に成功した場合、業務アプリにログインする
+   *  
+   *
+   *  @return {void}
+   */
+  onLogin() {
 
-    // stop here if form is invalid
+    // 入力チェック
     if (this.useridFormControl.invalid || this.passwordFormControl.invalid) {
       return;
     }
 
-    await this.showProgressSpinner();
-
-    await this.delay(500);
-
-    await this.oAuth();
-
-    await this.closeProgressSpinner();
-
-    this.gyoumuJump();
-  }
-
-  async oAuth() {
-    this.authenticationService.login(this.userid, this.password)
-      .pipe(first())
-      .subscribe(
-        data => {
-          this.router.navigate([this.returnUrl]);
-        },
-        error => {
-          this.error = error;
-        });
-
-  }
-
-  async showProgressSpinner() {
+    // プログレススピナー表示
     this.dialogRef = this.dialog.open(SpinnerdialogComponent, {
       panelClass: 'transparent',
       disableClose: true
     });
+    
+    // oauth認証
+    this.authenticationService.login(this.userid, this.password)
+      .pipe(first())
+      .subscribe(
+        data => {
 
-  }
+          // oauth認証に成功した場合
+          this.router.navigate(["/gyoumu"]);
+          this.dialogRef.close();
+          this.matDialogRef.close();
 
-  async closeProgressSpinner() {
-    this.dialogRef.close();
+        },
+        error => {
 
-  }
+          // oauth認証に失敗した場合
+          this.dialogRef.close();
+          this.error = error;
 
-  async delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  gyoumuJump() {
-    if (!this.error) {
-      this.router.navigate(["/gyoumu"]);
-    }
+        });
     
   }
+  
 }

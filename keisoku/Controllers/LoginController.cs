@@ -29,44 +29,24 @@ namespace keisoku.Controllers
             _signInManager = signInManager;
             _config = config;
         }
+
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]UserModel login)
         {
             IActionResult response = Unauthorized();
-            var user = await AuthenticateUser(login);
 
-            if (user != null)
+            var result = await _signInManager.PasswordSignInAsync(login.LoginId, login.Password, false, false);
+
+            if (result.Succeeded)
             {
 
-                var tokenString = GenerateJSONWebToken(user);
+                var tokenString = GenerateJSONWebToken(login);
                 response = Ok(new { token = tokenString });
             }
 
             return response;
         }
-
-
-        public async Task<object> Register(UserModel login)
-        {
-            IActionResult response = Unauthorized();
-            var user = new IdentityUser
-            {
-                UserName = login.UserName,
-                Email = login.Email,
-                EmailConfirmed = true
-            };
-            var result = await _userManager.CreateAsync(user, login.Email);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                var tokenString = GenerateJSONWebToken(login);
-                response = Ok(new { token = tokenString });
-                return response;
-            }
-
-            throw new ApplicationException("UNKNOWN_ERROR");
-        }
+        
 
         private string GenerateJSONWebToken(UserModel userInfo)
         {
@@ -74,8 +54,8 @@ namespace keisoku.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[] {
-                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
-                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
+                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.LoginId),
+                 new Claim("Password", userInfo.Password),
                  new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                  };
@@ -88,20 +68,6 @@ namespace keisoku.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        private async Task<UserModel> AuthenticateUser(UserModel login)
-        {
-            UserModel user = null;
-
-            var result = await _signInManager.PasswordSignInAsync(login.LoginId, login.Password, false, false);
-
-            //Validate the User Credentials 
-            //Demo Purpose, I have Passed HardCoded User Information 
-            if (result.Succeeded)
-            {
-                user = new UserModel { UserName = "JigneshTrivedi", Email = "Test1.btest@gmail.com" };
-            }
-            return user;
-        }
+        
     }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
-import { Router } from '@angular/router';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
 
@@ -33,15 +32,12 @@ export class TunnelComponent implements OnInit {
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
   
-
-
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   
-  constructor(private router: Router, private http: HttpClient, private tunnelService: TunnelService) { }
+  constructor(private http: HttpClient, private tunnelService: TunnelService) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
@@ -60,11 +56,18 @@ export class TunnelComponent implements OnInit {
       .subscribe();
   }
 
-  downloadFile() {
-    var filename: string = "DXF.dxf";
+  async downloadFile() {
+    var filename: string = "DWG.dwg";
 
-    var data = this.http.get('/api/download/' + filename)
-      .subscribe();
+    await this.http.get('/api/download/' + filename, { responseType: 'blob' })
+      .subscribe(res => {
+        var a = document.createElement("a");
 
+        a.href = URL.createObjectURL(res);
+        a.download = filename;
+        // start download
+        a.click();
+      });
+    
   }
 }

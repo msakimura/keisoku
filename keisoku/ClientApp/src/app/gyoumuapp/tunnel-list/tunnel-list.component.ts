@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Router } from '@angular/router';
-import { Validators, FormControl } from '@angular/forms';
-import { forEach } from '@angular/router/src/utils/collection';
 import { TunnelService, TunnelModel } from 'src/app/services/tunnel.service';
 
 export interface TunnelElement {
@@ -67,7 +64,7 @@ export class TunnelListComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor(private router: Router, private tunnelService: TunnelService) {
+  constructor(private tunnelService: TunnelService) {
   }
 
   ngOnInit() {

@@ -1,0 +1,143 @@
+<mat-sidenav-container>
+
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true">
+
+    <div class="mat-headline">ユーザ管理</div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+    <button mat-button (click)="saveUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+    <mat-divider></mat-divider>
+
+    <div fxLayout="column">
+
+      <mat-form-field>
+        <input matInput placeholder="顧客名" [(ngModel)]="customerName">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="ユーザ名" [(ngModel)]="userName">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Email" [(ngModel)]="email">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="ユーザID" [(ngModel)]="userId">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="パスワード" [(ngModel)]="passward">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="権限" [(ngModel)]="kengen">
+      </mat-form-field>
+
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="mat-headline">ユーザ管理</div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button (click)="sidenav.toggle()"><mat-icon color="primary">add</mat-icon>追加</button>
+
+    <button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
+
+    <button mat-button><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+
+    <mat-divider></mat-divider>
+
+    <div fxLayout="column">
+
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="顧客名でフィルタ">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="ユーザ名でフィルタ">
+      </mat-form-field>
+
+    </div>
+
+    <div class="mat-elevation-z8">
+      <mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="customerName">
+          <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="userName">
+          <mat-header-cell *matHeaderCellDef> ユーザ名 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="userId">
+          <mat-header-cell *matHeaderCellDef> ユーザID </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.userId}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="kanri">
+          <mat-header-cell *matHeaderCellDef> 管理 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.kanri}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="anken">
+          <mat-header-cell *matHeaderCellDef> 案件作成 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.anken}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="tunnel">
+          <mat-header-cell *matHeaderCellDef> トンネル作成 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.tunnel}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="upload">
+          <mat-header-cell *matHeaderCellDef> アップロード </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.upload}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="download">
+          <mat-header-cell *matHeaderCellDef> ダウンロード </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.download}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                  (click)="selection.toggle(row)">
+        </mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

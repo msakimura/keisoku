@@ -20,6 +20,7 @@ import { ErrorInterceptorService } from './Interceptor/error-interceptor.service
 import { AuthorizationCheckService } from './services/authorization-check.service'
 import { AuthenticationService } from './services/authentication.service'
 import { TunnelService } from './services/tunnel.service';
+import { UserService } from './services/user.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material/material.module';
@@ -56,7 +57,8 @@ import { SpinnerdialogComponent } from './shared/spinnerdialog/spinnerdialog.com
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true },
     AuthorizationCheckService,
     AuthenticationService,
-    TunnelService],
+    TunnelService,
+    UserService],
   bootstrap: [AppComponent],
   entryComponents: [LoginComponent, SpinnerdialogComponent]
 })

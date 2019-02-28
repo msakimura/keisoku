@@ -9,6 +9,7 @@ import { AnkenListComponent } from './anken-list/anken-list.component';
 import { TunnelListComponent } from './tunnel-list/tunnel-list.component';
 import { TunnelComponent } from './tunnel/tunnel.component';
 import { FormsModule  } from '@angular/forms';
+import { UserKanriComponent } from './user-kanri/user-kanri.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FormsModule  } from '@angular/forms';
     GyoumuHeaderComponent,
     AnkenListComponent,
     TunnelListComponent,
-    TunnelComponent
+    TunnelComponent,
+    UserKanriComponent
   ],
 
   imports: [
@@ -30,7 +32,8 @@ import { FormsModule  } from '@angular/forms';
         children: [
           { path: '', component: AnkenListComponent, pathMatch: 'full' },
           { path: 'tunnellist', component: TunnelListComponent },
-          { path: 'tunnel', component: TunnelComponent }
+          { path: 'tunnel', component: TunnelComponent },
+          { path: 'userkanri', component: UserKanriComponent }
         ]
       }
       

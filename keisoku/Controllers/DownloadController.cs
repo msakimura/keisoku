@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +20,7 @@ namespace keisoku.Controllers
     {
 
         [HttpGet("{filename}")]
-        public async Task<IActionResult> Download(string filename)
+        public async Task<FileContentResult> Download(string filename)
         {
             string accountname = "keisokuaccount";
 
@@ -39,7 +42,17 @@ namespace keisoku.Controllers
 
             await blockBlob_download.DownloadToStreamAsync(memory);
 
-            return Ok(memory);
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new StreamContent(memory);
+            result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+            {
+                FileName = filename
+            };
+            result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+            return new FileContentResult(memory.GetBuffer(), "application/octet-stream");
         }
+        
     }
+
 }

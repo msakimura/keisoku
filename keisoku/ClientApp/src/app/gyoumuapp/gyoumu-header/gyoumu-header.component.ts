@@ -17,4 +17,12 @@ export class GyoumuHeaderComponent implements OnInit {
   baseJump() {
     this.router.navigate(["/"]);
   }
+
+  userKanriJump() {
+    this.router.navigate(["/gyoumu/userkanri"]);
+  }
+
+  homeJump() {
+    this.router.navigate(["/gyoumu"]);
+  }
 }

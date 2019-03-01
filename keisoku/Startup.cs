@@ -34,6 +34,10 @@ namespace keisoku
                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                                              b => b.MigrationsAssembly("keisoku")));
 
+            services.AddDbContext<KeisokuDbContext>(options =>
+                   options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                  .AddJwtBearer(options =>
                  {

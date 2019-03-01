@@ -10,6 +10,9 @@ import { TunnelListComponent } from './tunnel-list/tunnel-list.component';
 import { TunnelComponent } from './tunnel/tunnel.component';
 import { FormsModule  } from '@angular/forms';
 import { UserKanriComponent } from './user-kanri/user-kanri.component';
+import { CustomerKanriComponent } from './customer-kanri/customer-kanri.component';
+
+import { CustomerService } from '../services/customer.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { UserKanriComponent } from './user-kanri/user-kanri.component';
     AnkenListComponent,
     TunnelListComponent,
     TunnelComponent,
-    UserKanriComponent
+    UserKanriComponent,
+    CustomerKanriComponent
   ],
 
   imports: [
@@ -33,12 +37,15 @@ import { UserKanriComponent } from './user-kanri/user-kanri.component';
           { path: '', component: AnkenListComponent, pathMatch: 'full' },
           { path: 'tunnellist', component: TunnelListComponent },
           { path: 'tunnel', component: TunnelComponent },
-          { path: 'userkanri', component: UserKanriComponent }
+          { path: 'userkanri', component: UserKanriComponent },
+          { path: 'customerkanri', component: CustomerKanriComponent }
         ]
       }
       
     ])
   ],
+
+  providers: [CustomerService],
 
   exports: [RouterModule]
   

@@ -15,9 +15,13 @@
 
       <!-- The following menu items will be hidden on both SM and XS screen sizes -->
 
-      <button mat-button (click)="homeJump()">ホーム</button>
+      <button mat-button (click)="showHome()">ホーム</button>
 
-      <button mat-button (click)="userKanriJump()">管理</button>
+      <button mat-button [matMenuTriggerFor]="kanri">管理</button>
+      <mat-menu #kanri="matMenu">
+        <button mat-menu-item (click)="showCustomerKanri()">顧客管理</button>
+        <button mat-menu-item (click)="showUserKanri()">ユーザ管理</button>
+      </mat-menu>
 
       <button mat-button>パスワード変更</button>
 

@@ -1,0 +1,81 @@
+<mat-sidenav-container>
+
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="customer_sidenav">
+
+    <div class="mat-headline">顧客管理</div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+    <button mat-button (click)="saveCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+    <mat-divider></mat-divider>
+
+    <div fxLayout="column">
+      <mat-form-field>
+        <input matInput placeholder="顧客名" [(ngModel)]="customerName">
+      </mat-form-field>
+
+      <mat-checkbox [(ngModel)]="otameshi">お試し機能</mat-checkbox>
+    </div>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="mat-headline">顧客管理</div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button (click)="sidenav.toggle()"><mat-icon color="primary">add</mat-icon>追加</button>
+
+    <button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
+
+    <button mat-button><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+
+    <mat-divider></mat-divider>
+    
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="顧客名でフィルタ">
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+      <mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="customerName">
+          <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="otameshi">
+          <mat-header-cell *matHeaderCellDef> お試し機能 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> ✕ </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                 (click)="selection.toggle(row)">
+        </mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

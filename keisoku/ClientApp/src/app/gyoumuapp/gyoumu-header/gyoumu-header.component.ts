@@ -14,15 +14,51 @@ export class GyoumuHeaderComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   *  baseJump
+   *
+   *  ベースアプリを起動する
+   *  
+   *
+   *  @return {void}
+   */
   baseJump() {
     this.router.navigate(["/"]);
   }
 
-  userKanriJump() {
+  /**
+   *  showUserKanri
+   *
+   *  メインフレームにユーザ管理画面を表示する
+   *  
+   *
+   *  @return {void}
+   */
+  showUserKanri() {
     this.router.navigate(["/gyoumu/userkanri"]);
   }
 
-  homeJump() {
+  /**
+   *  showCustomerKanri
+   *
+   *  メインフレームに顧客管理画面を表示する
+   *  
+   *
+   *  @return {void}
+   */
+  showCustomerKanri() {
+    this.router.navigate(["/gyoumu/customerkanri"]);
+  }
+
+  /**
+   *  showHome
+   *
+   *  メインフレームに案件一覧画面を表示する
+   *  
+   *
+   *  @return {void}
+   */
+  showHome() {
     this.router.navigate(["/gyoumu"]);
   }
 }

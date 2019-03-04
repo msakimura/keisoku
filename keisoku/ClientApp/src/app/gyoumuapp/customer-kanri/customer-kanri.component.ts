@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
+import { SelectionModel, DataSource } from '@angular/cdk/collections';
 import { CustomerService, CustomerModel } from 'src/app/services/customer.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class CustomerKanriComponent implements OnInit {
   displayedColumns: string[] = ['select', 'customerName', 'otameshi'];
 
 
-  dataSource;
+  dataSource = new MatTableDataSource <CustomerModel>();
 
   selection = new SelectionModel<CustomerModel>(true, []);
 
@@ -44,14 +44,30 @@ export class CustomerKanriComponent implements OnInit {
   constructor(private customerService: CustomerService) { }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.customerService.customerModels);
+
+    this.bindAllCustomerInfo();
+    
     this.dataSource.paginator = this.paginator;
+    
+  }
+
+  /**
+   *  getAllCustomerInfo
+   *
+   *  DBに登録されている全ての顧客情報をdataSourceにバインドする
+   *  
+   *
+   *  @return {void}
+   */
+  bindAllCustomerInfo() {
+    this.customerService.getAllCustomer()
+      .subscribe((data: any) => this.dataSource = new MatTableDataSource(data));
   }
 
   /**
    *  saveCustomerInfo
    *
-   *  入力した顧客情報をDBに保存する
+   *  入力した顧客情報をDBに保存し、datasourceに追加する
    *  
    *
    *  @return {void}
@@ -59,12 +75,35 @@ export class CustomerKanriComponent implements OnInit {
   saveCustomerInfo() {
 
     var info: CustomerModel = {
-      customerId: '',
+      customerId: 0,
       customerName: this.customerName
     };
 
-    this.customerService.createCustomer(info);
+    this.customerService.insertCustomer(info)
+      .subscribe((newdata:any) => {
+        const data = this.dataSource.data;
+        data.push(newdata);
+
+        this.dataSource.data = data;
+      });
     
     this.sideNav.close();
+  }
+
+  /**
+   *  deleteCustomerInfo
+   *
+   *  選択した顧客情報をDB、datasourceから削除する
+   *  
+   *
+   *  @return {void}
+   */
+  deleteCustomerInfo() {
+    this.customerService.deleteCustomer(this.selection.selected[0].customerId).subscribe();
+
+    const data = this.dataSource.data;
+    data.splice(0, 1);
+
+    this.dataSource.data = data;
   }
 }

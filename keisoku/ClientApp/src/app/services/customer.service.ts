@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { error } from 'protractor';
 
 export interface CustomerModel {
-  customerId: string;
+  customerId: number;
   customerName: string;
 }
 
@@ -14,21 +14,49 @@ export class CustomerService {
 
   public customerModels: CustomerModel[] = new Array();
 
+  private routeUrl: string = 'api/customer';
+
+
   constructor(private http: HttpClient) { }
+
+  /**
+   *  getAllCustomer
+   *
+   *  DBに登録されている全ての顧客情報を取得する
+   *  
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  getAllCustomer() {
+    return this.http.get(this.routeUrl);
+  }
+
 
   /**
    *  createCustomer
    *
-   *  customerを顧客テーブルに追加する
+   *  customerをDBに追加する
    *  
    *
    *  @param  {CustomerModel}    customer
    *
-   *  @return {void}
+   *  @return {Observable<Object>} フェッチ
    */
-  createCustomer(customer: CustomerModel) {
+  insertCustomer(customer: CustomerModel) {
+    return this.http.post(this.routeUrl, customer);
+  }
 
-    this.http.post('api/customer', customer)
-      .subscribe();
+  /**
+   *  deleteCustomer
+   *
+   *  customerIdをDBから削除する
+   *  
+   *
+   *  @param  {number}    customerId
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  deleteCustomer(customerId: number) {
+    return this.http.delete(this.routeUrl + '/' + customerId);
   }
 }

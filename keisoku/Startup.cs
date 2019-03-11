@@ -33,10 +33,7 @@ namespace keisoku
             services.AddDbContext<ApplicationDbContext>(options =>
                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                                              b => b.MigrationsAssembly("keisoku")));
-
-            services.AddDbContext<KeisokuDbContext>(options =>
-                   options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                  .AddJwtBearer(options =>
@@ -81,6 +78,7 @@ namespace keisoku
             app.UseSpaStaticFiles();
 
             app.UseAuthentication();
+            
 
             app.UseMvc(routes =>
             {

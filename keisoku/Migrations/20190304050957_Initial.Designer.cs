@@ -10,7 +10,7 @@ using keisoku.Data;
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190212020516_Initial")]
+    [Migration("20190304050957_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,6 +180,20 @@ namespace keisoku.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("keisoku.Models.CustomerModel", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CustomerName");
+
+                    b.HasKey("CustomerId");
+
+                    b.ToTable("Customers","keisoku");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
 
 export interface TunnelImageElement {
@@ -10,6 +10,10 @@ export interface TunnelImageElement {
   hibiChushutsu: string;
   sonshou: string;
   hibiBunrui: string;
+}
+
+export interface UploadModel {
+  tunnelImage: string;
 }
 
 const ELEMENT_DATA: TunnelImageElement[] = [
@@ -49,11 +53,34 @@ export class TunnelComponent implements OnInit {
 
     this.tunnelService.tunnelModel.forEach(function (value) {
 
-      formData.append('uploadFile', value.data, value.name);
+      formData.append('file', value.fileData);
     });
 
-    this.http.post('api/upload', formData)
-      .subscribe();
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8'
+      })
+    };
+
+    var reader = new FileReader();
+
+    reader.onload = (e) => {
+      
+      let bufferOne = Buffer.from(this.tunnelService.tunnelModel[0].fileData);
+
+      var decodedString = String.fromCharCode.apply(null, new Uint16Array(reader.result));
+      var obj = JSON.parse(decodedString);
+
+      //this.http.post('api/upload', reader.result)
+      //  .subscribe();
+    };
+
+    reader.readAsArrayBuffer(this.tunnelService.tunnelModel[0].fileData);
+
+    //this.http.post('api/upload', formData, httpOptions)
+    //  .subscribe();
+
+    
   }
 
   async downloadFile() {

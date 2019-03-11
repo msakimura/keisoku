@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav } from '@angular/material';
 import { SelectionModel, DataSource } from '@angular/cdk/collections';
 import { CustomerService, CustomerModel } from 'src/app/services/customer.service';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-customer-kanri',
@@ -85,7 +86,8 @@ export class CustomerKanriComponent implements OnInit {
         data.push(newdata);
 
         this.dataSource.data = data;
-      });
+      },
+      error => { });
     
     this.sideNav.close();
   }
@@ -105,5 +107,8 @@ export class CustomerKanriComponent implements OnInit {
     data.splice(0, 1);
 
     this.dataSource.data = data;
+
+    this.selection.clear();
+
   }
 }

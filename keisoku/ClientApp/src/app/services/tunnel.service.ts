@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Stream } from 'stream';
 
 export interface TunnelModel {
-  name: string;
-  data: File;
+  fileName: string;
+  fileData: File;
 }
 
 

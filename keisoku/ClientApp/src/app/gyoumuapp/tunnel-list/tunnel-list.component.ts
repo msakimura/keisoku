@@ -95,8 +95,8 @@ export class TunnelListComponent implements OnInit {
 
       data.push(newData);
 
-
-      var tunnelData: TunnelModel = { name: file.name, data: file };
+      
+      var tunnelData: TunnelModel = { fileName: file.name, fileData: file };
 
       this.tunnelService.tunnelModel.push(tunnelData);
     }

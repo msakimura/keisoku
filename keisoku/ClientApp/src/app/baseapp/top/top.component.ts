@@ -9,10 +9,12 @@ import { Component, OnInit } from '@angular/core';
 
 export class TopComponent implements OnInit {
   cards = [
-    { title: 'ひび割れ抽出', cols: 1, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/mimm.jpg', content: '' },
+    { title: '', cols: 1, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/ko_0031.jpg', content: '' },
     { title: 'ひび割れ抽出', cols: 2, rows: 1, image:'https://keisokuaccount.blob.core.windows.net/tunnel/mimm.jpg', content:'' },
+    { title: '', cols: 1, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/ko_0041.jpg', content: '' },
     { title: 'ひび割れ幅分類', cols: 2, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/プレビュー.jpg', content: '' },
-    { title: 'その他変状抽出', cols: 2, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/抽出.jpg', content: ''},
+    { title: '', cols: 1, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/抽出.jpg', content: '' },
+    { title: 'その他変状抽出', cols: 2, rows: 1, image: 'https://keisokuaccount.blob.core.windows.net/tunnel/抽出.jpg', content: '' },
   ];
 
   constructor() { }

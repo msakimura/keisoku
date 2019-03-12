@@ -22,44 +22,33 @@ namespace keisoku.Controllers
         {
             using (var reader = new StreamReader(Request.Body))
             {
+                // リクエストされた画像を読み込む
                 var body = reader.ReadToEnd();
 
-                //var deserialized = JsonConvert.DeserializeObject<List<UploadModel>>(body);
+                var deserialized = JsonConvert.DeserializeObject<UploadModel>(body);
+
+                var base64 = Convert.FromBase64String(deserialized.FileData);
+
+                MemoryStream fileStream = new MemoryStream(base64);
+
+                //Azure Blob Storageにアップロード
+                string accountname = "keisokuaccount";
+
+                string accesskey = "DchFUYDdOuIh0z2XICJ5xXs07aOwCgeXkWpMBqJliclpVyOk0s2hiOVnBJYdXtdaEsS+DAU/K4ldtpgOfS1mHQ==";
+
+                var credential = new StorageCredentials(accountname, accesskey);
+                var storageAccount = new CloudStorageAccount(credential, true);
+
+                //blob
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                //container
+                CloudBlobContainer container = blobClient.GetContainerReference("tunnel");
+
+                CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(deserialized.FileName);
+
+                await blockBlob_upload.UploadFromStreamAsync(fileStream);
             }
-
-            //string accountname = "keisokuaccount";
-
-            //string accesskey = "DchFUYDdOuIh0z2XICJ5xXs07aOwCgeXkWpMBqJliclpVyOk0s2hiOVnBJYdXtdaEsS+DAU/K4ldtpgOfS1mHQ==";
-
-            //var credential = new StorageCredentials(accountname, accesskey);
-            //var storageAccount = new CloudStorageAccount(credential, true);
-
-            ////blob
-            //CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            ////container
-            //CloudBlobContainer container = blobClient.GetContainerReference("tunnel");
-
-            //foreach (var file in Request.Form.Files)
-            //{
-
-            //    if (file.Length > 0)
-            //    {
-            //        //アップロード後のファイル名を指定（無くてよい）
-            //        CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(file.FileName);
-
-            //        //アップロード処理
-            //        //アップロードしたいローカルのファイルを指定
-            //        using (var fileStream = file.OpenReadStream())
-            //        {
-            //            System.Diagnostics.Trace.WriteLine(DateTime.Now.ToLongTimeString());
-
-            //            await blockBlob_upload.UploadFromStreamAsync(fileStream);
-            //            System.Diagnostics.Trace.WriteLine(DateTime.Now.ToLongTimeString());
-
-            //        }
-
-            //    }
-            //}
+            
 
             return Ok();
         }

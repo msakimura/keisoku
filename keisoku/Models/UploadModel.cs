@@ -10,7 +10,9 @@ namespace keisoku.Models
 {
     public class UploadModel
     {
-        [JsonProperty("tunnelImage")]
-        public byte[] TunnelImage { get; set; }
+        [JsonProperty("fileName")]
+        public string FileName { get; set; }
+        [JsonProperty("fileData")]
+        public string FileData { get; set; }
     }
 }

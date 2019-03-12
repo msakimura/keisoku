@@ -53,16 +53,7 @@ export class CustomerService {
    *  @return {Observable<Object>} フェッチ
    */
   insertCustomer(customer: CustomerModel) {
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
     
-    const body = JSON.stringify(customer);
-    
-
     return this.http.post(this.routeUrl, customer);
   }
 

@@ -1,17 +1,24 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
 
 namespace keisoku.Models
 {
-    [Table("Customers", Schema = "keisoku")]
     public class CustomerModel
     {
-        [Key]
         [JsonProperty("customerId")]
         public int CustomerId { get; set; }
+
         [JsonProperty("customerName")]
         public string CustomerName { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
+
+        public ICollection<UserModel> Users { get; set; }
     }
 }

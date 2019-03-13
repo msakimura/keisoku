@@ -56,7 +56,7 @@ namespace keisoku.Controllers
             var claims = new[] {
                  new Claim(JwtRegisteredClaimNames.Sub, userInfo.LoginId),
                  new Claim("Password", userInfo.Password),
-                 new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
+                 new Claim("CreatedAt", userInfo.CreatedAt.ToString("yyyy-MM-dd")),
                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                  };
 

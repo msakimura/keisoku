@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { error } from 'protractor';
-import { RequestOptions } from '@angular/http';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 export interface CustomerModel {
   customerId: number;
@@ -18,16 +15,7 @@ export class CustomerService {
 
   private routeUrl: string = 'api/customer';
   
-  obj = {
-    CustomerId: 3,
-    CustomerName: "A"
-  };
-
-  private headers: HttpHeaders;
-
-  constructor(private http: HttpClient) {
-    this.headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8', 'Accept': "application/json" });
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    *  getAllCustomer

@@ -11,6 +11,7 @@ import { TunnelComponent } from './tunnel/tunnel.component';
 import { FormsModule  } from '@angular/forms';
 import { UserKanriComponent } from './user-kanri/user-kanri.component';
 import { CustomerKanriComponent } from './customer-kanri/customer-kanri.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomerService } from '../services/customer.service';
 
@@ -29,7 +30,8 @@ import { CustomerService } from '../services/customer.service';
     CommonModule,
     MaterialModule,
     FlexLayoutModule,
-    FormsModule ,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
       {
         path: '', component: GyoumuappComponent,

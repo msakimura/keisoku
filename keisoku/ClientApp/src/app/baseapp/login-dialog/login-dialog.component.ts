@@ -21,13 +21,9 @@ export class LoginDialogComponent implements OnInit {
   userid: string;
   password: string;
   
-  useridFormControl = new FormControl('', [
-    Validators.required
-  ]);
+  useridFormControl = new FormControl('', [Validators.required]);
 
-  passwordFormControl = new FormControl('', [
-    Validators.required
-  ]);
+  passwordFormControl = new FormControl('', [Validators.required]);
 
 
   dialogRef: MatDialogRef<SpinnerdialogComponent>;

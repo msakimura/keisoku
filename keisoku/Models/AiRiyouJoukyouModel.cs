@@ -5,29 +5,26 @@ using System.Threading.Tasks;
 
 namespace keisoku.Models
 {
-    public class AnkenModel
+    public class AiRiyouJoukyouModel
     {
         public int CustomerId { get; set; }
 
         public int AnkenId { get; set; }
 
-        public string AnkenName { get; set; }
+        public string Riyoubi { get; set; }
 
         public int TunnelNumber { get; set; }
 
-        public int ImageNumber { get; set; }
+        public int SouEnchou { get; set; }
 
-        public int CadNumber { get; set; }
+        public int TankaId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         public DateTime UpdatedDate { get; set; }
 
-        public CustomerModel Customer { get; set; }
+        public AnkenModel Anken { get; set; }
 
-        public ICollection<TunnelModel> Tunnels { get; set; }
-        public ICollection<AiRiyouJoukyouModel> AiRiyouJoukyous { get; set; }
-
-
+        public TankaModel Tanka { get; set; }
     }
 }

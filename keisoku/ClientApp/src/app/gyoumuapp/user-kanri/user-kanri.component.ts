@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService, UserModel } from 'src/app/services/user.service';
 import { MatTableDataSource, MatPaginator, MatSidenav } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CustomerService, CustomerModel } from 'src/app/services/customer.service';
+import { FormControl, Validators } from '@angular/forms';
+import { KengenService } from 'src/app/services/kengen.service';
 
 @Component({
   selector: 'app-user-kanri',
@@ -9,8 +12,15 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./user-kanri.component.css']
 })
 export class UserKanriComponent implements OnInit {
+  customers: CustomerModel[];
 
-  customerName: string;
+  customerFormControl = new FormControl('', [Validators.required]);
+
+  userNameFormControl = new FormControl('', [Validators.required]);
+
+  userIdFormControl = new FormControl('', [Validators.required]);
+
+  passwordFormControl = new FormControl('', [Validators.required]);
 
   userName: string;
 
@@ -48,13 +58,40 @@ export class UserKanriComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor(private userService: UserService) {
-    
-  }
+  constructor(private userService: UserService, private customerService: CustomerService, private kengenService: KengenService) {}
 
   ngOnInit() {
+
+    this.bindAllCustomerInfo();
+
     this.dataSource = new MatTableDataSource(this.userService.userModels);
     this.dataSource.paginator = this.paginator;
+  }
+
+  /**
+   *  bindAllCustomerInfo
+   *
+   *  DBに登録されている全ての顧客情報をcustomersにバインドする
+   *  
+   *
+   *  @return {void}
+   */
+  bindAllCustomerInfo() {
+    this.customerService.getAllCustomer()
+      .subscribe((data: any) => this.customers = data);
+  }
+
+  /**
+   *  bindAllKengenInfo
+   *
+   *  DBに登録されている全ての権限情報をcustomersにバインドする
+   *  
+   *
+   *  @return {void}
+   */
+  bindAllKengenInfo() {
+    this.kengenService.getAllCustomer()
+      .subscribe((data: any) => this.customers = data);
   }
 
   saveUserInfo() {
@@ -68,7 +105,7 @@ export class UserKanriComponent implements OnInit {
       email: this.email
     };
 
-    this.userService.registerUser(userInfo);
+    //this.userService.registerUser(userInfo);
 
     this.sideNav.close();
   }

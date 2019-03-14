@@ -22,6 +22,7 @@ import { AuthenticationService } from './services/authentication.service'
 import { TunnelService } from './services/tunnel.service';
 import { UserService } from './services/user.service';
 import { CaptionService } from './services/caption.service';
+import { KengenService } from './services/kengen.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material/material.module';
@@ -60,7 +61,8 @@ import { SpinnerdialogComponent } from './shared/spinnerdialog/spinnerdialog.com
     AuthenticationService,
     CaptionService,
     TunnelService,
-    UserService],
+    UserService,
+    KengenService],
   bootstrap: [AppComponent],
   entryComponents: [LoginComponent, SpinnerdialogComponent]
 })

@@ -20,5 +20,7 @@ namespace keisoku.Models
         public DateTime UpdatedDate { get; set; }
 
         public ICollection<UserModel> Users { get; set; }
+
+        public ICollection<AnkenModel> Ankens { get; set; }
     }
 }

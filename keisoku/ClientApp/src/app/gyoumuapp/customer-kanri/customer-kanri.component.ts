@@ -53,7 +53,7 @@ export class CustomerKanriComponent implements OnInit {
   }
 
   /**
-   *  getAllCustomerInfo
+   *  bindAllCustomerInfo
    *
    *  DBに登録されている全ての顧客情報をdataSourceにバインドする
    *  

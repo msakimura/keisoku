@@ -1,6 +1,6 @@
 <mat-sidenav-container>
 
-  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true">
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="user_sidenav">
 
     <div class="mat-headline">ユーザ管理</div>
 
@@ -15,11 +15,15 @@
     <div fxLayout="column">
 
       <mat-form-field>
-        <input matInput placeholder="顧客名" [(ngModel)]="customerName">
+        <mat-select placeholder="顧客名" [formControl]="customerFormControl" required>
+          <mat-option *ngFor="let customer of customers" [value]="customer.customerId">
+            {{customer.customerName}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="ユーザ名" [(ngModel)]="userName">
+        <input matInput placeholder="ユーザ名" [(ngModel)]="userName" [formControl]="userNameFormControl" required>
       </mat-form-field>
 
       <mat-form-field>
@@ -27,11 +31,11 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="ユーザID" [(ngModel)]="userId">
+        <input matInput placeholder="ユーザID" [(ngModel)]="userId" [formControl]="userIdFormControl" required>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="パスワード" [(ngModel)]="password">
+        <input matInput placeholder="パスワード" [(ngModel)]="password" [formControl]="passwordFormControl" required>
       </mat-form-field>
 
       <mat-form-field>

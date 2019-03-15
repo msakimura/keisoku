@@ -23,9 +23,9 @@ namespace keisoku.Models
 
         public int PrintDataKubun { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public TunnelModel Tunnel { get; set; }
     }

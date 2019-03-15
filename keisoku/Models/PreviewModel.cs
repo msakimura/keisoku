@@ -11,9 +11,9 @@ namespace keisoku.Models
 
         public int PreviewImageId { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public SeikahinImageModel SeikahinImage { get; set; }
 

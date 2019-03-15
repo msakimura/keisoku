@@ -1,6 +1,7 @@
 ﻿using keisoku.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace keisoku.Data
 {
@@ -62,6 +63,7 @@ namespace keisoku.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasDefaultSchema("keisoku");
+            
 
             builder.Entity<CustomerModel>(i =>
             {
@@ -72,6 +74,7 @@ namespace keisoku.Data
                 i.HasMany(j => j.Users).WithOne(k => k.Customer).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l=>l.CustomerId);
 
                 i.HasMany(j => j.Ankens).WithOne(k => k.Customer).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CustomerId);
+                
             });
 
             builder.Entity<UserModel>(i =>
@@ -83,6 +86,8 @@ namespace keisoku.Data
                 i.HasOne(j => j.Customer).WithMany(k => k.Users).OnDelete(DeleteBehavior.Cascade);
 
                 i.HasMany(j => j.KengenFuyos).WithOne(k => k.User).OnDelete(DeleteBehavior.Cascade).HasPrincipalKey(l => new { l.CustomerId, l.UserId });
+
+
             });
 
             builder.Entity<KengenModel>(i =>
@@ -101,6 +106,7 @@ namespace keisoku.Data
                 i.HasOne(j => j.Kengen).WithMany(k => k.KengenFuyos).OnDelete(DeleteBehavior.Cascade);
 
                 i.HasOne(j => j.User).WithMany(k => k.KengenFuyos).OnDelete(DeleteBehavior.Cascade);
+                
             });
 
             builder.Entity<AnkenModel>(i =>

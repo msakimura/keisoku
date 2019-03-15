@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 export interface UserModel {
-  customerId: string;
-  userId: string;
+  customerId: number;
+  userId: number;
   loginId: string;
   password: string;
   userName: string;
   email: string;
+  kengenFuyos: KengenFuyoModel[];
+}
+
+export interface KengenFuyoModel {
+  customerId: number;
+  userId: number;
+  kengenId: number;
 }
 
 @Injectable({
@@ -17,12 +24,23 @@ export class UserService {
 
   public userModels: UserModel[] = new Array();
 
+  private routeUrl: string = 'api/user';
+
   constructor(private http: HttpClient) { }
 
-  registerUser(user: UserModel) {
-    
-    this.http.post('api/user', user)
-      .subscribe();
-  }
+  
+  /**
+   *  insertUser
+   *
+   *  userをDBに追加する
+   *  
+   *
+   *  @param  {UserModel}    user
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  insertUser(user: UserModel) {
 
+    return this.http.post(this.routeUrl, user);
+  }
 }

@@ -14,9 +14,9 @@ namespace keisoku.Models
 
         public string KengenName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public ICollection<KengenFuyoModel> KengenFuyos { get; set; }
 
@@ -42,38 +42,38 @@ namespace keisoku.Models
                     new KengenModel
                     {
                         KengenName = "管理",
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
                     },
                     new KengenModel
                     {
                         KengenName = "プロジェクト作成",
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
                     },
                     new KengenModel
                     {
                         KengenName = "案件作成",
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
                     },
                     new KengenModel
                     {
                         KengenName = "トンネル作成",
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
                     },
                     new KengenModel
                     {
                         KengenName = "アップロード",
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
                     },
                     new KengenModel
                     {
                         KengenName = "ダウンロード",
-                        CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
                     }
                 );
                 context.SaveChanges();

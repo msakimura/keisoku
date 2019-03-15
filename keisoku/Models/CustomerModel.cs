@@ -15,9 +15,9 @@ namespace keisoku.Models
         [JsonProperty("customerName")]
         public string CustomerName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public ICollection<UserModel> Users { get; set; }
 

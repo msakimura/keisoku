@@ -11,9 +11,9 @@ namespace keisoku.Models
 
         public string PreviewImageData { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public ICollection<PreviewModel> Previews { get; set; }
 

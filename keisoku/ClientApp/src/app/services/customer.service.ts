@@ -31,7 +31,7 @@ export class CustomerService {
 
 
   /**
-   *  createCustomer
+   *  insertCustomer
    *
    *  customerをDBに追加する
    *  

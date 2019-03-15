@@ -27,19 +27,37 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Email" [(ngModel)]="email">
+        <input matInput placeholder="Email" [(ngModel)]="email" [formControl]="emailFormControl" >
+
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+          有効なEmailアドレスを入力してください
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="ユーザID" [(ngModel)]="userId" [formControl]="userIdFormControl" required>
+        <input matInput placeholder="ログインID" [(ngModel)]="loginId" [formControl]="loginIdFormControl" required>
       </mat-form-field>
 
       <mat-form-field>
         <input matInput placeholder="パスワード" [(ngModel)]="password" [formControl]="passwordFormControl" required>
+
+        <mat-error *ngIf="passwordFormControl.hasError('required')">
+          パスワードは必須です
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('minlength')">
+          6文字以上入力してください
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('isAlphaNumeric')">
+          英数字を含めてください
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="権限" [(ngModel)]="kengen">
+        <mat-select placeholder="権限" [formControl]="kengenFormControl" multiple>
+          <mat-option *ngFor="let kengen of kengens" [value]="kengen.kengenId">{{kengen.kengenName}}</mat-option>
+        </mat-select>
       </mat-form-field>
 
     </div>
@@ -103,9 +121,9 @@
           <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="userId">
-          <mat-header-cell *matHeaderCellDef> ユーザID </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.userId}} </mat-cell>
+        <ng-container matColumnDef="loginId">
+          <mat-header-cell *matHeaderCellDef> ログインID </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.loginId}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="kanri">

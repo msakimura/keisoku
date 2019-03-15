@@ -13,9 +13,9 @@ namespace keisoku.Models
 
         public string CsvData { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public ICollection<SummaryModel> Summaries { get; set; }
     }

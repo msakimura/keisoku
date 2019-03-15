@@ -3,6 +3,7 @@ using keisoku.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -69,6 +70,8 @@ namespace keisoku.Controllers
 
                 var deserialized = JsonConvert.DeserializeObject<CustomerModel>(body);
 
+                deserialized.CreatedAt = DateTime.Now;
+                deserialized.UpdatedAt = DateTime.Now;
 
                 var model = _context.Customers.Add(deserialized);
 

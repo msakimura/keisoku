@@ -11,9 +11,9 @@ namespace keisoku.Models
 
         public string Tanka { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public ICollection<AiRiyouJoukyouModel> AiRiyouJoukyous { get; set; }
 

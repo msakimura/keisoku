@@ -12,6 +12,11 @@
 
     <mat-divider></mat-divider>
 
+    <div *ngIf="isInput" class="alert alert-danger">必須項目を入力してください</div>
+
+    <div *ngIf="isDuplicateUserName" class="alert alert-danger">入力したログインIDは既に使われています</div>
+
+
     <div fxLayout="column">
 
       <mat-form-field>
@@ -20,38 +25,63 @@
             {{customer.customerName}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
 
-      <mat-form-field>
-        <input matInput placeholder="ユーザ名" [(ngModel)]="userName" [formControl]="userNameFormControl" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="Email" [(ngModel)]="email" [formControl]="emailFormControl" >
-
-        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-          有効なEmailアドレスを入力してください
+        <mat-error *ngIf="customerFormControl.hasError('required')">
+          顧客名は必須です
         </mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="ログインID" [(ngModel)]="loginId" [formControl]="loginIdFormControl" required>
+        <input matInput placeholder="ユーザ名" [formControl]="userNameFormControl" required>
+
+        <mat-error *ngIf="userNameFormControl.hasError('required')">
+          ユーザ名は必須です
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="パスワード" [(ngModel)]="password" [formControl]="passwordFormControl" required>
+        <input matInput placeholder="Email" [(ngModel)]="email">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="ログインID" [formControl]="loginIdFormControl" required>
+
+        <mat-error *ngIf="loginIdFormControl.hasError('required')">
+          ログインIDは必須です
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="password" placeholder="パスワード" [formControl]="passwordFormControl" required>
+
+        <mat-error *ngIf="passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+          6文字以上入力してください
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('isAlphaNumeric') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+          英字を1文字以上含めてください
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('isLowerCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+          小文字を1文字以上含めてください
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('isUpperCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+          大文字を1文字以上含めてください
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('isDigit') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+          数字を1文字以上含めてください
+        </mat-error>
+
+        <mat-error *ngIf="passwordFormControl.hasError('isSymbol') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+          記号を1文字以上含めてください
+        </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('required')">
           パスワードは必須です
         </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('minlength')">
-          6文字以上入力してください
-        </mat-error>
-
-        <mat-error *ngIf="passwordFormControl.hasError('isAlphaNumeric')">
-          英数字を含めてください
-        </mat-error>
       </mat-form-field>
 
       <mat-form-field>

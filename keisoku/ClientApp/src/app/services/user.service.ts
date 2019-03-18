@@ -28,6 +28,18 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   *  getAllUser
+   *
+   *  DBに登録されている全てのユーザ情報を取得する
+   *  
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  getAllUser() {
+    return this.http.get(this.routeUrl);
+  }
+
   
   /**
    *  insertUser

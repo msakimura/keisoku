@@ -31,7 +31,7 @@ namespace keisoku.Controllers
         [HttpGet]
         public async Task<IEnumerable<CustomerModel>> GetAll()
         {
-            return await _context.Customers.OrderBy(x => x.CustomerName).ToArrayAsync();
+            return await _context.Customers.ToArrayAsync();
         }
 
         /// <summary>

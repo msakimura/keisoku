@@ -6,6 +6,7 @@ import { CustomerService, CustomerModel } from 'src/app/services/customer.servic
 import { FormControl, Validators } from '@angular/forms';
 import { KengenService, KengenModel } from 'src/app/services/kengen.service';
 import { ValidationModule } from 'src/app/shared/validation/validation.module';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-kanri',
@@ -14,7 +15,11 @@ import { ValidationModule } from 'src/app/shared/validation/validation.module';
 })
   
 export class UserKanriComponent implements OnInit {
+  isInput: boolean = false;
 
+  isDuplicateUserName: boolean = false;
+
+  
   customers: CustomerModel[] = new Array();;
 
   kengens: KengenModel[] = new Array();;
@@ -25,19 +30,11 @@ export class UserKanriComponent implements OnInit {
 
   loginIdFormControl = new FormControl('', [Validators.required]);
 
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-
-  passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6), ValidationModule.isAlphaNumeric]);
+  passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6), ValidationModule.isAlphaNumeric, ValidationModule.isLowerCase, ValidationModule.isUpperCase, ValidationModule.isDigit, ValidationModule.isSymbol]);
 
   kengenFormControl = new FormControl();
 
-  userName: string;
-
   email: string;
-
-  loginId: string;
-
-  password: string;
 
 
   displayedColumns: string[] = ['select', 'customerName', 'userName', 'email', 'loginId', 'kanri', 'anken', 'tunnel', 'upload', 'download'];
@@ -66,17 +63,34 @@ export class UserKanriComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  constructor(private userService: UserService, private customerService: CustomerService, private kengenService: KengenService) {}
+  constructor(private userService: UserService, private customerService: CustomerService, private kengenService: KengenService) { }
 
 
   ngOnInit() {
+    this.bindAllUserInfo();
 
     this.bindAllCustomerInfo();
 
     this.bindAllKengenInfo();
+    
+  }
 
-    this.dataSource = new MatTableDataSource(this.userService.userModels);
-    this.dataSource.paginator = this.paginator;
+  /**
+   *  bindAllUserInfo
+   *
+   *  DBに登録されている全てのユーザ情報をdataSourceにバインドする
+   *  
+   *
+   *  @return {void}
+   */
+  bindAllUserInfo() {
+    this.userService.getAllUser()
+      .subscribe((data: any) => {
+
+        this.dataSource = new MatTableDataSource(data);
+
+        this.dataSource.paginator = this.paginator;
+      });
   }
 
   /**
@@ -115,11 +129,17 @@ export class UserKanriComponent implements OnInit {
    */
   saveUserInfo() {
 
+    this.isInput = false;
+
+    this.isDuplicateUserName = false;
+
     if (this.customerFormControl.invalid ||
       this.userNameFormControl.invalid ||
       this.loginIdFormControl.invalid ||
       this.passwordFormControl.invalid)
     {
+      this.isInput = true;
+
       return;
     }
     
@@ -138,24 +158,58 @@ export class UserKanriComponent implements OnInit {
     var userInfo: UserModel = {
       customerId: this.customerFormControl.value,
       userId: 0,
-      loginId: this.loginId,
-      password: this.password,
-      userName: this.userName,
+      loginId: this.loginIdFormControl.value,
+      password: this.passwordFormControl.value,
+      userName: this.userNameFormControl.value,
       email: this.email == null ? '' : this.email,
       kengenFuyos: kengenFuyos
     };
 
     this.userService.insertUser(userInfo)
-      .subscribe((newdata: any) => {
-        //const data = this.dataSource.data;
-        //data.push(newdata);
+      .subscribe((response: any) => {
 
-        //this.dataSource.data = data;
+        if (response['Succeeded']) {
+          const data = this.dataSource.data;
+
+          data.push(response['Data']);
+
+          this.dataSource.data = data;
+
+          this.clearSideNavFormData();
+
+          this.sideNav.close();
+
+        }
+        else if (response['ErrorMessage'][0]['code'] === "DuplicateUserName") {
+          this.isDuplicateUserName = true;
+        }
       },
       error => {
-        
-      });;
+      });
+    
+  }
 
-    this.sideNav.close();
+  /**
+   *  clearSideNavFormData
+   *
+   *  sideNavのフォームデータをクリアする
+   *  
+   *
+   *  @return {void}
+   */
+  clearSideNavFormData() {
+    this.customerFormControl.setValue('');
+
+    this.userNameFormControl.setValue('');
+
+    this.loginIdFormControl.setValue('');
+
+    this.passwordFormControl.setValue('');
+
+    this.kengenFormControl.setValue('');
+
+    this.email = '';
+    
+    this.kengenFormControl.setValue('');
   }
 }

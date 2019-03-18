@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using keisoku.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -34,6 +36,42 @@ namespace keisoku.Controllers
         }
 
         /// <summary>
+        /// 全てのユーザ情報を取得する
+        /// </summary>
+        /// 
+        /// <returns>ユーザ情報リスト</returns>
+        [HttpGet]
+        public async Task<IEnumerable<UserModel>> GetAll()
+        {
+            return await _context.CustomersUsers.ToArrayAsync();
+        }
+
+        /// <summary>
+        /// 顧客ID、ユーザIDに一致するユーザ情報を取得する
+        /// </summary>
+        /// 
+        /// <param name="customerId">顧客ID</param>
+        /// <param name="userId">ユーザID</param>
+        /// <returns>ユーザ情報リスト</returns>
+        [HttpGet("{customerId}/{userId}")]
+        public async Task<IActionResult> Get([FromRoute] int customerId, int userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _context.CustomersUsers.SingleOrDefaultAsync(x => x.CustomerId == customerId && x.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        /// <summary>
         /// ユーザ情報を追加する
         /// </summary>
         [HttpPost]
@@ -41,6 +79,9 @@ namespace keisoku.Controllers
         {
             using (var reader = new StreamReader(Request.Body))
             {
+                IDictionary<string, object> value = new Dictionary<string, object>();
+                value["Succeeded"] = false;
+
                 // JSON ⇒ Modelに変換
                 var body = reader.ReadToEnd();
 
@@ -55,7 +96,8 @@ namespace keisoku.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return BadRequest();
+                    value["ErrorMessage"] = result.Errors;
+                    return new ObjectResult(value);
                 }
 
                 // ユーザ情報追加
@@ -72,25 +114,12 @@ namespace keisoku.Controllers
 
                 await _context.SaveChangesAsync();
 
+                value["Succeeded"] = true;
+                value["Data"] = ((ApplicationDbContext)model.Context).CustomersUsers.Last();
 
-                
-                return Ok();
+                return new ObjectResult(value);
             }
-
-            //var user = new IdentityUser
-            //{
-            //    UserName = userModel.UserName,
-            //    Email = userModel.Email,
-            //    EmailConfirmed = true
-            //};
-            //var result = await _userManager.CreateAsync(user, userModel.Password);
-
-            //if (result.Succeeded)
-            //{
-            //    return Ok();
-            //}
-
-            //return BadRequest();
         }
+        
     }
 }

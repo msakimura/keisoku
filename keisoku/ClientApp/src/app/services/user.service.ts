@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CustomerModel } from './customer.service';
+import { KengenModel } from './kengen.service';
 
 export interface UserModel {
   customerId: number;
@@ -9,6 +11,13 @@ export interface UserModel {
   userName: string;
   email: string;
   kengenFuyos: KengenFuyoModel[];
+
+  customerName: string;
+  kanri: string;
+  anken: string;
+  tunnel: string;
+  upload: string;
+  download: string;
 }
 
 export interface KengenFuyoModel {
@@ -54,5 +63,19 @@ export class UserService {
   insertUser(user: UserModel) {
 
     return this.http.post(this.routeUrl, user);
+  }
+
+  /**
+   *  deleteUsers
+   *
+   *  usersをDBから削除する
+   *  
+   *
+   *  @param  {Array}    users
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  deleteUsers(user: UserModel) {
+    return this.http.delete(this.routeUrl + '/' + user.customerId + '/' + user.userId);
   }
 }

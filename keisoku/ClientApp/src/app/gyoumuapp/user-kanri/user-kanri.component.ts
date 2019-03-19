@@ -5,8 +5,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CustomerService, CustomerModel } from 'src/app/services/customer.service';
 import { FormControl, Validators } from '@angular/forms';
 import { KengenService, KengenModel } from 'src/app/services/kengen.service';
-import { ValidationModule } from 'src/app/shared/validation/validation.module';
-import { Observable } from 'rxjs';
+import { ValidationModule } from 'src/app/shared/validation.module';
+import { InputMessage, PasswordMessage } from '../../shared/constant.module';
 
 @Component({
   selector: 'app-user-kanri',
@@ -20,7 +20,7 @@ export class UserKanriComponent implements OnInit {
   isDuplicateUserName: boolean = false;
 
   
-  customers: CustomerModel[] = new Array();;
+  customers: CustomerModel[] = new Array();
 
   kengens: KengenModel[] = new Array();;
 
@@ -36,10 +36,37 @@ export class UserKanriComponent implements OnInit {
 
   email: string;
 
+  customerSelected: string;
+
+
+  hissuMessage: string = InputMessage.HISUU;
+
+  usedLoginIdMessage: string = InputMessage.USED_LOGINID;
+
+  hissuCustomerMessage: string = InputMessage.HISSU_CUSTOMER;
+
+  hissuUserNameMessage: string = InputMessage.HISSU_USERNAME;
+
+  hissuLoginIdMessage: string = InputMessage.HISSU_LOGINID;
+
+  hissuPasswordMessage: string = InputMessage.HISSU_PASSWORD;
+
+  minlengthMessage: string = PasswordMessage.MINLENGTH;
+
+  alphabetMessage: string = PasswordMessage.ALPHABET;
+
+  lowcaseMessage: string = PasswordMessage.LOWCASE;
+
+  uppercaseMessage: string = PasswordMessage.UPPERCASE;
+
+  digitMessage: string = PasswordMessage.DIGIT;
+
+  symbolMessage: string = PasswordMessage.SYMBOL;
+
 
   displayedColumns: string[] = ['select', 'customerName', 'userName', 'email', 'loginId', 'kanri', 'anken', 'tunnel', 'upload', 'download'];
 
-  dataSource;
+  dataSource: MatTableDataSource<UserModel>;
 
   selection = new SelectionModel<UserModel>(true, []);
 
@@ -67,12 +94,12 @@ export class UserKanriComponent implements OnInit {
 
 
   ngOnInit() {
-    this.bindAllUserInfo();
 
     this.bindAllCustomerInfo();
 
     this.bindAllKengenInfo();
-    
+
+    this.bindAllUserInfo();
   }
 
   /**
@@ -90,6 +117,11 @@ export class UserKanriComponent implements OnInit {
         this.dataSource = new MatTableDataSource(data);
 
         this.dataSource.paginator = this.paginator;
+
+        this.dataSource.data.forEach(user => {
+          user.kengenFuyos.forEach(kengenFuyo => {
+          });
+        });
       });
   }
 
@@ -145,13 +177,13 @@ export class UserKanriComponent implements OnInit {
     
     var kengenFuyos: KengenFuyoModel[] = new Array();
 
-    var kengenLength = this.kengenFormControl.value == null ? 0 : this.kengenFormControl.value.length;
-
-    for (var i = 0; i < kengenLength; i++) {
-      kengenFuyos.push({
-        customerId: this.customerFormControl.value,
-        userId: 0,
-        kengenId: this.kengenFormControl.value[i]
+    if (this.kengenFormControl.value != null) {
+      this.kengenFormControl.value.forEach(x => {
+        kengenFuyos.push({
+          customerId: this.customerFormControl.value,
+          userId: 0,
+          kengenId: x
+        });
       });
     }
 
@@ -162,7 +194,13 @@ export class UserKanriComponent implements OnInit {
       password: this.passwordFormControl.value,
       userName: this.userNameFormControl.value,
       email: this.email == null ? '' : this.email,
-      kengenFuyos: kengenFuyos
+      kengenFuyos: kengenFuyos,
+      customerName: '',
+      kanri: '',
+      anken: '',
+      tunnel: '',
+      upload:'',
+      download:''
     };
 
     this.userService.insertUser(userInfo)
@@ -175,10 +213,10 @@ export class UserKanriComponent implements OnInit {
 
           this.dataSource.data = data;
 
-          this.clearSideNavFormData();
-
           this.sideNav.close();
 
+          this.clearSideNavFormData();
+          
         }
         else if (response['ErrorMessage'][0]['code'] === "DuplicateUserName") {
           this.isDuplicateUserName = true;
@@ -186,7 +224,34 @@ export class UserKanriComponent implements OnInit {
       },
       error => {
       });
-    
+  }
+
+
+  /**
+   *  deleteUserInfo
+   *
+   *  選択したユーザ情報をDBから削除する
+   *  
+   *
+   *  @return {void}
+   */
+  deleteCustomerInfo() {
+
+    for (var i = 0; i < this.selection.selected.length; i++) {
+      this.userService.deleteUsers(this.selection.selected[i]).subscribe(
+        data => { },
+        error => {
+        });
+    }
+
+    for (var i = 0; i < this.selection.selected.length; i++) {
+      const data = this.dataSource.data;
+      data.splice(0, 1);
+
+      this.dataSource.data = data;
+    }
+
+    this.selection.clear();
   }
 
   /**
@@ -212,4 +277,5 @@ export class UserKanriComponent implements OnInit {
     
     this.kengenFormControl.setValue('');
   }
+  
 }

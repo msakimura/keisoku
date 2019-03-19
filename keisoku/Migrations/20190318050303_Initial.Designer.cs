@@ -10,8 +10,8 @@ using keisoku.Data;
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190314070449_KengenDefaultRollback")]
-    partial class KengenDefaultRollback
+    [Migration("20190318050303_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -21,7 +21,6 @@ namespace keisoku.Models
 
         public DateTime UpdatedAt { get; set; }
 
-        [JsonProperty("user")]
         public UserModel User { get; set; }
 
         public KengenModel Kengen { get; set; }

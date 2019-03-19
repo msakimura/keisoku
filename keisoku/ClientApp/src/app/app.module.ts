@@ -5,11 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { LoginComponent } from './login/login.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -25,18 +20,13 @@ import { CaptionService } from './services/caption.service';
 import { KengenService } from './services/kengen.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './shared/material/material.module';
+import { MaterialModule } from './shared/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SpinnerdialogComponent } from './shared/spinnerdialog/spinnerdialog.component';
+import { SpinnerdialogComponent } from './components/spinnerdialog/spinnerdialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
-    LoginComponent,
     SpinnerdialogComponent
   ],
   imports: [
@@ -49,8 +39,6 @@ import { SpinnerdialogComponent } from './shared/spinnerdialog/spinnerdialog.com
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', loadChildren: './baseapp/baseapp.module#BaseappModule' },
-      { path: 'home', component: HomeComponent },
-      { path: 'counter', component: CounterComponent },
       { path: 'gyoumu', loadChildren: './gyoumuapp/gyoumuapp.module#GyoumuappModule'}
     ])
   ],
@@ -64,6 +52,6 @@ import { SpinnerdialogComponent } from './shared/spinnerdialog/spinnerdialog.com
     UserService,
     KengenService],
   bootstrap: [AppComponent],
-  entryComponents: [LoginComponent, SpinnerdialogComponent]
+  entryComponents: [SpinnerdialogComponent]
 })
 export class AppModule { }

@@ -6,7 +6,7 @@ import { first } from 'rxjs/operators';
 import { AuthenticationService } from '../../services/authentication.service';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
 
-import { SpinnerdialogComponent } from '../../shared/spinnerdialog/spinnerdialog.component';
+import { SpinnerdialogComponent } from '../../components/spinnerdialog/spinnerdialog.component';
 
 @Component({
   selector: 'app-login-dialog',

@@ -14,9 +14,8 @@ namespace keisoku.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController : BaseController
     {
-        private readonly ApplicationDbContext _context;
 
         public CustomerController(ApplicationDbContext context)
         {

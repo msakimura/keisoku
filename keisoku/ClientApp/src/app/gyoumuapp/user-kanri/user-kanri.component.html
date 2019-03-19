@@ -12,9 +12,9 @@
 
     <mat-divider></mat-divider>
 
-    <div *ngIf="isInput" class="alert alert-danger">必須項目を入力してください</div>
+    <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
 
-    <div *ngIf="isDuplicateUserName" class="alert alert-danger">入力したログインIDは既に使われています</div>
+    <div *ngIf="isDuplicateUserName" class="alert alert-danger">{{usedLoginIdMessage}}</div>
 
 
     <div fxLayout="column">
@@ -27,7 +27,7 @@
         </mat-select>
 
         <mat-error *ngIf="customerFormControl.hasError('required')">
-          顧客名は必須です
+          {{hissuCustomerMessage}}
         </mat-error>
       </mat-form-field>
 
@@ -35,7 +35,7 @@
         <input matInput placeholder="ユーザ名" [formControl]="userNameFormControl" required>
 
         <mat-error *ngIf="userNameFormControl.hasError('required')">
-          ユーザ名は必須です
+          {{hissuUserNameMessage}}
         </mat-error>
       </mat-form-field>
 
@@ -47,7 +47,7 @@
         <input matInput placeholder="ログインID" [formControl]="loginIdFormControl" required>
 
         <mat-error *ngIf="loginIdFormControl.hasError('required')">
-          ログインIDは必須です
+          {{hissuLoginIdMessage}}
         </mat-error>
       </mat-form-field>
 
@@ -55,31 +55,31 @@
         <input matInput type="password" placeholder="パスワード" [formControl]="passwordFormControl" required>
 
         <mat-error *ngIf="passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          6文字以上入力してください
+          {{minlengthMessage}}
         </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('isAlphaNumeric') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          英字を1文字以上含めてください
+          {{alphabetMessage}}
         </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('isLowerCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          小文字を1文字以上含めてください
+          {{lowcaseMessage}}
         </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('isUpperCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          大文字を1文字以上含めてください
+          {{uppercaseMessage}}
         </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('isDigit') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          数字を1文字以上含めてください
+          {{digitMessage}}
         </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('isSymbol') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          記号を1文字以上含めてください
+          {{symbolMessage}}
         </mat-error>
 
         <mat-error *ngIf="passwordFormControl.hasError('required')">
-          パスワードは必須です
+          {{hissuPasswordMessage}}
         </mat-error>
 
       </mat-form-field>
@@ -102,7 +102,7 @@
 
     <button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
 
-    <button mat-button><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+    <button mat-button (click)="deleteCustomerInfo()"><mat-icon color="primary">delete_forever</mat-icon>削除</button>
 
     <mat-divider></mat-divider>
 
@@ -138,7 +138,7 @@
 
         <ng-container matColumnDef="customerName">
           <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.customer.customerName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="userName">

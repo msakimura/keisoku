@@ -13,11 +13,15 @@ import { InputMessage, PasswordMessage } from '../../shared/constant.module';
   templateUrl: './user-kanri.component.html',
   styleUrls: ['./user-kanri.component.css']
 })
-  
+
 export class UserKanriComponent implements OnInit {
   isInput: boolean = false;
 
   isDuplicateUserName: boolean = false;
+
+  isAdd: boolean = false;
+
+  isEdit: boolean = false;
 
   
   customers: CustomerModel[] = new Array();
@@ -29,14 +33,13 @@ export class UserKanriComponent implements OnInit {
   userNameFormControl = new FormControl('', [Validators.required]);
 
   loginIdFormControl = new FormControl('', [Validators.required]);
-
+  
   passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6), ValidationModule.isAlphaNumeric, ValidationModule.isLowerCase, ValidationModule.isUpperCase, ValidationModule.isDigit, ValidationModule.isSymbol]);
 
   kengenFormControl = new FormControl();
 
   email: string;
-
-  customerSelected: string;
+  
 
 
   hissuMessage: string = InputMessage.HISUU;
@@ -66,7 +69,7 @@ export class UserKanriComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'customerName', 'userName', 'email', 'loginId', 'kanri', 'anken', 'tunnel', 'upload', 'download'];
 
-  dataSource: MatTableDataSource<UserModel>;
+  dataSource= new MatTableDataSource<UserModel>();
 
   selection = new SelectionModel<UserModel>(true, []);
 
@@ -90,6 +93,7 @@ export class UserKanriComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
+
   constructor(private userService: UserService, private customerService: CustomerService, private kengenService: KengenService) { }
 
 
@@ -112,16 +116,12 @@ export class UserKanriComponent implements OnInit {
    */
   bindAllUserInfo() {
     this.userService.getAllUser()
-      .subscribe((data: any) => {
+      .subscribe((response: any) => {
 
-        this.dataSource = new MatTableDataSource(data);
-
+        this.dataSource.data = this.userService.convertUserModels(response);
+        
         this.dataSource.paginator = this.paginator;
-
-        this.dataSource.data.forEach(user => {
-          user.kengenFuyos.forEach(kengenFuyo => {
-          });
-        });
+        
       });
   }
 
@@ -161,10 +161,7 @@ export class UserKanriComponent implements OnInit {
    */
   saveUserInfo() {
 
-    this.isInput = false;
-
-    this.isDuplicateUserName = false;
-
+    // 必須入力チェック
     if (this.customerFormControl.invalid ||
       this.userNameFormControl.invalid ||
       this.loginIdFormControl.invalid ||
@@ -175,49 +172,27 @@ export class UserKanriComponent implements OnInit {
       return;
     }
     
-    var kengenFuyos: KengenFuyoModel[] = new Array();
-
-    if (this.kengenFormControl.value != null) {
-      this.kengenFormControl.value.forEach(x => {
-        kengenFuyos.push({
-          customerId: this.customerFormControl.value,
-          userId: 0,
-          kengenId: x
-        });
-      });
-    }
-
-    var userInfo: UserModel = {
-      customerId: this.customerFormControl.value,
-      userId: 0,
-      loginId: this.loginIdFormControl.value,
-      password: this.passwordFormControl.value,
-      userName: this.userNameFormControl.value,
-      email: this.email == null ? '' : this.email,
-      kengenFuyos: kengenFuyos,
-      customerName: '',
-      kanri: '',
-      anken: '',
-      tunnel: '',
-      upload:'',
-      download:''
-    };
+    // ユーザ情報をDBに追加
+    var userInfo = this.getInputUserModel(0);
 
     this.userService.insertUser(userInfo)
       .subscribe((response: any) => {
 
+        // 追加成功時、dataSourceに追加
         if (response['Succeeded']) {
+
           const data = this.dataSource.data;
 
-          data.push(response['Data']);
+          data.push(this.userService.convertUserModel(response['Data']));
 
           this.dataSource.data = data;
 
-          this.sideNav.close();
-
           this.clearSideNavFormData();
+
+          this.sideNav.close();
           
         }
+        // 入力したログインIDが登録済みの場合、エラーメッセージ表示
         else if (response['ErrorMessage'][0]['code'] === "DuplicateUserName") {
           this.isDuplicateUserName = true;
         }
@@ -226,6 +201,40 @@ export class UserKanriComponent implements OnInit {
       });
   }
 
+  /**
+   *  saveUserInfo
+   *
+   *  選択したユーザ情報についてDB、datasourceを更新する
+   *  
+   *
+   *  @return {void}
+   */
+  updateUserInfo() {
+
+    // 必須入力チェック
+    if (this.customerFormControl.invalid ||
+      this.userNameFormControl.invalid ||
+      this.loginIdFormControl.invalid ||
+      this.passwordFormControl.invalid) {
+      this.isInput = true;
+
+      return;
+    }
+
+    // ユーザ情報でDBを更新
+    var userInfo = this.getInputUserModel(this.selection.selected[0].userId);
+
+    this.userService.updateUser(userInfo)
+      .subscribe((response: any) => {
+
+          this.sideNav.close();
+
+          this.clearSideNavFormData();
+        
+      },
+        error => {
+        });
+  }
 
   /**
    *  deleteUserInfo
@@ -237,21 +246,89 @@ export class UserKanriComponent implements OnInit {
    */
   deleteCustomerInfo() {
 
-    for (var i = 0; i < this.selection.selected.length; i++) {
-      this.userService.deleteUsers(this.selection.selected[i]).subscribe(
+    this.selection.selected.forEach(user => {
+      this.userService.deleteUsers(user).subscribe(
         data => { },
         error => {
         });
-    }
+    });
 
-    for (var i = 0; i < this.selection.selected.length; i++) {
-      const data = this.dataSource.data;
-      data.splice(0, 1);
+    var data = this.dataSource.data;
 
-      this.dataSource.data = data;
-    }
+    this.selection.selected.forEach(user => {
 
+      data = data.filter(function (element) { return (element.customerId != user.customerId || element.userId != user.userId); });
+    });
+
+    this.dataSource.data = data;
+    
     this.selection.clear();
+  }
+
+  /**
+   *  displayAddSideNav
+   *
+   *  追加用のサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displayAddSideNav() {
+    this.clearSideNavFormData();
+
+    this.isAdd = true;
+
+    this.sideNav.open();
+  }
+
+  /**
+   *  displayEditSideNav
+   *
+   *  選択したユーザー情報について、編集用のサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displayEditSideNav() {
+    this.clearSideNavFormData();
+
+    var user = this.selection.selected[0];
+
+    this.customerFormControl.setValue(user.customerId);
+
+    this.userNameFormControl.setValue(user.userName);
+
+    this.loginIdFormControl.setValue(user.loginId);
+    this.loginIdFormControl.disable();
+
+    this.passwordFormControl.setValue(user.password);
+
+    this.email = user.email;
+
+    var kengenFuyos = new Array();
+    user.kengenFuyos.forEach(kengenFuyo => {
+
+      kengenFuyos.push(kengenFuyo.kengenId);
+    });
+
+    this.kengenFormControl.setValue(kengenFuyos);
+
+    this.isEdit = true;
+
+    this.sideNav.open();
+  }
+
+  /**
+   *  closeSideNav
+   *
+   *  サイドナビを閉じる
+   *  
+   *
+   *  @return {void}
+   */
+  closeSideNav() {
+    this.sideNav.close();
+
   }
 
   /**
@@ -263,19 +340,69 @@ export class UserKanriComponent implements OnInit {
    *  @return {void}
    */
   clearSideNavFormData() {
-    this.customerFormControl.setValue('');
+    this.customerFormControl.reset();
 
-    this.userNameFormControl.setValue('');
+    this.userNameFormControl.reset();
 
-    this.loginIdFormControl.setValue('');
-
-    this.passwordFormControl.setValue('');
-
-    this.kengenFormControl.setValue('');
-
-    this.email = '';
+    this.loginIdFormControl.reset();
+    this.loginIdFormControl.enable();
     
-    this.kengenFormControl.setValue('');
+    this.passwordFormControl.markAsUntouched();
+    this.passwordFormControl.setValue('');
+    
+    this.email = '';
+
+    this.kengenFormControl.reset();
+
+    this.isAdd = false;
+
+    this.isEdit = false;
+
+    this.isInput = false;
+
+    this.isDuplicateUserName = false;
   }
-  
+
+  /**
+   *  getInputUserModel
+   *
+   *  入力項目のユーザ情報を取得する
+   *  
+   *
+   *  @return {UserModel} ユーザ情報
+   */
+  getInputUserModel(userId): UserModel{
+
+    // 選択した権限情報を作成
+    var kengenFuyos: KengenFuyoModel[] = new Array();
+
+    if (this.kengenFormControl.value != null) {
+      this.kengenFormControl.value.forEach(x => {
+        kengenFuyos.push({
+          customerId: this.customerFormControl.value,
+          userId: userId,
+          kengenId: x
+        });
+      });
+    }
+
+    // 入力したユーザ情報を作成
+    var userInfo: UserModel = {
+      customerId: this.customerFormControl.value,
+      userId: userId,
+      loginId: this.loginIdFormControl.value,
+      password: this.passwordFormControl.value,
+      userName: this.userNameFormControl.value,
+      email: this.email == null ? '' : this.email,
+      kengenFuyos: kengenFuyos,
+      customerName: '',
+      kanri: '',
+      anken: '',
+      tunnel: '',
+      upload: '',
+      download: ''
+    };
+
+    return userInfo;
+  }
 }

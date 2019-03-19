@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="mat-elevation-z8">
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="user_sidenav">
 
@@ -6,9 +6,11 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button mat-button (click)="saveUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+    <button *ngIf="isAdd" mat-button (click)="saveUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+    <button *ngIf="isEdit" mat-button (click)="updateUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
     <mat-divider></mat-divider>
 
@@ -44,7 +46,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="ログインID" [formControl]="loginIdFormControl" required>
+        <input matInput placeholder="ログインID" [formControl]="loginIdFormControl" [disabled]="true" required>
 
         <mat-error *ngIf="loginIdFormControl.hasError('required')">
           {{hissuLoginIdMessage}}
@@ -98,9 +100,9 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="sidenav.toggle()"><mat-icon color="primary">add</mat-icon>追加</button>
+    <button mat-button (click)="displayAddSideNav()"><mat-icon color="primary">add</mat-icon>追加</button>
 
-    <button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
+    <button mat-button (click)="displayEditSideNav()"><mat-icon color="primary">create</mat-icon>編集</button>
 
     <button mat-button (click)="deleteCustomerInfo()"><mat-icon color="primary">delete_forever</mat-icon>削除</button>
 
@@ -118,7 +120,7 @@
 
     </div>
 
-    <div class="mat-elevation-z8">
+    <div>
       <mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="select">
@@ -138,7 +140,7 @@
 
         <ng-container matColumnDef="customerName">
           <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.customer.customerName}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="userName">
@@ -193,3 +195,4 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
+

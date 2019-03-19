@@ -24,3 +24,11 @@ export class PasswordMessage {
   public static readonly DIGIT = '数字を1文字以上含めてください';
   public static readonly SYMBOL = '記号を1文字以上含めてください';
 }
+
+export class Kengen {
+  public static readonly KANRI = '管理';
+  public static readonly ANKEN = '案件作成';
+  public static readonly TUNNEL = 'トンネル作成';
+  public static readonly UPLOAD = 'アップロード';
+  public static readonly DOWNLOAD = 'ダウンロード';
+}

@@ -47,12 +47,6 @@ namespace keisoku.Models
                     },
                     new KengenModel
                     {
-                        KengenName = "プロジェクト作成",
-                        CreatedAt = DateTime.Now,
-                        UpdatedAt = DateTime.Now
-                    },
-                    new KengenModel
-                    {
                         KengenName = "案件作成",
                         CreatedAt = DateTime.Now,
                         UpdatedAt = DateTime.Now

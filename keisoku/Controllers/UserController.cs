@@ -179,6 +179,95 @@ namespace keisoku.Controllers
 
             return Ok(user);
         }
-        
+
+        /// <summary>
+        /// 顧客ID、ユーザIDに一致するユーザ情報を更新する
+        /// </summary>
+        /// 
+        /// <param name="customerId">顧客ID</param>
+        /// <param name="userId">ユーザID</param>
+        /// 
+        /// <returns>削除したユーザ情報</returns>
+        /// 
+        [HttpPut("{customerId}/{userId}")]
+        public async Task<IActionResult> Put([FromRoute] int customerId, int userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            using (var reader = new StreamReader(Request.Body))
+            {
+                IDictionary<string, object> value = new Dictionary<string, object>
+                {
+                    ["Succeeded"] = false
+                };
+
+                // JSON ⇒ Modelに変換
+                var body = reader.ReadToEnd();
+
+                var deserialized = JsonConvert.DeserializeObject<UserModel>(body);
+
+                if (customerId != deserialized.CustomerId || userId != deserialized.UserId)
+                {
+                    return BadRequest();
+                }
+
+                // Identity更新
+                var iUser = _userManager.Users.FirstOrDefault(x => x.UserName == deserialized.LoginId);
+                if (iUser == null)
+                {
+                    return NotFound();
+                }
+
+                var removeResult = await _userManager.RemovePasswordAsync(iUser);
+                if (!removeResult.Succeeded)
+                {
+                    return NotFound();
+                }
+
+                var addResult = await _userManager.AddPasswordAsync(iUser, deserialized.Password);
+                if (!addResult.Succeeded)
+                {
+                    return NotFound();
+                }
+
+                // ユーザ情報更新
+                _context.Entry(deserialized).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!IsUserExists(customerId, userId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+        }
+
+        /// <summary>
+        /// 顧客ID、ユーザIDに一致するユーザ情報が存在するか判定
+        /// </summary>
+        /// 
+        /// <param name="customerId">顧客ID</param>
+        /// <param name="userId">ユーザID</param>
+        /// 
+        /// <returns>存在有無</returns>
+        /// 
+        private bool IsUserExists(int customerId, int userId)
+        {
+            return _context.CustomersUsers.Any(e => e.CustomerId == customerId && e.UserId == userId);
+        }
     }
 }

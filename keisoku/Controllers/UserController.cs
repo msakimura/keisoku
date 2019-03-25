@@ -187,7 +187,7 @@ namespace keisoku.Controllers
         /// <param name="customerId">顧客ID</param>
         /// <param name="userId">ユーザID</param>
         /// 
-        /// <returns>削除したユーザ情報</returns>
+        /// <returns>処理結果</returns>
         /// 
         [HttpPut("{customerId}/{userId}")]
         public async Task<IActionResult> Put([FromRoute] int customerId, int userId)
@@ -234,6 +234,8 @@ namespace keisoku.Controllers
                 }
 
                 // ユーザ情報更新
+                PutKengenFuyos(deserialized);
+
                 _context.Entry(deserialized).State = EntityState.Modified;
 
                 try
@@ -252,12 +254,14 @@ namespace keisoku.Controllers
                     }
                 }
 
-                return NoContent();
+                var putData = await Get(customerId, userId);
+
+                return new ObjectResult(putData);
             }
         }
 
         /// <summary>
-        /// 顧客ID、ユーザIDに一致するユーザ情報が存在するか判定
+        /// 顧客ID、ユーザIDに一致するユーザが存在するか判定
         /// </summary>
         /// 
         /// <param name="customerId">顧客ID</param>
@@ -268,6 +272,54 @@ namespace keisoku.Controllers
         private bool IsUserExists(int customerId, int userId)
         {
             return _context.CustomersUsers.Any(e => e.CustomerId == customerId && e.UserId == userId);
+        }
+
+        /// <summary>
+        /// 顧客ID、ユーザIDに一致する権限付与リストを取得
+        /// </summary>
+        /// 
+        /// <param name="customerId">顧客ID</param>
+        /// <param name="userId">ユーザID</param>
+        /// 
+        /// <returns>権限付与リスト</returns>
+        /// 
+        private IQueryable<KengenFuyoModel> GetKengenFuyos(int customerId, int userId)
+        {
+            return _context.KengenFuyos.Where(e => e.CustomerId == customerId && e.UserId == userId );
+        }
+
+        /// <summary>
+        /// ユーザ情報に関連付いている権限付与を更新する
+        /// </summary>
+        /// 
+        /// <param name="user">ユーザ情報</param>
+        /// 
+        /// 
+        private void PutKengenFuyos(UserModel user)
+        {
+            var addedKengenFuyos = GetKengenFuyos(user.CustomerId, user.UserId);
+
+            var targetKengenFuyos = user.KengenFuyos;
+
+            foreach (var kengenFuyo in targetKengenFuyos)
+            {
+                var exists = addedKengenFuyos.Any(x => x.CustomerId == kengenFuyo.CustomerId && x.UserId == kengenFuyo.UserId && x.KengenId == kengenFuyo.KengenId);
+
+                if (!exists)
+                {
+                    _context.Entry(kengenFuyo).State = EntityState.Added;
+                }
+            }
+
+            foreach (var addedKengenFuyo in addedKengenFuyos)
+            {
+                var exists = targetKengenFuyos.Any(x => x.CustomerId == addedKengenFuyo.CustomerId && x.UserId == addedKengenFuyo.UserId && x.KengenId == addedKengenFuyo.KengenId);
+
+                if (!exists)
+                {
+                    _context.Entry(addedKengenFuyo).State = EntityState.Deleted;
+                }
+            }
         }
     }
 }

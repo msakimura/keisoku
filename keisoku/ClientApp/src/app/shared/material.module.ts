@@ -20,6 +20,8 @@ import {
   MatMenuModule
 } from "@angular/material";
 
+import { MatSortModule } from '@angular/material/sort';
+
 const MAT_MODULES = [
   MatTableModule,
   MatButtonModule,
@@ -38,7 +40,8 @@ const MAT_MODULES = [
   MatPaginatorModule,
   MatGridListModule,
   MatListModule,
-  MatMenuModule
+  MatMenuModule,
+  MatSortModule
 ];
 
 @NgModule({

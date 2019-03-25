@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,24 +32,47 @@ namespace keisoku.Controllers
             _config = config;
         }
 
+        /// <summary>
+        /// リクエストのログインID、パスワードでoAuth認証する
+        /// </summary>
+        /// 
+        /// <returns>ユーザ情報リスト</returns>
+        /// 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody]UserModel login)
+        public async Task<IActionResult> Post()
         {
-            IActionResult response = Unauthorized();
-
-            var result = await _signInManager.PasswordSignInAsync(login.LoginId, login.Password, false, false);
-
-            if (result.Succeeded)
+            using (var reader = new StreamReader(Request.Body))
             {
+                // JSON ⇒ Modelに変換
+                var body = reader.ReadToEnd();
 
-                var tokenString = GenerateJSONWebToken(login);
-                response = Ok(new { token = tokenString });
+                var deserialized = JsonConvert.DeserializeObject<UserModel>(body);
+
+                // oAuth認証
+                IActionResult response = Unauthorized();
+
+                var result = await _signInManager.PasswordSignInAsync(deserialized.LoginId, deserialized.Password, false, false);
+
+                if (result.Succeeded)
+                {
+
+                    var tokenString = GenerateJSONWebToken(deserialized);
+                    response = Ok(new { token = tokenString });
+                }
+
+                return response;
             }
-
-            return response;
+            
         }
-        
 
+        /// <summary>
+        /// ユーザ情報に対するアクセストークンを取得する
+        /// </summary>
+        /// 
+        /// <param name="userInfo">ユーザ情報</param>
+        /// 
+        /// <returns>アクセストークン</returns>
+        /// 
         private string GenerateJSONWebToken(UserModel userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

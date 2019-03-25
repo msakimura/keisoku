@@ -1,0 +1,16 @@
+.layout-wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.layout-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

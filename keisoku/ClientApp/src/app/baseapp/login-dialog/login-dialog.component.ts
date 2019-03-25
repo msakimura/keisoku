@@ -29,7 +29,6 @@ export class LoginDialogComponent implements OnInit {
   dialogRef: MatDialogRef<SpinnerdialogComponent>;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
     @Inject(MAT_DIALOG_DATA) public data: any,

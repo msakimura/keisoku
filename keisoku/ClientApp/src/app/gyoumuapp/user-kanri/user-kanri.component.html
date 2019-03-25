@@ -102,26 +102,26 @@
 
     <button mat-button (click)="displayAddSideNav()"><mat-icon color="primary">add</mat-icon>追加</button>
 
-    <button mat-button (click)="displayEditSideNav()"><mat-icon color="primary">create</mat-icon>編集</button>
+    <button mat-button (click)="displayEditSideNav()" [disabled]="isEditDisabled"><mat-icon color="{{editIconColor}}">create</mat-icon>編集</button>
 
-    <button mat-button (click)="deleteCustomerInfo()"><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+    <button mat-button (click)="deleteCustomerInfo()" [disabled]="isDeleteDisabled"><mat-icon color="{{deleteIconColor}}">delete_forever</mat-icon>削除</button>
 
     <mat-divider></mat-divider>
 
     <div fxLayout="column">
 
       <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="顧客名でフィルタ">
+        <input matInput (keyup)="applyFilterCustomerName($event.target.value)" placeholder="顧客名でフィルタ">
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="ユーザ名でフィルタ">
+        <input matInput (keyup)="applyFilterUserName($event.target.value)" placeholder="ユーザ名でフィルタ">
       </mat-form-field>
 
     </div>
 
     <div>
-      <mat-table [dataSource]="dataSource">
+      <mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="select">
           <mat-header-cell *matHeaderCellDef>
@@ -132,19 +132,19 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let row">
             <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(row) : null"
+                          (change)="$event ? selectToggle(row) : null"
                           [checked]="selection.isSelected(row)">
             </mat-checkbox>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="customerName">
-          <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 顧客名 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="userName">
-          <mat-header-cell *matHeaderCellDef> ユーザ名 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ユーザ名 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
         </ng-container>
 

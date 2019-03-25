@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CustomerModel } from './customer.service';
-import { KengenModel } from './kengen.service';
 import { Kengen } from '../shared/constant.module';
 
 export interface UserModel {
@@ -129,7 +127,7 @@ export class UserService {
    */
   convertUserModel(user): UserModel {
 
-    var kannri = '✕';
+    var kanri = '✕';
     var anken = '✕';
     var tunnel = '✕';
     var upload = '✕';
@@ -141,7 +139,7 @@ export class UserService {
       user.kengenFuyos.forEach(kengenFuyo => {
 
         if (kengenFuyo.kengen.kengenName == Kengen.KANRI) {
-          kannri = '〇';
+          kanri = '〇';
         }
         else if (kengenFuyo.kengen.kengenName == Kengen.ANKEN) {
           anken = '〇';
@@ -176,7 +174,7 @@ export class UserService {
       email: user.email,
       kengenFuyos: kengenFuyos,
       customerName: user.customer.customerName,
-      kanri: kannri,
+      kanri: kanri,
       anken: anken,
       tunnel: tunnel,
       upload: upload,

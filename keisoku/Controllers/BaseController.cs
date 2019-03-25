@@ -52,6 +52,11 @@ namespace keisoku.Controllers
                 return false;
             }
 
+            if(user.KengenFuyos != null)
+            {
+                user.KengenFuyos.Clear();
+            }
+
             foreach(var data in datas)
             {
                 var result = await SetKengen(data);

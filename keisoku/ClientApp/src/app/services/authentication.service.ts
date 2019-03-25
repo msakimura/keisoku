@@ -2,29 +2,38 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
-export interface UserModel {
-  LoginId: string;
-  Password: string;
+export interface LoginModel {
+  loginId: string;
+  password: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
+
   constructor(private http: HttpClient) { }
 
+  /**
+   *  login
+   *
+   *  指定したuserid、passwordでログインする
+   *
+   *  @param  {string}    userid
+   *  @param  {string}    password
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
   login(userid: string, password: string) {
 
-    var body: UserModel = {
-      LoginId: userid,
-      Password: password
+    var body: LoginModel = {
+      loginId: userid,
+      password: password
     };
 
     return this.http.post<any>('/api/login', body)
       .pipe(map(user => {
-        // login successful if there's a jwt token in the response
         if (user && user.token) {
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('TokenInfo', JSON.stringify(user));
         }
 
@@ -32,11 +41,26 @@ export class AuthenticationService {
       }));
   }
 
+  /**
+   *  logout
+   *
+   *  TokenInfo（アクセストークン）を削除してログアウトする
+   *
+   *
+   *  @return {void}
+   */
   logout() {
-    // remove user from local storage to log user out
     localStorage.removeItem('TokenInfo');
   }
 
+  /**
+   *  hasTokenInfo
+   *
+   *  TokenInfo（アクセストークン）を取得する
+   *
+   *
+   *  @return {void}
+   */
   hasTokenInfo() : string{
     return localStorage.getItem('TokenInfo');
   }

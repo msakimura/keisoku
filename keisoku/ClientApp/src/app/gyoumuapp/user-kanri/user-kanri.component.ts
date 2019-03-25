@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService, UserModel, KengenFuyoModel } from 'src/app/services/user.service';
-import { MatTableDataSource, MatPaginator, MatSidenav } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CustomerService, CustomerModel } from 'src/app/services/customer.service';
 import { FormControl, Validators } from '@angular/forms';
 import { KengenService, KengenModel } from 'src/app/services/kengen.service';
 import { ValidationModule } from 'src/app/shared/validation.module';
-import { InputMessage, PasswordMessage } from '../../shared/constant.module';
+import { InputMessage, PasswordMessage, Kengen } from '../../shared/constant.module';
 
 @Component({
   selector: 'app-user-kanri',
@@ -22,6 +22,14 @@ export class UserKanriComponent implements OnInit {
   isAdd: boolean = false;
 
   isEdit: boolean = false;
+
+  isEditDisabled: boolean = true;
+
+  editIconColor = 'diabled';
+
+  isDeleteDisabled: boolean = true;
+
+  deleteIconColor = 'diabled';
 
   
   customers: CustomerModel[] = new Array();
@@ -77,21 +85,7 @@ export class UserKanriComponent implements OnInit {
 
   @ViewChild('sidenav') public sideNav: MatSidenav;
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
+  @ViewChild(MatSort) sort: MatSort;
 
 
   constructor(private userService: UserService, private customerService: CustomerService, private kengenService: KengenService) { }
@@ -104,6 +98,125 @@ export class UserKanriComponent implements OnInit {
     this.bindAllKengenInfo();
 
     this.bindAllUserInfo();
+
+  }
+
+  /**
+   *  applyFilterCustomerName
+   *
+   *  顧客名でフィルタする
+   *  
+   *
+   *  @return {void}
+   */
+  applyFilterCustomerName(filterValue: string) {
+    this.dataSource.filterPredicate = function (data, filter: string): boolean {
+      return data.customerName.toLowerCase().includes(filter);
+    };
+
+    this.dataSource.filter = filterValue;
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  /**
+   *  applyFilterUserName
+   *
+   *  ユーザ名でフィルタする
+   *  
+   *
+   *  @return {void}
+   */
+  applyFilterUserName(filterValue: string) {
+    this.dataSource.filterPredicate = function (data, filter: string): boolean {
+      return data.userName.toLowerCase().includes(filter);
+    };
+
+    this.dataSource.filter = filterValue;
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  /**
+   *  isAllSelected
+   *
+   *  全てのチェックボックスが選択されているか判定する
+   *  
+   *
+   *  @return {boolean} 判定結果
+   */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /**
+   *  masterToggle
+   *
+   *  ヘッダーのチェックボックス選択時、全レコードのチェックボックスの選択有無を切り替える
+   *  
+   *
+   *  @return {boid}
+   */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+
+    this.changeDisabled();
+  }
+
+  /**
+   *  selectToggle
+   *
+   *  レコードのチェックボックスの選択有無を切り替える
+   *  
+   *
+   *  @return {boid}
+   */
+  selectToggle(row) {
+    this.selection.toggle(row);
+
+    this.changeDisabled();
+  }
+
+  /**
+   *  changeDisabled
+   *
+   *  レコードのチェックボックス選択数によって、編集ボタン・削除ボタンの活性/不活性を切り替える
+   *  
+   *
+   *  @return {boid}
+   */
+  changeDisabled() {
+    this.isEditDisabled = true;
+
+    this.editIconColor = 'diabled';
+
+    this.isDeleteDisabled = true;
+
+    this.deleteIconColor = 'diabled';
+
+    const numSelected = this.selection.selected.length;
+
+    if (numSelected >= 1) {
+
+      if (numSelected == 1) {
+        this.isEditDisabled = false;
+
+        this.editIconColor = 'primary';
+      }
+
+      this.isDeleteDisabled = false;
+
+      this.deleteIconColor = 'primary';
+
+    }
   }
 
   /**
@@ -121,7 +234,8 @@ export class UserKanriComponent implements OnInit {
         this.dataSource.data = this.userService.convertUserModels(response);
         
         this.dataSource.paginator = this.paginator;
-        
+
+        this.dataSource.sort = this.sort;
       });
   }
 
@@ -221,15 +335,21 @@ export class UserKanriComponent implements OnInit {
       return;
     }
 
-    // ユーザ情報でDBを更新
+    // 編集したユーザ情報でDBを更新
     var userInfo = this.getInputUserModel(this.selection.selected[0].userId);
 
     this.userService.updateUser(userInfo)
       .subscribe((response: any) => {
 
-          this.sideNav.close();
+        var row = this.updateSelectedRowUserInfo(this.userService.convertUserModel(response.value));
+        
+        this.sideNav.close();
 
-          this.clearSideNavFormData();
+        this.clearSideNavFormData();
+
+        if (row != null) {
+          this.selectToggle(row);
+        }
         
       },
         error => {
@@ -295,6 +415,7 @@ export class UserKanriComponent implements OnInit {
     var user = this.selection.selected[0];
 
     this.customerFormControl.setValue(user.customerId);
+    this.customerFormControl.disable();
 
     this.userNameFormControl.setValue(user.userName);
 
@@ -341,6 +462,7 @@ export class UserKanriComponent implements OnInit {
    */
   clearSideNavFormData() {
     this.customerFormControl.reset();
+    this.customerFormControl.enable();
 
     this.userNameFormControl.reset();
 
@@ -377,11 +499,11 @@ export class UserKanriComponent implements OnInit {
     var kengenFuyos: KengenFuyoModel[] = new Array();
 
     if (this.kengenFormControl.value != null) {
-      this.kengenFormControl.value.forEach(x => {
+      this.kengenFormControl.value.forEach(kengenId => {
         kengenFuyos.push({
           customerId: this.customerFormControl.value,
           userId: userId,
-          kengenId: x
+          kengenId: kengenId
         });
       });
     }
@@ -404,5 +526,63 @@ export class UserKanriComponent implements OnInit {
     };
 
     return userInfo;
+  }
+
+  /**
+   *  updateSelectedRow
+   *
+   *  選択したレコードのユーザ情報を編集した内容で更新する
+   *  
+   *
+   *  @return {UserModel} 編集した内容
+   */
+  updateSelectedRowUserInfo(editUser :UserModel):UserModel {
+    var data = this.dataSource.data;
+
+    var target = data.find(user => {
+      return (user.customerId == editUser.customerId && user.userId == editUser.userId);
+    });
+
+    if (target == null) return null;
+
+
+    target.password = editUser.password;
+    target.userName = editUser.userName;
+    target.email= editUser.email;
+    
+    target.kanri = '✕';
+    target.anken = '✕';
+    target.tunnel = '✕';
+    target.upload = '✕';
+    target.download = '✕';
+
+    target.kengenFuyos = editUser.kengenFuyos
+
+    if (editUser.kengenFuyos != null) {
+      editUser.kengenFuyos.forEach(kengenFuyo => {
+
+        var kengen = this.kengens.find(kengen => {
+          return (kengen.kengenId == kengenFuyo.kengenId);
+        });
+
+        if (kengen.kengenName == Kengen.KANRI) {
+          target.kanri = '〇';
+        }
+        else if (kengen.kengenName == Kengen.ANKEN) {
+          target.anken = '〇';
+        }
+        else if (kengen.kengenName == Kengen.TUNNEL) {
+          target.tunnel = '〇';
+        }
+        else if (kengen.kengenName == Kengen.UPLOAD) {
+          target.upload = '〇';
+        }
+        else if (kengen.kengenName == Kengen.DOWNLOAD) {
+          target.download = '〇';
+        }
+      });
+    }
+
+    return target;
   }
 }

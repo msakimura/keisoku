@@ -1,10 +1,9 @@
 .image-add-divider {
   border-top-width: 1px;
-  border-top-color: darkgray;
+  border-top-color: grey;
 }
 
 .mat-form-field {
-  font-size: 14px;
   width: 100%;
 }
 
@@ -18,4 +17,9 @@
 
 .tunnel_sidenav {
   width: 300px;
+}
+
+.image-mat-button {
+  padding: 0 0;
+  color: grey;
 }

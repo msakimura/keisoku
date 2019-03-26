@@ -15,6 +15,7 @@ export class InputMessage {
   public static readonly HISSU_LOGINID = 'ログインIDは必須です';
   public static readonly HISSU_PASSWORD = 'パスワードは必須です';
   public static readonly HISSU_ANKEN = '案件名は必須です';
+  public static readonly HISSU_TUNNEL = 'トンネル名は必須です';
 }
 
 export class PasswordMessage {

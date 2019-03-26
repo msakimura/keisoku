@@ -161,7 +161,7 @@ export class AnkenListComponent implements OnInit {
 
 
   /**
-   *  bindAllAnkenInfoWrap
+   *  bindAllAnkenInfoLoginUser
    *
    *  ログイン者の顧客IDに紐付いている全ての案件情報をdataSourceにバインドする
    *  
@@ -188,7 +188,7 @@ export class AnkenListComponent implements OnInit {
   }
 
   /**
-   *  bindAllAnkenInfo
+   *  bindAllAnkenInfoCustomer
    *
    *  customerIdに紐付く全ての案件情報をdataSourceにバインドする
    *  
@@ -438,14 +438,14 @@ export class AnkenListComponent implements OnInit {
 
 
   /**
-   *  jumpTunnelList
+   *  setSelectedAnken
    *
-   *  選択した案件のトンネル一覧画面に遷移する
+   *  選択した案件情報をankenServiceのselectedAnkenに設定する
    *  
    *
    *  @return {void} 
    */
-  jumpTunnelList(row) {
+  setSelectedAnken(row) {
 
     this.ankenService.selectedAnken = row;
     

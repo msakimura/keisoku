@@ -68,7 +68,7 @@
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 案件名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <a routerLink="./tunnellist" (click)="jumpTunnelList(element)" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.ankenName}}</a>
+            <a routerLink="./tunnellist" (click)="setSelectedAnken(element)" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.ankenName}}</a>
           </mat-cell>
         </ng-container>
 

@@ -81,17 +81,17 @@ export class TunnelComponent implements OnInit {
   uploadFile()
   {
     
-    for (var i = 0; i < this.tunnelService.tunnelModel.length; i++)
-    {
-      var fileReader = readAsBase64(this.tunnelService.tunnelModel[i].fileData);
+    //for (var i = 0; i < this.tunnelService.tunnelModel.length; i++)
+    //{
+    //  var fileReader = readAsBase64(this.tunnelService.tunnelModel[i].fileData);
 
-      fileReader.subscribe((data: string) => {
+    //  fileReader.subscribe((data: string) => {
 
-        var model: UploadModel = { fileName: this.tunnelService.tunnelModel[0].fileName, fileData: data };
+    //    var model: UploadModel = { fileName: this.tunnelService.tunnelModel[0].fileName, fileData: data };
 
-        this.http.post('api/upload', model).subscribe(result => { console.log("アップロード完了") });
-      });
-    }
+    //    this.http.post('api/upload', model).subscribe(result => { console.log("アップロード完了") });
+    //  });
+    //}
     
   }
 

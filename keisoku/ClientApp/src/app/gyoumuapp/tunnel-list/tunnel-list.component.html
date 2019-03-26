@@ -6,52 +6,66 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button mat-button (click)="saveTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+    <button *ngIf="isAdd" mat-button (click)="saveTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+    <button *ngIf="isEdit" mat-button (click)="updateTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
     <mat-divider></mat-divider>
 
+    <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+
     <mat-form-field>
-      <input matInput placeholder="トンネル名" [(ngModel)]="tunnelName">
+      <input matInput placeholder="トンネル名" [formControl]="tunnelNameFormControl" required>
+
+      <mat-error *ngIf="tunnelNameFormControl.hasError('required')">
+        {{hissuTunnelMessage}}
+      </mat-error>
     </mat-form-field>
 
-    <mat-selection-list #images>
-      <mat-list-option *ngFor="let image of typesOfImages">
-        {{image.name}}
-      </mat-list-option>
-    </mat-selection-list>
+    <mat-list #images>
+      <mat-list-item *ngFor="let tunnelImage of tunnelImages">
+        {{tunnelImage.name}}
+        <button mat-button matSuffix mat-icon-button aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
 
-    <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="uploadFile(file.files)" />
 
-    <button mat-button (click)="file.click()">トンネル画像追加</button>
+    <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" />
+
+    <div layout="row" layout-align="start center" flex>
+      <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
+      <span flex></span>
+    </div>
 
     <mat-divider class="image-add-divider"></mat-divider>
 
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="mat-headline">XX工事</div>
+    <div class="mat-headline">{{ankenName}}</div>
 
     <mat-divider></mat-divider>
 
     <a routerLink="../" mat-button><mat-icon color="primary">arrow_back</mat-icon>戻る</a>
 
-    <button mat-button (click)="sidenav.toggle()" ><mat-icon color="primary">add</mat-icon>追加</button>
+    <button mat-button (click)="displayAddSideNav()"><mat-icon color="primary">add</mat-icon>追加</button>
 
-    <button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
+    <button mat-button (click)="displayEditSideNav()" [disabled]="isEditDisabled"><mat-icon color="{{editIconColor}}">create</mat-icon>編集</button>
 
-    <button mat-button><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+    <button mat-button (click)="deleteTunnelInfo()" [disabled]="isDeleteDisabled"><mat-icon color="{{deleteIconColor}}">delete_forever</mat-icon>削除</button>
 
     <mat-divider></mat-divider>
 
     <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="トンネル名でフィルタ">
+      <input matInput (keyup)="applyFilterTunnelName($event.target.value)" placeholder="トンネル名でフィルタ">
     </mat-form-field>
 
 
     <div class="mat-elevation-z8">
-      <mat-table [dataSource]="dataSource">
+      <mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="select">
           <mat-header-cell *matHeaderCellDef>
@@ -62,47 +76,47 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let row">
             <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(row) : null"
+                          (change)="$event ? selectToggle(row) : null"
                           [checked]="selection.isSelected(row)">
             </mat-checkbox>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef> トンネル名 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <a routerLink="../tunnel" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.name}}</a>
+            <a routerLink="../tunnel" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.tunnelName}}</a>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="enchou">
           <mat-header-cell *matHeaderCellDef> トンネル延長 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.enchou}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.tunnelEnchou}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="yoteiImageNum">
           <mat-header-cell *matHeaderCellDef> 予定画像数 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.yoteiImageNum}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.yoteiImageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef> 画像 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.image}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.imageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="ai">
           <mat-header-cell *matHeaderCellDef> AI済 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.ai}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.aiNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
           <mat-header-cell *matHeaderCellDef> 作成日 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.createdAt | date:"yyyy/MM/dd"}} </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"
-                 (click)="selection.toggle(row)">
+                 (click)="selectToggle(row)">
         </mat-row>
       </mat-table>
 

@@ -52,7 +52,7 @@ export class AnkenService {
   }
 
   /**
-   *  updateUser
+   *  updateAnken
    *
    *  ankenのDBを更新する
    *  
@@ -67,7 +67,7 @@ export class AnkenService {
   }
 
   /**
-   *  deleteUsers
+   *  deleteAnken
    *
    *  ankenをDBから削除する
    *  
@@ -106,7 +106,7 @@ export class AnkenService {
   /**
    *  convertAnkenModel
    *
-   *  DBから取得したuserをユーザモデルに変換する
+   *  DBから取得したuserを案件モデルに変換する
    *  
    *
    *  @param  {object}    user

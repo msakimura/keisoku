@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
@@ -67,13 +67,12 @@ export class LoginDialogComponent implements OnInit {
     this.authenticationService.login(this.userid, this.password)
       .pipe(first())
       .subscribe(
-        data => {
-
+      data => {
           // oauth認証に成功した場合
           this.router.navigate(["/gyoumu"]);
           this.dialogRef.close();
           this.matDialogRef.close();
-
+          
         },
         error => {
 
@@ -81,7 +80,8 @@ export class LoginDialogComponent implements OnInit {
           this.dialogRef.close();
           this.error = error;
 
-        });
+      });
+
     
   }
   

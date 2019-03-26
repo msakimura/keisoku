@@ -3,7 +3,6 @@ import { MatDialog, MatSnackBar } from "@angular/material";
 import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { CaptionService } from 'src/app/services/caption.service';
 
 @Component({
   selector: 'app-base-header',
@@ -18,15 +17,14 @@ export class BaseHeaderComponent implements OnInit {
   constructor(
     public matDialog: MatDialog,
     private router: Router,
-    private authenticationService: AuthenticationService,
-    private captionService: CaptionService) { }
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     if (this.authenticationService.hasTokenInfo()) {
-      this.signinCaption = this.captionService.getSignoutCaption();
+      this.signinCaption = this.authenticationService.getSignoutCaption();
     }
     else {
-      this.signinCaption = this.captionService.getSigninCaption();
+      this.signinCaption = this.authenticationService.getSigninCaption();
     }
   }
 
@@ -45,7 +43,7 @@ export class BaseHeaderComponent implements OnInit {
 
       this.authenticationService.logout();
 
-      this.signinCaption = this.captionService.getSigninCaption();
+      this.signinCaption = this.authenticationService.getSigninCaption();
 
     // oauth認証していない場合、ダイアログの表示
     } else {
@@ -73,7 +71,7 @@ export class BaseHeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
       if (this.authenticationService.hasTokenInfo()) {
-        this.signinCaption = this.captionService.getSignoutCaption();;
+        this.signinCaption = this.authenticationService.getSignoutCaption();;
       }
 
     });
@@ -88,16 +86,16 @@ export class BaseHeaderComponent implements OnInit {
    *  @return {void}
    */
   gyoumuJump() {
-    //if (this.authenticationService.hasTokenInfo()) {
+    if (this.authenticationService.hasTokenInfo()) {
 
       this.router.navigate(["/gyoumu"]);
 
-    //}
-    //else {
+    }
+    else {
 
-    //  this.showLoginDialog();
+      this.showLoginDialog();
 
-    //}
+    }
   }
   
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace keisoku.Controllers
         /// <param name="customerId">顧客ID</param>
         /// <param name="userId">ユーザID</param>
         /// 
-        /// <returns>ユーザ情報リスト</returns>
+        /// <returns>ユーザ情報</returns>
         /// 
         [HttpGet("{customerId}/{userId}")]
         public async Task<IActionResult> Get([FromRoute] int customerId, int userId)
@@ -64,6 +65,32 @@ namespace keisoku.Controllers
             }
 
             var user = await _context.CustomersUsers.SingleOrDefaultAsync(x => x.CustomerId == customerId && x.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await SetCustomer(user);
+
+            await SetKengenFuyos(user);
+
+            return Ok(user);
+        }
+
+        /// <summary>
+        /// ログインIDに一致するユーザ情報を取得する
+        /// </summary>
+        /// 
+        /// <param name="loginId">ログインID</param>
+        /// 
+        /// <returns>ユーザ情報</returns>
+        /// 
+        [HttpGet("{loginId}")]
+        public async Task<IActionResult> Get([FromRoute] string loginId)
+        {
+
+            var user = await _context.CustomersUsers.SingleOrDefaultAsync(x => x.LoginId == loginId);
 
             if (user == null)
             {
@@ -181,38 +208,23 @@ namespace keisoku.Controllers
         }
 
         /// <summary>
-        /// 顧客ID、ユーザIDに一致するユーザ情報を更新する
+        /// ユーザ情報を更新する
         /// </summary>
         /// 
-        /// <param name="customerId">顧客ID</param>
-        /// <param name="userId">ユーザID</param>
         /// 
         /// <returns>処理結果</returns>
         /// 
-        [HttpPut("{customerId}/{userId}")]
-        public async Task<IActionResult> Put([FromRoute] int customerId, int userId)
+        [HttpPut]
+        public async Task<IActionResult> Put()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             using (var reader = new StreamReader(Request.Body))
             {
-                IDictionary<string, object> value = new Dictionary<string, object>
-                {
-                    ["Succeeded"] = false
-                };
-
                 // JSON ⇒ Modelに変換
                 var body = reader.ReadToEnd();
 
                 var deserialized = JsonConvert.DeserializeObject<UserModel>(body);
 
-                if (customerId != deserialized.CustomerId || userId != deserialized.UserId)
-                {
-                    return BadRequest();
-                }
+                deserialized.UpdatedAt = DateTime.Now;
 
                 // Identity更新
                 var iUser = _userManager.Users.FirstOrDefault(x => x.UserName == deserialized.LoginId);
@@ -244,7 +256,7 @@ namespace keisoku.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!IsUserExists(customerId, userId))
+                    if (!IsUserExists(deserialized.CustomerId, deserialized.UserId))
                     {
                         return NotFound();
                     }
@@ -254,11 +266,12 @@ namespace keisoku.Controllers
                     }
                 }
 
-                var putData = await Get(customerId, userId);
+                var putData = await Get(deserialized.CustomerId, deserialized.UserId);
 
                 return new ObjectResult(putData);
             }
         }
+        
 
         /// <summary>
         /// 顧客ID、ユーザIDに一致するユーザが存在するか判定

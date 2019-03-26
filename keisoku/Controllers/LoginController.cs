@@ -20,14 +20,11 @@ namespace keisoku.Controllers
     public class LoginController : ControllerBase
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private IConfiguration _config;
+        private readonly IConfiguration _config;
 
-        public LoginController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+        public LoginController(SignInManager<IdentityUser> signInManager,
             IConfiguration config)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
         }

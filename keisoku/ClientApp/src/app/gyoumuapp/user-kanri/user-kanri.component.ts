@@ -104,8 +104,9 @@ export class UserKanriComponent implements OnInit {
   /**
    *  applyFilterCustomerName
    *
-   *  顧客名でフィルタする
-   *  
+   *  顧客名をfilterValueでフィルタする
+   *
+   *  @param  {string}    filterValue
    *
    *  @return {void}
    */
@@ -124,8 +125,9 @@ export class UserKanriComponent implements OnInit {
   /**
    *  applyFilterUserName
    *
-   *  ユーザ名でフィルタする
+   *  ユーザ名をfilterValueでフィルタする
    *  
+   *  @param  {string}    filterValue
    *
    *  @return {void}
    */
@@ -174,8 +176,9 @@ export class UserKanriComponent implements OnInit {
   /**
    *  selectToggle
    *
-   *  レコードのチェックボックスの選択有無を切り替える
+   *  レコードrowのチェックボックスの選択有無を切り替える
    *  
+   *  @param  {object}    row
    *
    *  @return {boid}
    */
@@ -316,7 +319,7 @@ export class UserKanriComponent implements OnInit {
   }
 
   /**
-   *  saveUserInfo
+   *  updateUserInfo
    *
    *  選択したユーザ情報についてDB、datasourceを更新する
    *  
@@ -367,7 +370,7 @@ export class UserKanriComponent implements OnInit {
   deleteCustomerInfo() {
 
     this.selection.selected.forEach(user => {
-      this.userService.deleteUsers(user).subscribe(
+      this.userService.deleteUser(user).subscribe(
         data => { },
         error => {
         });
@@ -488,9 +491,11 @@ export class UserKanriComponent implements OnInit {
   /**
    *  getInputUserModel
    *
-   *  入力項目のユーザ情報を取得する
+   *  入力項目を元にユーザ情報を取得する
+   *  ユーザIDはuserIdを設定する
    *  
-   *
+   *  @param  {number}    userId
+   *  
    *  @return {UserModel} ユーザ情報
    */
   getInputUserModel(userId): UserModel{
@@ -529,10 +534,11 @@ export class UserKanriComponent implements OnInit {
   }
 
   /**
-   *  updateSelectedRow
+   *  updateSelectedRowUserInfo
    *
-   *  選択したレコードのユーザ情報を編集した内容で更新する
+   *  選択したレコードのeditUserを編集した内容で更新する
    *  
+   *  @param  {UserModel}    editUser
    *
    *  @return {UserModel} 編集した内容
    */

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-gyoumu-header',
@@ -7,11 +9,25 @@ import { Router } from '@angular/router';
   styleUrls: ['./gyoumu-header.component.css']
 })
 export class GyoumuHeaderComponent implements OnInit {
+  customerName: string;
 
-  constructor(private router: Router) {
-  }
+  userName: string;
+
+  constructor(private router: Router, private userService:UserService, private authenticationService:AuthenticationService) {}
 
   ngOnInit() {
+
+    if (this.authenticationService.hasTokenInfo()) {
+      this.userService.getUserFromLoginId(this.authenticationService.getTokenLoginId())
+        .subscribe((response: any) => {
+          this.userService.loginUserModel = this.userService.convertUserModel(response);
+
+          this.customerName = this.userService.loginUserModel.customerName;
+
+          this.userName = this.userService.loginUserModel.userName;
+        });
+    }
+    
   }
 
   /**

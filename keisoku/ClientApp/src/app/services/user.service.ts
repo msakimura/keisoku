@@ -32,6 +32,8 @@ export class UserService {
 
   public userModels: UserModel[] = new Array();
 
+  public loginUserModel: UserModel;
+
   private routeUrl: string = 'api/user';
 
   constructor(private http: HttpClient) { }
@@ -46,6 +48,19 @@ export class UserService {
    */
   getAllUser() {
     return this.http.get(this.routeUrl);
+  }
+
+  /**
+   *  getUserFromLoginId
+   *
+   *  loginIdに一致するユーザ情報をDBより取得する
+   *  
+   *  @param  {string}    loginId
+   *  
+   *  @return {Observable<Object>} フェッチ
+   */
+  getUserFromLoginId(loginId) {
+    return this.http.get(this.routeUrl + '/' + loginId);
   }
 
   
@@ -75,21 +90,20 @@ export class UserService {
    *  @return {Observable<Object>} フェッチ
    */
   updateUser(user: UserModel) {
-
-    return this.http.put(this.routeUrl + '/' + user.customerId + '/' + user.userId, user);
+    return this.http.put(this.routeUrl, user);
   }
 
   /**
    *  deleteUsers
    *
-   *  usersをDBから削除する
+   *  userをDBから削除する
    *  
    *
-   *  @param  {Array}    users
+   *  @param  {UserModel}    user
    *
    *  @return {Observable<Object>} フェッチ
    */
-  deleteUsers(user: UserModel) {
+  deleteUser(user: UserModel) {
     return this.http.delete(this.routeUrl + '/' + user.customerId + '/' + user.userId);
   }
 
@@ -116,12 +130,12 @@ export class UserService {
   }
 
   /**
-   *  convertUserModels
+   *  convertUserModel
    *
    *  DBから取得したuserをユーザモデルに変換する
    *  
    *
-   *  @param  {Array}    users
+   *  @param  {object}    user
    *
    *  @return {UserModel} ユーザモデル
    */
@@ -184,4 +198,5 @@ export class UserService {
 
     return userModel;
   }
+  
 }

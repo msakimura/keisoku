@@ -5,7 +5,7 @@ import { TunnelService, TunnelModel } from 'src/app/services/tunnel.service';
 import { AnkenService } from 'src/app/services/anken.service';
 import { FormControl, Validators } from '@angular/forms';
 import { InputMessage } from 'src/app/shared/constant.module';
-import { ValidationModule } from 'src/app/shared/validation.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tunnel-list',
@@ -32,8 +32,6 @@ export class TunnelListComponent implements OnInit {
   tunnelNameFormControl = new FormControl('', [Validators.required]);
   
 
-  tunnelImages: File[] = [];
-
   ankenName: string;
 
   hissuMessage: string = InputMessage.HISUU;
@@ -54,12 +52,19 @@ export class TunnelListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private tunnelService: TunnelService, private ankenService: AnkenService) { }
+  constructor(private router: Router, private tunnelService: TunnelService, private ankenService: AnkenService) { }
 
   ngOnInit() {
-    this.ankenName = this.ankenService.selectedAnken.ankenName;
+    if (this.ankenService.selectedAnken) {
+      this.ankenName = this.ankenService.selectedAnken.ankenName;
 
-    this.bindAllTunnelInfo();
+      this.bindAllTunnelInfo();
+    }
+    else {
+
+      this.showHome();
+    }
+    
   }
 
   /**
@@ -76,7 +81,7 @@ export class TunnelListComponent implements OnInit {
       return data.tunnelName.toLowerCase().includes(filter);
     };
 
-    this.dataSource.filter = filterValue;
+    this.dataSource.filter = filterValue.toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
@@ -174,15 +179,16 @@ export class TunnelListComponent implements OnInit {
    */
   bindAllTunnelInfo() {
     
-    if (this.ankenService.selectedAnken == null) {
-      return;
-    }
-
     this.tunnelService.getAllTunnel(this.ankenService.selectedAnken.customerId, this.ankenService.selectedAnken.ankenId)
       .subscribe((response: any) => {
 
         this.dataSource.data = this.tunnelService.convertTunnelModels(response);
 
+        this.dataSource.paginator = this.paginator;
+
+        this.dataSource.sort = this.sort;
+      },
+      error => {
         this.dataSource.paginator = this.paginator;
 
         this.dataSource.sort = this.sort;
@@ -220,13 +226,21 @@ export class TunnelListComponent implements OnInit {
 
         this.dataSource.data = data;
 
-        this.clearSideNavFormData();
+        // 選択した案件情報のトンネル数を設定し、DBを更新
+        this.ankenService.selectedAnken.tunnelNumber = this.dataSource.data.length;
 
-        this.sideNav.close();
+        this.ankenService.updateAnken(this.ankenService.selectedAnken)
+          .subscribe((response: any) => {
+            this.clearSideNavFormData();
 
+            this.sideNav.close();
+          });
+        
       },
-        error => {
-        });
+      error => {
+      });
+
+    
   }
 
 
@@ -286,12 +300,11 @@ export class TunnelListComponent implements OnInit {
       ankenId: this.ankenService.selectedAnken.ankenId,
       tunnelId: tunnelId,
       tunnelName: this.tunnelNameFormControl.value,
-      tunnelEnchou: 300,
+      tunnelEnchou: 0,
       yoteiImageNumber: 0,
       imageNumber: 0,
       aiNumber: 0,
-      createdAt: new Date(),
-      tunnelImages: []
+      createdAt: new Date()
     };
 
     return tunnelInfo;
@@ -307,24 +320,36 @@ export class TunnelListComponent implements OnInit {
    *  @return {void}
    */
   deleteTunnelInfo() {
+    var data = this.dataSource.data;
+
+    this.selection.selected.forEach(tunnel => {
+
+      data = data.filter(function (element) { return (element.customerId != tunnel.customerId || element.ankenId != tunnel.ankenId || element.tunnelId != tunnel.tunnelId); });
+    });
 
     this.selection.selected.forEach(tunnel => {
       this.tunnelService.deleteTunnel(tunnel).subscribe(
-        data => { },
+        (response:any) => {
+          // 選択した案件情報のトンネル数を設定し、DBを更新
+          this.ankenService.selectedAnken.tunnelNumber = this.dataSource.data.length;
+
+          this.ankenService.updateAnken(this.ankenService.selectedAnken)
+            .subscribe((response: any) => {
+              this.clearSideNavFormData();
+
+              this.sideNav.close();
+            });
+        },
         error => {
         });
     });
 
-    var data = this.dataSource.data;
-
-    this.selection.selected.forEach(anken => {
-
-      data = data.filter(function (element) { return (element.customerId != anken.customerId || element.ankenId != anken.ankenId); });
-    });
-
+    
     this.dataSource.data = data;
 
     this.selection.clear();
+
+    this.changeDisabled();
   }
 
 
@@ -344,8 +369,7 @@ export class TunnelListComponent implements OnInit {
     this.isEdit = false;
 
     this.isInput = false;
-
-    this.tunnelImages = [];
+    
   }
 
 
@@ -402,38 +426,6 @@ export class TunnelListComponent implements OnInit {
 
 
   /**
-   *  addTunnelImages
-   *
-   *  選択したトンネル画像：filesをtunnelImagesに追加する
-   *  
-   *  @param  {File[]}    files
-   *  
-   *  @return {void}
-   */
-  addTunnelImages(files) {
-
-    if (files.length === 0) {
-      return;
-    }
-
-    for (var i = 0; i < files.length; i++) {
-      var isImage = ValidationModule.isImage(files[i]);
-
-      if (isImage) {
-
-        var target = this.tunnelImages.find(image => {
-          return (image.name == files[i].name);
-        });
-
-        if (!target) {
-          this.tunnelImages.push(files[i]);
-        }
-      }
-    }
-  }
-
-
-  /**
    *  updateSelectedRowTunnelInfo
    *
    *  選択したレコードのeditTunnelを編集した内容で更新する
@@ -455,5 +447,31 @@ export class TunnelListComponent implements OnInit {
     target.tunnelName = editTunnel.tunnelName;
 
     return target;
+  }
+
+  /**
+   *  showHome
+   *
+   *  メインフレームに案件一覧画面を表示する
+   *  
+   *
+   *  @return {void}
+   */
+  showHome() {
+    this.router.navigate(["/gyoumu"]);
+  }
+
+  /**
+   *  setSelectedTunnel
+   *
+   *  選択したトンネル情報をtunnelServiceのselectedTunnelに設定する
+   *  
+   *
+   *  @return {void} 
+   */
+  setSelectedTunnel(row) {
+
+    this.tunnelService.selectedTunnel = row;
+
   }
 }

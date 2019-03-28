@@ -1,12 +1,12 @@
 <mat-sidenav-container>
 
-  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true">
+  <mat-sidenav #sidenavpreview mode="over" position="end" fixedInViewport="true">
 
     <div class="mat-headline">oo-001　プレビュー</div>
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+    <button mat-button (click)="closeSideNavPreview()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
     <button mat-button><mat-icon color="primary">arrow_back_ios</mat-icon>前の画像</button>
 
@@ -23,69 +23,122 @@
 
   </mat-sidenav>
 
+  <mat-sidenav #sidenavimage mode="over" position="end" fixedInViewport="true" class="tunnel_sidenav">
+
+    <div class="mat-headline">画像選択</div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button (click)="closeSideNavImage()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+    <button mat-button (click)="selectTunnelImageInfo()" [disabled]="isDeleteDisabled"><mat-icon color="primary">add_photo_alternate</mat-icon>保存</button>
+
+    <mat-divider></mat-divider>
+
+    <mat-list #images>
+      <mat-list-item *ngFor="let seikahinImage of seikahinImages">
+        {{seikahinImage.imageName}}
+        <button mat-button matSuffix mat-icon-button aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+
+
+    <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" />
+
+    <div layout="row" layout-align="start center" flex>
+      <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
+      <span flex></span>
+    </div>
+
+    <mat-divider class="image-add-divider"></mat-divider>
+
+  </mat-sidenav>
+
 
   <mat-sidenav-content>
 
-    <div class="mat-headline">XX工事 > AAトンネル</div>
+    <div class="mat-headline">{{ankenName}} > {{tunnelName}}</div>
 
     <mat-divider></mat-divider>
 
     <a routerLink="../tunnellist" mat-button><mat-icon color="primary">arrow_back</mat-icon>戻る</a>
 
-    <button mat-button (click)="uploadFile()"><mat-icon color="primary">cloud_upload</mat-icon>アップロード</button>
+    <button mat-button (click)="displaySideNavImage()"><mat-icon color="primary">add</mat-icon>追加</button>
+
+    <button mat-button (click)="deleteTunnelImageInfo()" [disabled]="isDeleteDisabled"><mat-icon color="{{deleteIconColor}}">delete_forever</mat-icon>削除</button>
+
+    <button mat-button (click)="uploadTunnelImageInfo()"><mat-icon color="primary">cloud_upload</mat-icon>アップロード</button>
 
     <button mat-button (click)="downloadFile()"><mat-icon color="primary">cloud_download</mat-icon>ダウンロード</button>
 
-    <button mat-button><mat-icon color="primary">assignment_returned</mat-icon>Excel台帳ダウンロード</button>
+    <button mat-button><mat-icon color="primary">receipt</mat-icon>台帳</button>
 
-    <button mat-button><mat-icon color="primary">picture_as_pdf</mat-icon>印刷用PDFダウンロード</button>
+    <button mat-button><mat-icon color="primary">print</mat-icon>印刷</button>
 
     <button mat-button><mat-icon color="primary">view_list</mat-icon>サマリー</button>
 
     <mat-divider></mat-divider>
 
     <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="画像名でフィルタ">
+      <input matInput (keyup)="applyFilterImageName($event.target.value)" placeholder="画像名でフィルタ">
     </mat-form-field>
 
 
     <div class="mat-elevation-z8">
-      <mat-table [dataSource]="dataSource">
+      <mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selectToggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
 
         <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef> 画像名 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 画像名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button mat-button (click)="sidenav.toggle()" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.name}}</button>
+            <button mat-button (click)="sidenav.toggle()" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.seikahinImage.imageName}}</button>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="width">
           <mat-header-cell *matHeaderCellDef> 横幅 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.width}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.seikahinImage.width}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="height">
           <mat-header-cell *matHeaderCellDef> 縦幅 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.height}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.seikahinImage.height}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="hibiChushutsu">
-          <mat-header-cell *matHeaderCellDef> ひび抽出 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.hibiChushutsu}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ひび抽出 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.seikahinImage.hibiChushutsu}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="sonshou">
-          <mat-header-cell *matHeaderCellDef> 損傷 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.sonshou}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 損傷 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.seikahinImage.sonshou}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="hibiBunrui">
-          <mat-header-cell *matHeaderCellDef> ひび分類 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.hibiBunrui}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ひび分類 </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.seikahinImage.hibiBunrui}} </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                 (click)="selectToggle(row)">
         </mat-row>
       </mat-table>
 

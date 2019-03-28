@@ -11,8 +11,6 @@ export interface TunnelModel {
   imageNumber: number;
   aiNumber: number;
   createdAt: Date;
-
-  tunnelImages: File[];
 }
 
 
@@ -22,6 +20,8 @@ export interface TunnelModel {
 export class TunnelService {
 
   public tunnelModel: TunnelModel[] = new Array();
+
+  public selectedTunnel: TunnelModel;
 
   private routeUrl: string = 'api/tunnel';
 
@@ -112,12 +112,12 @@ export class TunnelService {
   /**
    *  convertTunnelModel
    *
-   *  DBから取得したtunnelを案件モデルに変換する
+   *  DBから取得したtunnelをトンネルモデルに変換する
    *  
    *
    *  @param  {object}    tunnel
    *
-   *  @return {TunnelModel} 案件モデル
+   *  @return {TunnelModel} トンネルモデル
    */
   convertTunnelModel(tunnel): TunnelModel {
 
@@ -130,8 +130,7 @@ export class TunnelService {
       yoteiImageNumber: tunnel.yoteiImageNumber,
       imageNumber: tunnel.imageNumber,
       aiNumber: tunnel.aiNumber,
-      createdAt: tunnel.createdAt,
-      tunnelImages:[]
+      createdAt: tunnel.createdAt
     };
 
 

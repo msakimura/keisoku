@@ -34,3 +34,7 @@ export class Kengen {
   public static readonly UPLOAD = 'アップロード';
   public static readonly DOWNLOAD = 'ダウンロード';
 }
+
+export class Chushutsu {
+  public static readonly NONE = '未';
+}

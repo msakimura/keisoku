@@ -17,7 +17,8 @@ import {
   MatPaginatorModule,
   MatGridListModule,
   MatListModule,
-  MatMenuModule
+  MatMenuModule,
+  MatProgressBarModule
 } from "@angular/material";
 
 import { MatSortModule } from '@angular/material/sort';
@@ -41,7 +42,8 @@ const MAT_MODULES = [
   MatGridListModule,
   MatListModule,
   MatMenuModule,
-  MatSortModule
+  MatSortModule,
+  MatProgressBarModule
 ];
 
 @NgModule({

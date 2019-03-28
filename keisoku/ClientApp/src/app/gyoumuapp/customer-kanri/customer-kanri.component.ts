@@ -109,6 +109,6 @@ export class CustomerKanriComponent implements OnInit {
     this.dataSource.data = data;
 
     this.selection.clear();
-
+    
   }
 }

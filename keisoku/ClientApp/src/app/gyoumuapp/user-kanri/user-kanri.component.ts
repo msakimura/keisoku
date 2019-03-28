@@ -115,7 +115,7 @@ export class UserKanriComponent implements OnInit {
       return data.customerName.toLowerCase().includes(filter);
     };
 
-    this.dataSource.filter = filterValue;
+    this.dataSource.filter = filterValue.toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
@@ -136,7 +136,7 @@ export class UserKanriComponent implements OnInit {
       return data.userName.toLowerCase().includes(filter);
     };
 
-    this.dataSource.filter = filterValue;
+    this.dataSource.filter = filterValue.toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
@@ -236,6 +236,11 @@ export class UserKanriComponent implements OnInit {
 
         this.dataSource.data = this.userService.convertUserModels(response);
         
+        this.dataSource.paginator = this.paginator;
+
+        this.dataSource.sort = this.sort;
+      },
+      error => {
         this.dataSource.paginator = this.paginator;
 
         this.dataSource.sort = this.sort;
@@ -386,6 +391,8 @@ export class UserKanriComponent implements OnInit {
     this.dataSource.data = data;
     
     this.selection.clear();
+
+    this.changeDisabled();
   }
 
   /**

@@ -6,7 +6,6 @@ import { AnkenModel, AnkenService } from 'src/app/services/anken.service';
 import { InputMessage } from 'src/app/shared/constant.module';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-anken-list',
@@ -50,7 +49,7 @@ export class AnkenListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private router: Router, private ankenService: AnkenService, private userService: UserService, private authenticationService: AuthenticationService) { }
+  constructor(private ankenService: AnkenService, private userService: UserService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.bindAllAnkenInfoLoginUser();
@@ -71,7 +70,7 @@ export class AnkenListComponent implements OnInit {
       return data.ankenName.toLowerCase().includes(filter);
     };
 
-    this.dataSource.filter = filterValue;
+    this.dataSource.filter = filterValue.toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
@@ -206,6 +205,11 @@ export class AnkenListComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
 
         this.dataSource.sort = this.sort;
+      },
+      error => {
+        this.dataSource.paginator = this.paginator;
+
+        this.dataSource.sort = this.sort;
       });
   }
 
@@ -315,6 +319,8 @@ export class AnkenListComponent implements OnInit {
     this.dataSource.data = data;
 
     this.selection.clear();
+
+    this.changeDisabled();
   }
 
   /**

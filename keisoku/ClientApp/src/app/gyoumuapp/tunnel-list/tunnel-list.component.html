@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="mat-elevation-z8">
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="tunnel_sidenav">
 
@@ -45,7 +45,7 @@
     </mat-form-field>
 
 
-    <div class="mat-elevation-z8">
+    <div>
       <mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="select">
@@ -66,32 +66,32 @@
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <a routerLink="../tunnel" (click)="setSelectedTunnel(element)" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.tunnelName}}</a>
+            <a routerLink="../tunnel" (click)="setSelectedTunnel(element)" mat-button class="name-mat-button" color="primary"><mat-icon color="primary">launch</mat-icon>{{element.tunnelName}}</a>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="enchou">
-          <mat-header-cell *matHeaderCellDef> トンネル延長 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル延長 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.tunnelEnchou}}ｍ </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="yoteiImageNum">
-          <mat-header-cell *matHeaderCellDef> 予定画像数 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 予定画像数 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.yoteiImageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="image">
-          <mat-header-cell *matHeaderCellDef> 画像 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 画像 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.imageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="ai">
-          <mat-header-cell *matHeaderCellDef> AI済 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> AI済 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.aiNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
-          <mat-header-cell *matHeaderCellDef> 作成日 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 作成日 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.createdAt | date:"yyyy/MM/dd"}} </mat-cell>
         </ng-container>
 

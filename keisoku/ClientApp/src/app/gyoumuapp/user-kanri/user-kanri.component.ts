@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { UserService, UserModel, KengenFuyoModel } from 'src/app/services/user.service';
 import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -14,7 +14,7 @@ import { InputMessage, PasswordMessage, Kengen } from '../../shared/constant.mod
   styleUrls: ['./user-kanri.component.css']
 })
 
-export class UserKanriComponent implements OnInit {
+export class UserKanriComponent implements OnInit  {
   isInput: boolean = false;
 
   isDuplicateUserName: boolean = false;
@@ -93,6 +93,56 @@ export class UserKanriComponent implements OnInit {
 
   ngOnInit() {
 
+    const sortingDataAccessor = (data: UserModel, sortHeaderId: string): string | number => {
+      if (sortHeaderId === this.displayedColumns[1]) {
+        return data.customerName;
+      }
+      else if (sortHeaderId === this.displayedColumns[2]) {
+        return data.userName;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[3]) {
+        return data.email;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[4]) {
+        return data.loginId;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[5]) {
+        return data.kanri;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[6]) {
+        return data.anken;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[7]) {
+        return data.tunnel;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[8]) {
+        return data.upload;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[9]) {
+        return data.download;
+
+      }
+
+
+      return '';
+    };
+
+
+
+    this.dataSource.paginator = this.paginator;
+
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
+
+    this.dataSource.sort = this.sort;
+
+
     this.bindAllCustomerInfo();
 
     this.bindAllKengenInfo();
@@ -100,6 +150,7 @@ export class UserKanriComponent implements OnInit {
     this.bindAllUserInfo();
 
   }
+  
 
   /**
    *  applyFilterCustomerName
@@ -236,14 +287,8 @@ export class UserKanriComponent implements OnInit {
 
         this.dataSource.data = this.userService.convertUserModels(response);
         
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
       },
       error => {
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
       });
   }
 

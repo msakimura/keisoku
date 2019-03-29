@@ -47,7 +47,7 @@
     </mat-form-field>
 
 
-    <div class="mat-elevation-z8">
+    <div>
       <mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="select">
@@ -68,27 +68,27 @@
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 案件名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <a routerLink="./tunnellist" (click)="setSelectedAnken(element)" mat-button color="primary"><mat-icon color="primary">launch</mat-icon>{{element.ankenName}}</a>
+            <a routerLink="./tunnellist" (click)="setSelectedAnken(element)" mat-button class="name-mat-button" color="primary"><mat-icon color="primary">launch</mat-icon>{{element.ankenName}}</a>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="tunnel">
-          <mat-header-cell *matHeaderCellDef> トンネル数 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル数 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.tunnelNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="image">
-          <mat-header-cell *matHeaderCellDef> 画像済 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 画像済 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.imageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="cad">
-          <mat-header-cell *matHeaderCellDef> CAD </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> CAD </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.cadNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
-          <mat-header-cell *matHeaderCellDef> 作成日 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 作成日 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.createdAt | date:"yyyy/MM/dd"}} </mat-cell>
         </ng-container>
 

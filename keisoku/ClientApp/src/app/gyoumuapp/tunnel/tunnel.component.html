@@ -1,59 +1,64 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="mat-elevation-z8">
 
-  <mat-sidenav #sidenavpreview mode="over" position="end" fixedInViewport="true">
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true">
 
-    <div class="mat-headline">oo-001　プレビュー</div>
+    <div *ngIf="isSideNavPreview">
 
-    <mat-divider></mat-divider>
+      <div class="mat-headline">oo-001　プレビュー</div>
 
-    <button mat-button (click)="closeSideNavPreview()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+      <mat-divider></mat-divider>
 
-    <button mat-button><mat-icon color="primary">arrow_back_ios</mat-icon>前の画像</button>
+      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button mat-button><mat-icon color="primary">arrow_forward_ios</mat-icon>次の画像</button>
+      <button mat-button><mat-icon color="primary">arrow_back_ios</mat-icon>前の画像</button>
 
-    <mat-divider></mat-divider>
+      <button mat-button><mat-icon color="primary">arrow_forward_ios</mat-icon>次の画像</button>
 
-    <div fxFlexFill>
-      <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-001.jpg">
-      <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-002.jpg">
-      <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-003.jpg">
-      <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-004.jpg">
+      <mat-divider></mat-divider>
+
+      <div fxFlexFill>
+        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-001.jpg">
+        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-002.jpg">
+        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-003.jpg">
+        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-004.jpg">
+      </div>
+
     </div>
 
-  </mat-sidenav>
+    <div *ngIf="isSideNavImage" class="image_sidenav">
 
-  <mat-sidenav #sidenavimage mode="over" position="end" fixedInViewport="true" class="tunnel_sidenav">
+      <div class="mat-headline">画像選択</div>
 
-    <div class="mat-headline">画像選択</div>
+      <mat-divider></mat-divider>
 
-    <mat-divider></mat-divider>
+      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button mat-button (click)="closeSideNavImage()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+      <button mat-button (click)="addDatasourceTunnelImage()" [disabled]="isSaveDisabled"><mat-icon color="primary">add_photo_alternate</mat-icon>保存</button>
 
-    <button mat-button (click)="selectTunnelImageInfo()" [disabled]="isDeleteDisabled"><mat-icon color="primary">add_photo_alternate</mat-icon>保存</button>
+      <mat-divider></mat-divider>
 
-    <mat-divider></mat-divider>
+      <mat-progress-bar *ngIf="isImageProgress" mode="buffer"></mat-progress-bar>
 
-    <mat-list #images>
-      <mat-list-item *ngFor="let seikahinImage of seikahinImages">
-        {{seikahinImage.imageName}}
-        <button mat-button matSuffix mat-icon-button aria-label="Clear">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-list-item>
-    </mat-list>
+      <mat-list #images>
+        <mat-list-item *ngFor="let seikahinImage of seikahinImages">
+          {{seikahinImage.imageName}}
+          <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="deleteSelectedTunnelImage(seikahinImage)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
 
 
-    <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" />
+      <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" (click)="clearFileValue(file)"/>
 
-    <div layout="row" layout-align="start center" flex>
-      <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
-      <span flex></span>
+      <div layout="row" layout-align="start center" flex>
+        <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
+        <span flex></span>
+      </div>
+
+      <mat-divider class="image-add-divider"></mat-divider>
+
     </div>
-
-    <mat-divider class="image-add-divider"></mat-divider>
-
   </mat-sidenav>
 
 
@@ -86,7 +91,7 @@
     </mat-form-field>
 
 
-    <div class="mat-elevation-z8">
+    <div>
       <mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="select">
@@ -107,17 +112,17 @@
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 画像名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button mat-button (click)="sidenav.toggle()" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.seikahinImage.imageName}}</button>
+            <button mat-button class="name-mat-button" (click)="displaySideNavPreview()" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.seikahinImage.imageName}}</button>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="width">
-          <mat-header-cell *matHeaderCellDef> 横幅 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 横幅 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.seikahinImage.width}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="height">
-          <mat-header-cell *matHeaderCellDef> 縦幅 </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> 縦幅 </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.seikahinImage.height}} </mat-cell>
         </ng-container>
 

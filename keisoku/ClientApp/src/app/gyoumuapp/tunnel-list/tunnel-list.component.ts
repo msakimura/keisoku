@@ -55,6 +55,37 @@ export class TunnelListComponent implements OnInit {
   constructor(private router: Router, private tunnelService: TunnelService, private ankenService: AnkenService) { }
 
   ngOnInit() {
+
+    const sortingDataAccessor = (data: TunnelModel, sortHeaderId: string): string | number => {
+      if (sortHeaderId === this.displayedColumns[1]) {
+        return data.tunnelName;
+      }
+      else if (sortHeaderId === this.displayedColumns[2]) {
+        return data.tunnelEnchou;
+      }
+      else if (sortHeaderId === this.displayedColumns[3]) {
+        return data.yoteiImageNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[4]) {
+        return data.imageNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[5]) {
+        return data.aiNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[6]) {
+        return data.createdAt.toString();
+      }
+
+      return '';
+    };
+
+    this.dataSource.paginator = this.paginator;
+
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
+
+    this.dataSource.sort = this.sort;
+
+
     if (this.ankenService.selectedAnken) {
       this.ankenName = this.ankenService.selectedAnken.ankenName;
 
@@ -183,15 +214,9 @@ export class TunnelListComponent implements OnInit {
       .subscribe((response: any) => {
 
         this.dataSource.data = this.tunnelService.convertTunnelModels(response);
-
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
+        
       },
       error => {
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
       });
   }
 

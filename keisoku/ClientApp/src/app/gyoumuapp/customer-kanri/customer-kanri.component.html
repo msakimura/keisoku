@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="mat-elevation-z8">
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="customer_sidenav">
 
@@ -39,7 +39,7 @@
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="顧客名でフィルタ">
     </mat-form-field>
 
-    <div class="mat-elevation-z8">
+    <div>
       <mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="select">

@@ -2,39 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
-import { Observable } from 'rxjs';
 import { TunnelImageModel, TunnelImageService, SeikahinImageModel } from 'src/app/services/tunnel-image.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AnkenService } from 'src/app/services/anken.service';
 import { Router } from '@angular/router';
 import { ValidationModule } from 'src/app/shared/validation.module';
 import { Chushutsu } from 'src/app/shared/constant.module';
-
-export function readAsBase64(file): Observable<string> {
-  return Observable.create((observable) => {
-    const fileReader = new FileReader;
-
-    fileReader.onload = (() => {
-
-      var buffer = fileReader.result as ArrayBuffer;
-
-      var binary = '';
-      var bytes = new Uint8Array(buffer);
-      var len = bytes.byteLength;
-      for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-
-
-      var value = window.btoa(binary);
-
-      observable.next(value);
-      observable.complete();
-    });
-
-    fileReader.readAsArrayBuffer(file);
-  });
-}
 
 
 @Component({
@@ -44,11 +17,18 @@ export function readAsBase64(file): Observable<string> {
 })
 export class TunnelComponent implements OnInit {
 
+  isSideNavImage: boolean = false;
+
+  isSideNavPreview: boolean = false;
+
   isDeleteDisabled: boolean = true;
 
   deleteIconColor = 'diabled';
 
   isSaveDisabled: boolean = true;
+
+  isImageProgress: boolean = false;
+
 
   ankenName: string;
 
@@ -56,6 +36,9 @@ export class TunnelComponent implements OnInit {
   
   seikahinImages: SeikahinImageModel[] = [];
 
+  selectedImageNumber: number;
+
+  readImageNumber: number;
 
 
   displayedColumns: string[] = ['select', 'name', 'width', 'height', 'hibiChushutsu', 'sonshou', 'hibiBunrui'];
@@ -66,17 +49,54 @@ export class TunnelComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  @ViewChild('sidenavpreview') public sideNavPreview: MatSidenav;
-
-  @ViewChild('sidenavimage') public sideNavImage: MatSidenav;
+  @ViewChild('sidenav') public sideNav: MatSidenav;
 
   @ViewChild(MatSort) sort: MatSort;
 
 
-
+  
   constructor(private router: Router, private http: HttpClient, private ankenService: AnkenService, private tunnelService: TunnelService, private tunnelImageService: TunnelImageService) { }
 
   ngOnInit() {
+
+    const sortingDataAccessor = (data: TunnelImageModel, sortHeaderId: string): string | number => {
+      if (sortHeaderId === this.displayedColumns[1]) {
+        return data.seikahinImage.imageName;
+      }
+      else if (sortHeaderId === this.displayedColumns[2]) {
+        return data.seikahinImage.width;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[3]) {
+        return data.seikahinImage.height;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[4]) {
+        return data.seikahinImage.hibiChushutsu;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[5]) {
+        return data.seikahinImage.sonshou;
+
+      }
+      else if (sortHeaderId === this.displayedColumns[6]) {
+        return data.seikahinImage.hibiBunrui;
+
+      }
+
+      // Ignore other headers
+      return '';
+    };
+
+
+
+    this.dataSource.paginator = this.paginator;
+
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
+
+    this.dataSource.sort = this.sort;
+
+
     if (this.ankenService.selectedAnken && this.tunnelService.selectedTunnel) {
 
       this.ankenName = this.ankenService.selectedAnken.ankenName;
@@ -90,7 +110,7 @@ export class TunnelComponent implements OnInit {
       this.showHome();
     }
   }
-
+  
 
   /**
    *  applyFilterImageName
@@ -154,9 +174,13 @@ export class TunnelComponent implements OnInit {
    *  @return {boid}
    */
   selectToggle(row) {
+
+    if (this.sideNav.opened) return;
+
     this.selection.toggle(row);
 
     this.changeDisabled();
+    
   }
 
   /**
@@ -198,34 +222,31 @@ export class TunnelComponent implements OnInit {
       .subscribe((response: any) => {
 
         this.dataSource.data = this.tunnelImageService.convertTunnelImageModels(response);
-
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
+        
       },
       error => {
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
+        
       });
   }
 
 
   /**
-   *  selectTunnelImageInfo
+   *  addDatasourceTunnelImage
    *
-   *  選択したトンネル画像をdatasourceに追加する
+   *  トンネル画像をdatasourceに追加する
    *  
    *
    *  @return {void}
    */
-  selectTunnelImageInfo() {
+  addDatasourceTunnelImage() {
 
     var tunnelImages = this.getSelectedTunnelImageModels();
 
     this.dataSource.data = tunnelImages;
 
-    this.closeSideNavImage();
+    this.closeSideNav();
+
+    this.selection.clear();
   }
 
 
@@ -266,26 +287,16 @@ export class TunnelComponent implements OnInit {
     
     this.tunnelImageService.insertTunnelImages(this.dataSource.data);
   }
+  
 
-  uploadFile()
-  {
-    
-    //for (var i = 0; i < this.tunnelService.tunnelModel.length; i++)
-    //{
-    //  var fileReader = readAsBase64(this.tunnelService.tunnelModel[i].fileData);
-
-    //  fileReader.subscribe((data: string) => {
-
-    //    var model: UploadModel = { fileName: this.tunnelService.tunnelModel[0].fileName, fileData: data };
-
-    //    this.http.post('api/upload', model).subscribe(result => { console.log("アップロード完了") });
-    //  });
-    //}
-    
-  }
-
-
-
+  /**
+   *  downloadFile
+   *
+   *  
+   *  
+   *
+   *  @return {void}
+   */
   async downloadFile() {
     var filename: string = "DWG.dwg";
 
@@ -316,28 +327,16 @@ export class TunnelComponent implements OnInit {
 
 
   /**
-   *  closeSideNavPreview
+   *  closeSideNav
    *
-   *  プレビューのサイドナビを閉じる
+   *  サイドナビを閉じる
    *  
    *
    *  @return {void}
    */
-  closeSideNavPreview() {
-    this.sideNavPreview.close();
+  closeSideNav() {
 
-  }
-
-  /**
-   *  closeSideNavImage
-   *
-   *  画像選択のサイドナビを閉じる
-   *  
-   *
-   *  @return {void}
-   */
-  closeSideNavImage() {
-    this.sideNavImage.close();
+    this.sideNav.close();
 
   }
 
@@ -345,29 +344,61 @@ export class TunnelComponent implements OnInit {
   /**
    *  displaySideNavImage
    *
-   *  画像選択のサイドナビを表示する
+   *  画像追加のサイドナビを表示する
    *  
    *
    *  @return {void}
    */
   displaySideNavImage() {
-    this.clearSideNavImageFormData();
 
-    this.sideNavImage.open();
+    this.clearSideNavFormData();
+
+    this.addSeikahinImagesFromDataSource();
+
+    this.isSideNavImage = true;
+
+    this.sideNav.open();
   }
 
 
+
   /**
-   *  clearSideNavImageFormData
+   *  displaySideNavPreview
    *
-   *  sideNavImageのフォームデータをクリアする
+   *  プレビューのサイドナビを表示する
    *  
    *
    *  @return {void}
    */
-  clearSideNavImageFormData() {
+  displaySideNavPreview() {
+
+    this.clearSideNavFormData();
+
+    this.isSideNavPreview = true;
+
+    this.sideNav.open();
+    
+  }
+
+
+  /**
+   *  clearSideNavFormData
+   *
+   *  sideNavのフォームデータをクリアする
+   *  
+   *
+   *  @return {void}
+   */
+  clearSideNavFormData() {
+
+    this.isSaveDisabled = true;
 
     this.seikahinImages = [];
+
+    this.isSideNavImage = false;
+
+    this.isSideNavPreview = false;
+
   }
 
 
@@ -380,29 +411,45 @@ export class TunnelComponent implements OnInit {
    *  
    *  @return {void}
    */
-  async addTunnelImages(files) {
-
+   addTunnelImages(files) {
+    
     if (files.length === 0) {
       return;
     }
-    
+
+    var targetFiles: File[] = [];
+
     for (var i = 0; i < files.length; i++) {
       var isImage = ValidationModule.isImage(files[i]);
 
-      if (isImage) {
+      if (!isImage) continue;
 
-        var target = this.seikahinImages.find(seikahinImage => {
-          return (seikahinImage.imageName == files[i].name);
-        });
+      var target = this.seikahinImages.find(seikahinImage => {
+        return (seikahinImage.imageName === files[i].name);
+      });
 
-        if (!target) {
+      if (!target) {
 
-          
-          await this.addSeikahinImageModel(files[i], i == files.length-1);
-
-        }
+        targetFiles.push(files[i]);
       }
     }
+
+    if (targetFiles.length === 0) {
+      return;
+    }
+
+    this.isImageProgress = true;
+
+    this.selectedImageNumber = targetFiles.length;
+
+    this.readImageNumber = 0;
+
+    targetFiles.forEach(async file => {
+
+      await this.addSeikahinImageModel(file);
+
+    });
+    
   }
 
 
@@ -415,36 +462,34 @@ export class TunnelComponent implements OnInit {
    *  
    *  @return {void}
    */
-  async addSeikahinImageModel(file: File, isLastFile: boolean) {
+  async addSeikahinImageModel(file: File) {
 
     const reader = new FileReader();
 
     reader.onload = () => {
 
-      const img = new Image();
+      const url = reader.result as string;
 
-      img.onload = () => {
+      var base64 = url.substr(url.indexOf(',') + 1);
 
-        var url = img.src.substr(img.src.indexOf(',') + 1);
-
-        var seikahinImageModel: SeikahinImageModel = {
-          seikahinImageId: 0,
-          imageName: file.name,
-          imageData: url,
-          width: img.width,
-          height: img.height,
-          hibiChushutsu: Chushutsu.NONE,
-          sonshou: Chushutsu.NONE,
-          hibiBunrui: Chushutsu.NONE
-        };
-
-        this.seikahinImages.push(seikahinImageModel);
-
-        this.isSaveDisabled = isLastFile;
+      var seikahinImageModel: SeikahinImageModel = {
+        seikahinImageId: 0,
+        imageName: file.name,
+        imageData: base64,
+        width: 0,
+        height: 0,
+        hibiChushutsu: Chushutsu.NONE,
+        sonshou: Chushutsu.NONE,
+        hibiBunrui: Chushutsu.NONE
       };
 
-      img.src = reader.result as string;
+      this.seikahinImages.push(seikahinImageModel);
 
+      this.readImageNumber++;
+
+      this.progressbarReadImage();
+
+      
     };
 
     reader.readAsDataURL(file);
@@ -482,9 +527,81 @@ export class TunnelComponent implements OnInit {
       tunnelImageModels.push(tunnelImageModel);
 
     });
-
     
-
     return tunnelImageModels;
+  }
+
+  /**
+   *  progressbarReadImage
+   *
+   *  トンネル画像読み込み中のプログレスバーを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  progressbarReadImage() {
+    if (this.readImageNumber === this.selectedImageNumber) {
+
+      this.isImageProgress = false;
+
+      this.isSaveDisabled = false;
+    }
+    else {
+
+      this.isImageProgress = true;
+
+      this.isSaveDisabled = true;
+    }
+  }
+
+  /**
+   *  deleteSelectedTunnelImage
+   *
+   *  選択したトンネル画像を削除する
+   *  
+   *  @param  {SeikahinImageModel}    selectedImage
+   *  
+   *  @return {void}
+   */
+  deleteSelectedTunnelImage(selectedImage: SeikahinImageModel) {
+    var targetIdx = this.seikahinImages.findIndex(seikahinImage => {
+      return (seikahinImage.imageName === selectedImage.imageName);
+    });
+
+    if (targetIdx !== -1) {
+      this.seikahinImages.splice(targetIdx, 1);
+    }
+
+    if (this.seikahinImages.length === 0) {
+      this.isSaveDisabled = true;
+    }
+  }
+
+
+  /**
+   *  addSeikahinImagesFromDataSource
+   *
+   *  dataSourceに格納されている成果品画像情報をseikahinImagesに追加する
+   *  
+   *  
+   *  @return {void}
+   */
+  addSeikahinImagesFromDataSource() {
+    this.dataSource.data.forEach(data => {
+      this.seikahinImages.push(data.seikahinImage);
+    });
+  }
+
+
+  /**
+   *  clearFileValue
+   *
+   *  ファイル選択ダイアログのファイルパスをクリアする
+   *  
+   *  
+   *  @return {void}
+   */
+  clearFileValue(e) {
+    e.value = '';
   }
 }

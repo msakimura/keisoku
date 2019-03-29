@@ -15,11 +15,15 @@
   left: -9999px;
 }
 
-.tunnel_sidenav {
+.image_sidenav {
   width: 300px;
 }
 
 .image-mat-button {
   padding: 0 0;
   color: grey;
+}
+
+.name-mat-button {
+  padding: 0 0;
 }

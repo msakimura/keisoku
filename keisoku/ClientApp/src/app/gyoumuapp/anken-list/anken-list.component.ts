@@ -52,6 +52,33 @@ export class AnkenListComponent implements OnInit {
   constructor(private ankenService: AnkenService, private userService: UserService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+    const sortingDataAccessor = (data: AnkenModel, sortHeaderId: string): string | number => {
+      if (sortHeaderId === this.displayedColumns[1]) {
+        return data.ankenName;
+      }
+      else if (sortHeaderId === this.displayedColumns[2]) {
+        return data.tunnelNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[3]) {
+        return data.imageNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[4]) {
+        return data.cadNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[5]) {
+        return data.createdAt.toString();
+      }
+
+      return '';
+    };
+
+    this.dataSource.paginator = this.paginator;
+
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
+
+    this.dataSource.sort = this.sort;
+
+
     this.bindAllAnkenInfoLoginUser();
   }
 
@@ -201,15 +228,11 @@ export class AnkenListComponent implements OnInit {
       .subscribe((response: any) => {
 
         this.dataSource.data = this.ankenService.convertAnkenModels(response);
-
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
+        
       },
       error => {
         this.dataSource.paginator = this.paginator;
-
-        this.dataSource.sort = this.sort;
+        
       });
   }
 

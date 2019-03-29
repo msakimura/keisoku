@@ -9,7 +9,6 @@ export interface TunnelImageModel {
   seikahinImageId: number;
 
   seikahinImage: SeikahinImageModel;
-  
 }
 
 export interface SeikahinImageModel {

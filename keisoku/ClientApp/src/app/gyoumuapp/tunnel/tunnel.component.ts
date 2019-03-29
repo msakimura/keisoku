@@ -36,9 +36,25 @@ export class TunnelComponent implements OnInit {
   
   seikahinImages: SeikahinImageModel[] = [];
 
+  previewImages: SeikahinImageModel[] = [];
+
   selectedImageNumber: number;
 
   readImageNumber: number;
+
+  previewImageName: string;
+
+
+  previewSrc1: string;
+
+  previewSrc2: string;
+
+  previewSrc3: string;
+
+  previewSrc4: string;
+
+  previewSrc5: string;
+
 
 
   displayedColumns: string[] = ['select', 'name', 'width', 'height', 'hibiChushutsu', 'sonshou', 'hibiBunrui'];
@@ -240,6 +256,14 @@ export class TunnelComponent implements OnInit {
    */
   addDatasourceTunnelImage() {
 
+    this.seikahinImages.sort(function (a, b) {
+
+      if (a.imageName < b.imageName) return -1;
+      if (a.imageName > b.imageName) return 1;
+
+      return 0;
+    });
+
     var tunnelImages = this.getSelectedTunnelImageModels();
 
     this.dataSource.data = tunnelImages;
@@ -350,12 +374,15 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   displaySideNavImage() {
+    this.isSaveDisabled = true;
+
+    this.isSideNavImage = true;
+
+    this.isSideNavPreview = false;
 
     this.clearSideNavFormData();
 
     this.addSeikahinImagesFromDataSource();
-
-    this.isSideNavImage = true;
 
     this.sideNav.open();
   }
@@ -365,16 +392,39 @@ export class TunnelComponent implements OnInit {
   /**
    *  displaySideNavPreview
    *
-   *  プレビューのサイドナビを表示する
+   *  選択したrow(画像名)について、プレビューのサイドナビを表示する
    *  
-   *
+   *  @param  {object}    row
+   *  
    *  @return {void}
    */
-  displaySideNavPreview() {
-
-    this.clearSideNavFormData();
+  displaySideNavPreview(row) {
+    this.isSideNavImage = false;
 
     this.isSideNavPreview = true;
+
+    this.previewImageName = row.seikahinImage.imageName;
+
+    var targetIdx = this.seikahinImages.findIndex(seikahinImage => {
+      return (seikahinImage.imageName === this.previewImageName);
+    });
+
+
+    if (targetIdx >= 0) {
+
+      this.previewSrc1 = this.seikahinImages[targetIdx].imageUrl;
+
+      this.previewSrc2 = targetIdx + 1 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 1].imageUrl;
+
+      this.previewSrc3 = targetIdx + 2 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 2].imageUrl;
+
+      this.previewSrc4 = targetIdx + 3 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 3].imageUrl;
+
+      this.previewSrc5 = targetIdx + 4 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 4].imageUrl;
+
+    }
+    
+
 
     this.sideNav.open();
     
@@ -390,15 +440,9 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   clearSideNavFormData() {
-
-    this.isSaveDisabled = true;
-
+    
     this.seikahinImages = [];
-
-    this.isSideNavImage = false;
-
-    this.isSideNavPreview = false;
-
+    
   }
 
 
@@ -480,7 +524,8 @@ export class TunnelComponent implements OnInit {
         height: 0,
         hibiChushutsu: Chushutsu.NONE,
         sonshou: Chushutsu.NONE,
-        hibiBunrui: Chushutsu.NONE
+        hibiBunrui: Chushutsu.NONE,
+        imageUrl:url
       };
 
       this.seikahinImages.push(seikahinImageModel);

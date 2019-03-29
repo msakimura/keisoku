@@ -38,3 +38,4 @@ export class Kengen {
 export class Chushutsu {
   public static readonly NONE = '未';
 }
+

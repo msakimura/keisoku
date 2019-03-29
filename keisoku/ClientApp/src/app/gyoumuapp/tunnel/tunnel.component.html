@@ -4,7 +4,7 @@
 
     <div *ngIf="isSideNavPreview">
 
-      <div class="mat-headline">oo-001　プレビュー</div>
+      <div class="mat-headline">{{previewImageName}}　プレビュー</div>
 
       <mat-divider></mat-divider>
 
@@ -17,10 +17,11 @@
       <mat-divider></mat-divider>
 
       <div fxFlexFill>
-        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-001.jpg">
-        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-002.jpg">
-        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-003.jpg">
-        <img mat-card-image src="https://keisokuaccount.blob.core.windows.net/tunnel/二尾U-004.jpg">
+        <img mat-card-image [src]="previewSrc1" height="200" *ngIf="previewSrc1">
+        <img mat-card-image [src]="previewSrc2" height="200" *ngIf="previewSrc2">
+        <img mat-card-image [src]="previewSrc3" height="200" *ngIf="previewSrc3">
+        <img mat-card-image [src]="previewSrc4" height="200" *ngIf="previewSrc4">
+        <img mat-card-image [src]="previewSrc5" height="200" *ngIf="previewSrc5">
       </div>
 
     </div>
@@ -112,7 +113,7 @@
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 画像名 </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button mat-button class="name-mat-button" (click)="displaySideNavPreview()" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.seikahinImage.imageName}}</button>
+            <button mat-button class="name-mat-button" (click)="displaySideNavPreview(element)" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.seikahinImage.imageName}}</button>
           </mat-cell>
         </ng-container>
 

@@ -20,6 +20,8 @@ export interface SeikahinImageModel {
   hibiChushutsu: string;
   sonshou: string;
   hibiBunrui: string;
+
+  imageUrl:string
 }
 
 @Injectable({

@@ -231,7 +231,6 @@ export class AnkenListComponent implements OnInit {
         
       },
       error => {
-        this.dataSource.paginator = this.paginator;
         
       });
   }
@@ -454,7 +453,7 @@ export class AnkenListComponent implements OnInit {
     var data = this.dataSource.data;
 
     var target = data.find(anken => {
-      return (anken.customerId == editAnken.customerId && anken.ankenId == editAnken.ankenId);
+      return (anken.customerId === editAnken.customerId && anken.ankenId === editAnken.ankenId);
     });
 
     if (target == null) return null;

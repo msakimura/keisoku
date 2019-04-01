@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
@@ -71,7 +71,7 @@ export class TunnelComponent implements OnInit {
 
 
   
-  constructor(private router: Router, private http: HttpClient, private ankenService: AnkenService, private tunnelService: TunnelService, private tunnelImageService: TunnelImageService) { }
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private http: HttpClient, private ankenService: AnkenService, private tunnelService: TunnelService, private tunnelImageService: TunnelImageService) { }
 
   ngOnInit() {
 
@@ -648,5 +648,10 @@ export class TunnelComponent implements OnInit {
    */
   clearFileValue(e) {
     e.value = '';
+  }
+
+  onImageLoad(e) {
+    var a = e;
+    
   }
 }

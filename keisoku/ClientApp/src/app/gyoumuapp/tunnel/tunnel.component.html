@@ -17,11 +17,11 @@
       <mat-divider></mat-divider>
 
       <div fxFlexFill>
-        <img mat-card-image [src]="previewSrc1" height="200" *ngIf="previewSrc1">
-        <img mat-card-image [src]="previewSrc2" height="200" *ngIf="previewSrc2">
-        <img mat-card-image [src]="previewSrc3" height="200" *ngIf="previewSrc3">
-        <img mat-card-image [src]="previewSrc4" height="200" *ngIf="previewSrc4">
-        <img mat-card-image [src]="previewSrc5" height="200" *ngIf="previewSrc5">
+        <img class="previewSrc1" [src]="previewSrc1" height="200" *ngIf="previewSrc1" (load)="onImageLoad(previewSrc1)">
+        <img mat-card-image [src]="previewSrc2" height="200" *ngIf="previewSrc2" (load)="onImageLoad()">
+        <img mat-card-image [src]="previewSrc3" height="200" *ngIf="previewSrc3" (load)="onImageLoad()">
+        <img mat-card-image [src]="previewSrc4" height="200" *ngIf="previewSrc4" (load)="onImageLoad()">
+        <img mat-card-image [src]="previewSrc5" height="200" *ngIf="previewSrc5" (load)="onImageLoad()">
       </div>
 
     </div>

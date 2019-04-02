@@ -22,11 +22,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SpinnerdialogComponent } from './components/spinnerdialog/spinnerdialog.component';
+import { NotificationsnackbarComponent } from './components/notificationsnackbar/notificationsnackbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SpinnerdialogComponent
+    SpinnerdialogComponent,
+    NotificationsnackbarComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -50,6 +52,6 @@ import { SpinnerdialogComponent } from './components/spinnerdialog/spinnerdialog
     UserService,
     KengenService],
   bootstrap: [AppComponent],
-  entryComponents: [SpinnerdialogComponent]
+  entryComponents: [SpinnerdialogComponent, NotificationsnackbarComponent]
 })
 export class AppModule { }

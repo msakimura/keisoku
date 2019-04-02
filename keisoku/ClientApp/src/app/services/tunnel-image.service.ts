@@ -55,14 +55,16 @@ export class TunnelImageService {
   /**
    *  insertTunnelImages
    *
-   *  tunnelImagesをDBに追加する
+   *  tunnelImageをDBに追加する
    *  
    *
-   *  @param  {TunnelImageModel[]}    tunnelImages
+   *  @param  {TunnelImageModel}    tunnelImage
    *
    *  @return {Observable<Object>} フェッチ
    */
-  insertTunnelImages(tunnelImages: TunnelImageModel[]) {
+  insertTunnelImages(tunnelImage: TunnelImageModel) {
+
+    return this.http.post(this.routeUrl, tunnelImage);
 
     //var http = this.http;
     //var routeUrl = this.routeUrl;

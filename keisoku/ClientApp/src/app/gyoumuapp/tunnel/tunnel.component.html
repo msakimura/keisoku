@@ -1,6 +1,6 @@
 <mat-sidenav-container class="mat-elevation-z8">
 
-  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true">
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" (opened)="displayPreviewImages()">
 
     <div *ngIf="isSideNavPreview">
 
@@ -10,19 +10,27 @@
 
       <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-      <button mat-button><mat-icon color="primary">arrow_back_ios</mat-icon>前の画像</button>
+      <button mat-button [disabled]="isPrevImageDisabled" (click)="displayPrevPreviewImages()"><mat-icon color="{{prevImageIconColor}}">arrow_back_ios</mat-icon>前の画像</button>
 
-      <button mat-button><mat-icon color="primary">arrow_forward_ios</mat-icon>次の画像</button>
+      <button mat-button [disabled]="isNextImageDisabled" (click)="displayNextPreviewImages()"><mat-icon color="{{nextImageIconColor}}">arrow_forward_ios</mat-icon>次の画像</button>
 
       <mat-divider></mat-divider>
 
-      <div fxFlexFill>
-        <img class="previewSrc1" [src]="previewSrc1" height="200" *ngIf="previewSrc1" (load)="onImageLoad(previewSrc1)">
-        <img mat-card-image [src]="previewSrc2" height="200" *ngIf="previewSrc2" (load)="onImageLoad()">
-        <img mat-card-image [src]="previewSrc3" height="200" *ngIf="previewSrc3" (load)="onImageLoad()">
-        <img mat-card-image [src]="previewSrc4" height="200" *ngIf="previewSrc4" (load)="onImageLoad()">
-        <img mat-card-image [src]="previewSrc5" height="200" *ngIf="previewSrc5" (load)="onImageLoad()">
+      <div *ngIf="isLoadPreviewImageProgress" >
+
+        <h4 class="mat-h4">{{loadPreviewImageMessage}}</h4>
+
+        <mat-progress-bar mode="buffer"></mat-progress-bar>
+
       </div>
+      
+
+      <div fxLayout="row">
+        <div *ngFor="let image of previewImages">
+          <img [src]="image" height="200" *ngIf="image">
+        </div>
+      </div>
+
 
     </div>
 
@@ -34,11 +42,17 @@
 
       <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-      <button mat-button (click)="addDatasourceTunnelImage()" [disabled]="isSaveDisabled"><mat-icon color="primary">add_photo_alternate</mat-icon>保存</button>
+      <button mat-button (click)="addDatasourceTunnelImage()" [disabled]="isSaveDisabled"><mat-icon color="{{saveIconColor}}">add_photo_alternate</mat-icon>保存</button>
 
       <mat-divider></mat-divider>
 
-      <mat-progress-bar *ngIf="isImageProgress" mode="buffer"></mat-progress-bar>
+      <div *ngIf="isImageProgress">
+
+        <h4 class="mat-h4">{{addImageMessage}}</h4>
+
+        <mat-progress-bar mode="buffer"></mat-progress-bar>
+
+      </div>
 
       <mat-list #images>
         <mat-list-item *ngFor="let seikahinImage of seikahinImages">
@@ -50,7 +64,7 @@
       </mat-list>
 
 
-      <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" (click)="clearFileValue(file)"/>
+      <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" (click)="clearFileValue(file)" />
 
       <div layout="row" layout-align="start center" flex>
         <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
@@ -75,15 +89,15 @@
 
     <button mat-button (click)="deleteTunnelImageInfo()" [disabled]="isDeleteDisabled"><mat-icon color="{{deleteIconColor}}">delete_forever</mat-icon>削除</button>
 
-    <button mat-button (click)="uploadTunnelImageInfo()"><mat-icon color="primary">cloud_upload</mat-icon>アップロード</button>
+    <button mat-button (click)="uploadTunnelImageInfo()" [disabled]="isUploadDisabled"><mat-icon color="{{uploadIconColor}}">cloud_upload</mat-icon>アップロード</button>
 
-    <button mat-button (click)="downloadFile()"><mat-icon color="primary">cloud_download</mat-icon>ダウンロード</button>
+    <button mat-button (click)="downloadFile()" [disabled]="isDownloadDisabled"><mat-icon color="{{downloadIconColor}}">cloud_download</mat-icon>ダウンロード</button>
 
-    <button mat-button><mat-icon color="primary">receipt</mat-icon>台帳</button>
+    <button mat-button [disabled]="isDaichouDisabled"><mat-icon color="{{daichouIconColor}}">receipt</mat-icon>台帳</button>
 
-    <button mat-button><mat-icon color="primary">print</mat-icon>印刷</button>
+    <button mat-button [disabled]="isPrintDisabled"><mat-icon color="{{printIconColor}}">print</mat-icon>印刷</button>
 
-    <button mat-button><mat-icon color="primary">view_list</mat-icon>サマリー</button>
+    <button mat-button [disabled]="isSummaryDisabled"><mat-icon color="{{summaryIconColor}}">view_list</mat-icon>サマリー</button>
 
     <mat-divider></mat-divider>
 

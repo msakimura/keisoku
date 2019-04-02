@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSidenav, MatSort, MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
 import { TunnelImageModel, TunnelImageService, SeikahinImageModel } from 'src/app/services/tunnel-image.service';
@@ -7,7 +7,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { AnkenService } from 'src/app/services/anken.service';
 import { Router } from '@angular/router';
 import { ValidationModule } from 'src/app/shared/validation.module';
-import { Chushutsu } from 'src/app/shared/constant.module';
+import { Chushutsu, TunnelImage } from 'src/app/shared/constant.module';
+import { NotificationsnackbarComponent } from 'src/app/components/notificationsnackbar/notificationsnackbar.component';
 
 
 @Component({
@@ -21,13 +22,51 @@ export class TunnelComponent implements OnInit {
 
   isSideNavPreview: boolean = false;
 
-  isDeleteDisabled: boolean = true;
+  isImageProgress: boolean = false;
 
-  deleteIconColor = 'diabled';
+  isLoadPreviewImageProgress: boolean = false;
+
+  isDeleteDisabled: boolean = true;
 
   isSaveDisabled: boolean = true;
 
-  isImageProgress: boolean = false;
+  isPrevImageDisabled: boolean = true;
+
+  isNextImageDisabled: boolean = true;
+
+  isUploadDisabled: boolean = true;
+
+  isDownloadDisabled: boolean = true;
+
+  isDaichouDisabled: boolean = true;
+
+  isPrintDisabled: boolean = true;
+
+  isSummaryDisabled: boolean = true;
+
+
+  deleteIconColor = 'diabled';
+
+  saveIconColor = 'diabled';
+
+  prevImageIconColor = 'disabled';
+
+  nextImageIconColor = 'disabled';
+
+  uploadIconColor = 'disabled';
+
+  downloadIconColor = 'disabled';
+
+  daichouIconColor = 'disabled';
+
+  printIconColor = 'disabled';
+
+  summaryIconColor = 'disabled';
+
+
+  addImageMessage = TunnelImage.ADD_IMAGE;
+
+  loadPreviewImageMessage = TunnelImage.LOAD_PREVIEWIMAGE;
 
 
   ankenName: string;
@@ -36,7 +75,7 @@ export class TunnelComponent implements OnInit {
   
   seikahinImages: SeikahinImageModel[] = [];
 
-  previewImages: SeikahinImageModel[] = [];
+  previewImages: string[] = [];
 
   selectedImageNumber: number;
 
@@ -44,17 +83,10 @@ export class TunnelComponent implements OnInit {
 
   previewImageName: string;
 
+  basePreviewImageIndex: number;
 
-  previewSrc1: string;
 
-  previewSrc2: string;
-
-  previewSrc3: string;
-
-  previewSrc4: string;
-
-  previewSrc5: string;
-
+  notificationSnackbar: MatSnackBarRef<NotificationsnackbarComponent>;
 
 
   displayedColumns: string[] = ['select', 'name', 'width', 'height', 'hibiChushutsu', 'sonshou', 'hibiBunrui'];
@@ -71,7 +103,12 @@ export class TunnelComponent implements OnInit {
 
 
   
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private http: HttpClient, private ankenService: AnkenService, private tunnelService: TunnelService, private tunnelImageService: TunnelImageService) { }
+  constructor(private router: Router,
+    private http: HttpClient,
+    private ankenService: AnkenService,
+    private tunnelService: TunnelService,
+    private tunnelImageService: TunnelImageService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
 
@@ -202,23 +239,27 @@ export class TunnelComponent implements OnInit {
   /**
    *  changeDisabled
    *
-   *  レコードのチェックボックス選択数によって、削除ボタンの活性/不活性を切り替える
+   *  レコードのチェックボックス選択数によって、ボタンの活性/不活性を切り替える
    *  
    *
    *  @return {boid}
    */
   changeDisabled() {
-    this.isDeleteDisabled = true;
+    this.switchDisabledDeleteButton(true);
 
-    this.deleteIconColor = 'diabled';
+    this.switchDisabledUploadButton(true);
+
 
     const numSelected = this.selection.selected.length;
 
     if (numSelected >= 1) {
       
-      this.isDeleteDisabled = false;
+      this.switchDisabledDeleteButton(false);
+      
+    }
 
-      this.deleteIconColor = 'primary';
+    if (this.dataSource.data.length >= 1) {
+      this.switchDisabledUploadButton(false);
 
     }
   }
@@ -268,6 +309,8 @@ export class TunnelComponent implements OnInit {
 
     this.dataSource.data = tunnelImages;
 
+    this.switchDisabledUploadButton(false);
+
     this.closeSideNav();
 
     this.selection.clear();
@@ -308,8 +351,32 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   uploadTunnelImageInfo() {
+
+    this.notificationSnackbar = this.snackBar.openFromComponent(NotificationsnackbarComponent, { data: { message: 'アップロード中です' } });
+
+    this.notificationSnackbar.afterOpened()
+      .subscribe(() => {
+
+        this.dataSource.data.forEach(data => {
+
+          this.tunnelImageService.insertTunnelImages(data)
+            .subscribe((response: any) => {
+
+              this.notificationSnackbar.instance.message = '成功';
+            },
+              error => {
+
+
+                this.notificationSnackbar.instance.message = '失敗';
+              });
+
+        });
+
+      });
+
     
-    this.tunnelImageService.insertTunnelImages(this.dataSource.data);
+
+    
   }
   
 
@@ -374,11 +441,12 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   displaySideNavImage() {
-    this.isSaveDisabled = true;
 
     this.isSideNavImage = true;
 
     this.isSideNavPreview = false;
+
+    this.switchDisabledSaveButton(true);
 
     this.clearSideNavFormData();
 
@@ -405,28 +473,10 @@ export class TunnelComponent implements OnInit {
 
     this.previewImageName = row.seikahinImage.imageName;
 
-    var targetIdx = this.seikahinImages.findIndex(seikahinImage => {
-      return (seikahinImage.imageName === this.previewImageName);
-    });
-
-
-    if (targetIdx >= 0) {
-
-      this.previewSrc1 = this.seikahinImages[targetIdx].imageUrl;
-
-      this.previewSrc2 = targetIdx + 1 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 1].imageUrl;
-
-      this.previewSrc3 = targetIdx + 2 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 2].imageUrl;
-
-      this.previewSrc4 = targetIdx + 3 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 3].imageUrl;
-
-      this.previewSrc5 = targetIdx + 4 >= this.seikahinImages.length ? '' : this.seikahinImages[targetIdx + 4].imageUrl;
-
-    }
-    
-
+    this.initPreviewSideNav();
 
     this.sideNav.open();
+    
     
   }
 
@@ -506,7 +556,7 @@ export class TunnelComponent implements OnInit {
    *  
    *  @return {void}
    */
-  async addSeikahinImageModel(file: File) {
+  addSeikahinImageModel(file: File) {
 
     const reader = new FileReader();
 
@@ -589,13 +639,13 @@ export class TunnelComponent implements OnInit {
 
       this.isImageProgress = false;
 
-      this.isSaveDisabled = false;
+      this.switchDisabledSaveButton(false);
     }
     else {
 
       this.isImageProgress = true;
 
-      this.isSaveDisabled = true;
+      this.switchDisabledSaveButton(true);
     }
   }
 
@@ -618,7 +668,7 @@ export class TunnelComponent implements OnInit {
     }
 
     if (this.seikahinImages.length === 0) {
-      this.isSaveDisabled = true;
+      this.switchDisabledSaveButton(true);
     }
   }
 
@@ -650,8 +700,281 @@ export class TunnelComponent implements OnInit {
     e.value = '';
   }
 
-  onImageLoad(e) {
-    var a = e;
+  /**
+   *  displayPreviewImages
+   *
+   *  選択したpreviewImageNameを基準とし、TunnelImage.SPAN数分のプレビュー画像を表示する
+   *  
+   *  
+   *  @return {void}
+   */
+  displayPreviewImages() {
+
+    if (!this.isSideNavPreview) return;
     
+    this.basePreviewImageIndex = this.seikahinImages.findIndex(seikahinImage => {
+      return (seikahinImage.imageName === this.previewImageName);
+    });
+
+
+    this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
+    
+  }
+
+
+  /**
+   *  displayNextPreviewImages
+   *
+   *  previewImageNameの次の画像を基準とし、TunnelImage.PREVIEW_SPAN数分のプレビュー画像を表示する
+   *  
+   *  
+   *  @return {void}
+   */
+  displayNextPreviewImages() {
+    if (!this.isSideNavPreview) return;
+
+    this.basePreviewImageIndex += 1
+
+    if (this.basePreviewImageIndex >= this.seikahinImages.length) return;
+
+    this.initPreviewSideNav();
+
+    this.previewImageName = this.seikahinImages[this.basePreviewImageIndex].imageName;
+
+    this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
+  }
+
+
+  /**
+   *  displayPrevtPreviewImages
+   *
+   *  previewImageNameの前の画像を基準とし、TunnelImage.PREVIEW_SPAN数分のプレビュー画像を表示する
+   *  
+   *  
+   *  @return {void}
+   */
+  displayPrevPreviewImages() {
+
+    if (!this.isSideNavPreview) return;
+
+    this.basePreviewImageIndex -= 1;
+
+    if (this.basePreviewImageIndex === -1) return;
+
+    this.initPreviewSideNav();
+
+    this.previewImageName = this.seikahinImages[this.basePreviewImageIndex].imageName;
+
+    this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
+  }
+
+  /**
+   *  displayPreviewImagesFromIndex
+   *
+   *  targetIdxを基準とし、TunnelImage.PREVIEW_SPAN数分のプレビュー画像を表示
+   *  
+   *  @param  {number}    targetIdx
+   *  
+   *  @return {void}
+   */
+  displayPreviewImagesFromIndex(targetIdx: number) {
+
+    if (targetIdx === -1 || targetIdx >= this.seikahinImages.length) return;
+    
+
+    var i = 0;
+
+    var j = 0;
+    
+
+    while (i < TunnelImage.PREVIEW_SPAN && targetIdx + i < this.seikahinImages.length) {
+
+      const img = new Image();
+
+      img.onload = () => {
+        this.previewImages[j] = this.seikahinImages[targetIdx + j].imageUrl;
+        j++;
+
+        if (i === j) {
+
+          this.isLoadPreviewImageProgress = false;
+
+          if (targetIdx > 0) this.switchDisabledPrevImageButton(false);
+
+          if (targetIdx < this.seikahinImages.length) this.switchDisabledNextImageButton(false);
+
+        }
+
+      };
+
+      img.src = this.seikahinImages[targetIdx + i].imageUrl;
+
+      i++;
+    }
+  }
+
+  /**
+   *  initPreviewSideNav
+   *
+   *  プレビューサイドナビを初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initPreviewSideNav() {
+    this.previewImages = [];
+
+    this.isLoadPreviewImageProgress = true;
+
+    this.switchDisabledPrevImageButton(true);
+
+    this.switchDisabledNextImageButton(true);
+
+  }
+
+
+   /**
+   *  switchDisabledDeleteButton
+   *
+   *  削除ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledDeleteButton(disabled: boolean) {
+
+    this.isDeleteDisabled = disabled;
+
+    this.deleteIconColor = disabled ? 'diabled' : 'primary';
+    
+  }
+
+  /**
+   *  switchDisabledSaveButton
+   *
+   *  保存ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledSaveButton(disabled: boolean) {
+
+    this.isSaveDisabled = disabled;
+
+    this.saveIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledPrevImageButton
+   *
+   *  前の画像ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledPrevImageButton(disabled: boolean) {
+
+    this.isPrevImageDisabled = disabled;
+
+    this.prevImageIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledNextImageButton
+   *
+   *  次の画像ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledNextImageButton(disabled: boolean) {
+
+    this.isNextImageDisabled = disabled;
+
+    this.nextImageIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledUploadButton
+   *
+   *  アップロードボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledUploadButton(disabled: boolean) {
+
+    this.isUploadDisabled = disabled;
+
+    this.uploadIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledDownloadButton
+   *
+   *  ダウンロードボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledDownloadButton(disabled: boolean) {
+
+    this.isDaichouDisabled = disabled;
+
+    this.downloadIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledDaichouButton
+   *
+   *  台帳ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledDaichouButton(disabled: boolean) {
+
+    this.isDaichouDisabled = disabled;
+
+    this.daichouIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledPrintButton
+   *
+   *  印刷ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledPrintButton(disabled: boolean) {
+
+    this.isPrintDisabled = disabled;
+
+    this.printIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+  /**
+   *  switchDisabledSummaryButton
+   *
+   *  サマリーボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledSummaryButton(disabled: boolean) {
+
+    this.isSummaryDisabled = disabled;
+
+    this.summaryIconColor = disabled ? 'diabled' : 'primary';
   }
 }

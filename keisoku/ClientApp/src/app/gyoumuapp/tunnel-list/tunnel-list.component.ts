@@ -174,27 +174,19 @@ export class TunnelListComponent implements OnInit {
    *  @return {boid}
    */
   changeDisabled() {
-    this.isEditDisabled = true;
+    this.switchDisabledEditButton(true);
 
-    this.editIconColor = 'diabled';
-
-    this.isDeleteDisabled = true;
-
-    this.deleteIconColor = 'diabled';
+    this.switchDisabledDeleteButton(true);
 
     const numSelected = this.selection.selected.length;
 
     if (numSelected >= 1) {
 
       if (numSelected == 1) {
-        this.isEditDisabled = false;
-
-        this.editIconColor = 'primary';
+        this.switchDisabledEditButton(false);
       }
 
-      this.isDeleteDisabled = false;
-
-      this.deleteIconColor = 'primary';
+      this.switchDisabledDeleteButton(false);
 
     }
   }
@@ -497,6 +489,40 @@ export class TunnelListComponent implements OnInit {
   setSelectedTunnel(row) {
 
     this.tunnelService.selectedTunnel = row;
+
+  }
+
+  /**
+   *  switchDisabledDeleteButton
+   *
+   *  削除ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledDeleteButton(disabled: boolean) {
+
+    this.isDeleteDisabled = disabled;
+
+    this.deleteIconColor = disabled ? 'diabled' : 'primary';
+
+  }
+
+  /**
+   *  switchDisabledEditButton
+   *
+   *  編集ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledEditButton(disabled: boolean) {
+
+    this.isEditDisabled = disabled;
+
+    this.editIconColor = disabled ? 'diabled' : 'primary';
 
   }
 }

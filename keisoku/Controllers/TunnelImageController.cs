@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using keisoku.Data;
+using keisoku.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -13,6 +16,7 @@ using Newtonsoft.Json;
 
 namespace keisoku.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class TunnelImageController : BaseController
@@ -64,13 +68,6 @@ namespace keisoku.Controllers
         {
             using (var reader = new StreamReader(Request.Body))
             {
-                // JSON ⇒ Modelに変換
-                var body = reader.ReadToEnd();
-                
-                var base64 = Convert.FromBase64String(body);
-
-                MemoryStream fileStream = new MemoryStream(base64);
-                
                 //Azure Blob Storageにアップロード
                 string accountname = "keisokuaccount";
 
@@ -84,13 +81,26 @@ namespace keisoku.Controllers
                 //container
                 CloudBlobContainer container = blobClient.GetContainerReference("tunnel");
 
-                CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference("test");
+
+
+                // JSON ⇒ Modelに変換
+                var body = reader.ReadToEnd();
+
+                var deserialized = JsonConvert.DeserializeObject<TunnelImageModel>(body);
+
+                
+                var base64 = Convert.FromBase64String(deserialized.SeikahinImage.ImageData);
+
+                MemoryStream fileStream = new MemoryStream(base64);
+
+                CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(deserialized.SeikahinImage.ImageName);
 
                 await blockBlob_upload.UploadFromStreamAsync(fileStream);
-
-                    
+            
+                
                 return Ok();
             }
         }
     }
+    
 }

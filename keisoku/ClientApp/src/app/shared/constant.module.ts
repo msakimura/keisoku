@@ -39,3 +39,10 @@ export class Chushutsu {
   public static readonly NONE = '未';
 }
 
+export class TunnelImage {
+  public static readonly PREVIEW_SPAN = 5;
+  public static readonly ADD_IMAGE = '画像を追加しています';
+  public static readonly LOAD_PREVIEWIMAGE = 'プレビュー画像を読み込んでいます';
+
+}
+

@@ -357,20 +357,36 @@ export class TunnelComponent implements OnInit {
     this.notificationSnackbar.afterOpened()
       .subscribe(() => {
 
-        this.dataSource.data.forEach(data => {
+        for (var i = 0; i < this.dataSource.data.length; i++) {
 
-          this.tunnelImageService.insertTunnelImages(data)
+          this.tunnelImageService.insertTunnelImages(this.dataSource.data[i])
             .subscribe((response: any) => {
 
-              this.notificationSnackbar.instance.message = '成功';
+              console.log('アップロード完了');
             },
               error => {
 
 
                 this.notificationSnackbar.instance.message = '失敗';
               });
+        }
 
-        });
+        
+
+        //this.dataSource.data.forEach(data => {
+
+        //  this.tunnelImageService.insertTunnelImages(data)
+        //    .subscribe((response: any) => {
+
+        //      this.notificationSnackbar.instance.message = '成功';
+        //    },
+        //      error => {
+
+
+        //        this.notificationSnackbar.instance.message = '失敗';
+        //      });
+
+        //});
 
       });
 
@@ -540,7 +556,7 @@ export class TunnelComponent implements OnInit {
 
     targetFiles.forEach(async file => {
 
-      await this.addSeikahinImageModel(file);
+      this.addSeikahinImageModel(file);
 
     });
     

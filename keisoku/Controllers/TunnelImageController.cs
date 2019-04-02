@@ -88,7 +88,7 @@ namespace keisoku.Controllers
 
                 var deserialized = JsonConvert.DeserializeObject<TunnelImageModel>(body);
 
-                
+
                 var base64 = Convert.FromBase64String(deserialized.SeikahinImage.ImageData);
 
                 MemoryStream fileStream = new MemoryStream(base64);
@@ -96,8 +96,8 @@ namespace keisoku.Controllers
                 CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(deserialized.SeikahinImage.ImageName);
 
                 await blockBlob_upload.UploadFromStreamAsync(fileStream);
-            
-                
+
+
                 return Ok();
             }
         }

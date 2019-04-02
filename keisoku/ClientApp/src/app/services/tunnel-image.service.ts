@@ -65,19 +65,6 @@ export class TunnelImageService {
   insertTunnelImages(tunnelImage: TunnelImageModel) {
 
     return this.http.post(this.routeUrl, tunnelImage);
-
-    //var http = this.http;
-    //var routeUrl = this.routeUrl;
-
-    //const reader = new FileReader();
-    //reader.onload = function () {
-
-    //  var url = reader.result as string;
-
-    //  http.post(routeUrl, url.substr(url.indexOf(',') + 1)).subscribe();
-    //};
-
-    //reader.readAsDataURL(tunnelImages[0].seikahinImage.imageData);
     
   }
 

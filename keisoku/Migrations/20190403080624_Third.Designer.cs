@@ -10,8 +10,8 @@ using keisoku.Data;
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190318050303_Initial")]
-    partial class Initial
+    [Migration("20190403080624_Third")]
+    partial class Third
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -206,7 +206,7 @@ namespace keisoku.Migrations
 
                     b.Property<int>("AnkenId");
 
-                    b.Property<string>("Riyoubi");
+                    b.Property<DateTime>("RiyouMonth");
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -218,7 +218,7 @@ namespace keisoku.Migrations
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("CustomerId", "AnkenId", "Riyoubi");
+                    b.HasKey("CustomerId", "AnkenId", "RiyouMonth");
 
                     b.HasIndex("TankaId");
 
@@ -573,7 +573,7 @@ namespace keisoku.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("Tanka");
+                    b.Property<int>("Tanka");
 
                     b.Property<DateTime>("UpdatedAt");
 

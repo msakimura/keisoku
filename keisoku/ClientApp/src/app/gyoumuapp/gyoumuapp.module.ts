@@ -14,6 +14,7 @@ import { CustomerKanriComponent } from './customer-kanri/customer-kanri.componen
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomerService } from '../services/customer.service';
+import { AiriyoujoukyouComponent } from './airiyoujoukyou/airiyoujoukyou.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CustomerService } from '../services/customer.service';
     TunnelListComponent,
     TunnelComponent,
     UserKanriComponent,
-    CustomerKanriComponent
+    CustomerKanriComponent,
+    AiriyoujoukyouComponent
   ],
 
   imports: [

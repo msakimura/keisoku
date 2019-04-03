@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -45,15 +46,38 @@ namespace keisoku.Controllers
                 return BadRequest(ModelState);
             }
 
-            var tunnelImages = _context.TunnelImages.Where(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId);
+            DbSet<TunnelImageModel> tunnelImages = _context.TunnelImages;
+            DbSet<SeikahinImageModel> seikahinImages = _context.SeikahinImages;
 
-            if (tunnelImages.Count() == 0)
+            var query =
+                tunnelImages.Join(
+                    seikahinImages,
+                    seikahinImage => seikahinImage.SeikahinImageId,
+                    tunnewlImage => tunnewlImage.SeikahinImageId,
+                    (tunnewlImage, seikahinImage) => new
+                    {
+                        tunnewlImage.CustomerId,
+                        tunnewlImage.AnkenId,
+                        tunnewlImage.TunnelId,
+                        tunnewlImage.TunnelImageId,
+                        tunnewlImage.SeikahinImageId,
+                        seikahinImage.ImageName,
+                        seikahinImage.ImageData,
+                        seikahinImage.Width,
+                        seikahinImage.Height,
+                        seikahinImage.HibiChushutsu,
+                        seikahinImage.Sonshou,
+                        seikahinImage.HibiBunrui
+                    })
+                    .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId);
+
+            if (query.Count() == 0)
             {
                 return NotFound();
             }
 
 
-            return Ok(tunnelImages);
+            return Ok(query);
         }
 
 
@@ -88,6 +112,40 @@ namespace keisoku.Controllers
                 return Ok(tunnelImage);
             }
         }
+
+
+        /// <summary>
+        /// 顧客ID、案件ID、トンネルID、トンネル画像IDに一致するトンネル画像情報を削除する
+        /// </summary>
+        /// 
+        /// <param name="customerId">顧客ID</param>
+        /// <param name="ankenId">案件ID</param>
+        /// <param name="tunnelId">トンネルID</param>
+        /// <param name="tunnelImageId">トンネル画像ID</param>
+        /// 
+        /// <returns>削除したトンネル情報</returns>
+        /// 
+        [HttpDelete("{customerId}/{ankenId}/{tunnelId}/{tunnelImageId}")]
+        public async Task<IActionResult> Delete([FromRoute] int customerId, int ankenId, int tunnelId, int tunnelImageId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            var tunnelImage = await _context.TunnelImages.SingleOrDefaultAsync(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId && x.TunnelImageId == tunnelImageId);
+            if (tunnelImage == null)
+            {
+                return NotFound();
+            }
+
+            _context.TunnelImages.Remove(tunnelImage);
+            await _context.SaveChangesAsync();
+
+            return Ok(tunnelImage);
+        }
+        
     }
     
 }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using keisoku.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +12,7 @@ namespace keisoku.Models
     {
         public int TankaId { get; set; }
 
-        public string Tanka { get; set; }
+        public int Tanka { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -17,5 +20,34 @@ namespace keisoku.Models
 
         public ICollection<AiRiyouJoukyouModel> AiRiyouJoukyous { get; set; }
 
+
+        /// <summary>
+        /// 単価テーブルが空の場合、初期レコードを追加する
+        /// </summary>
+        /// 
+        /// <param name="serviceProvider">IServiceProvider</param>
+        /// 
+        /// <remarks>Program.csが実行されるタイミングでInitializeが呼び出される</remarks>
+        public static void Initialize(IServiceProvider serviceProvider)
+        {
+            using (var context = new ApplicationDbContext(
+                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+            {
+                if (context.Tankas.Any())
+                {
+                    return;
+                }
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 50,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+                context.SaveChanges();
+            }
+        }
     }
 }

@@ -218,7 +218,7 @@ namespace keisoku.Data
 
             builder.Entity<AiRiyouJoukyouModel>(i =>
             {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.Riyoubi });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.RiyouMonth });
 
                 i.HasOne(j => j.Anken).WithMany(k => k.AiRiyouJoukyous).OnDelete(DeleteBehavior.Cascade);
 

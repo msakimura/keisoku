@@ -10,6 +10,8 @@ import { ValidationModule } from 'src/app/shared/validation.module';
 import { Chushutsu, TunnelImage } from 'src/app/shared/constant.module';
 import { NotificationsnackbarComponent } from 'src/app/components/notificationsnackbar/notificationsnackbar.component';
 import { SeikahinImageModel, SeikahinImageService } from 'src/app/services/seikahin-image.service';
+import { findIndex } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 
 @Component({
@@ -22,6 +24,9 @@ export class TunnelComponent implements OnInit {
   isSideNavImage: boolean = false;
 
   isSideNavPreview: boolean = false;
+
+  isSideNavAiRiyoujoukyou: boolean = false;
+
 
   isImageProgress: boolean = false;
 
@@ -87,8 +92,8 @@ export class TunnelComponent implements OnInit {
   basePreviewImageIndex: number;
 
 
-  notificationSnackbar: MatSnackBarRef<NotificationsnackbarComponent>;
-
+  message: string;
+  
 
   displayedColumns: string[] = ['select', 'name', 'width', 'height', 'hibiChushutsu', 'sonshou', 'hibiBunrui'];
 
@@ -101,8 +106,7 @@ export class TunnelComponent implements OnInit {
   @ViewChild('sidenav') public sideNav: MatSidenav;
 
   @ViewChild(MatSort) sort: MatSort;
-
-
+  
   
   constructor(private router: Router,
     private http: HttpClient,
@@ -111,6 +115,7 @@ export class TunnelComponent implements OnInit {
     private tunnelImageService: TunnelImageService,
     private seikahinImageService: SeikahinImageService,
     private snackBar: MatSnackBar) { }
+
 
   ngOnInit() {
 
@@ -208,7 +213,7 @@ export class TunnelComponent implements OnInit {
    *  ヘッダーのチェックボックス選択時、全レコードのチェックボックスの選択有無を切り替える
    *  
    *
-   *  @return {boid}
+   *  @return {void}
    */
   masterToggle() {
     this.isAllSelected() ?
@@ -226,7 +231,7 @@ export class TunnelComponent implements OnInit {
    *  
    *  @param  {object}    row
    *
-   *  @return {boid}
+   *  @return {void}
    */
   selectToggle(row) {
 
@@ -244,7 +249,7 @@ export class TunnelComponent implements OnInit {
    *  レコードのチェックボックス選択数によって、ボタンの活性/不活性を切り替える
    *  
    *
-   *  @return {boid}
+   *  @return {void}
    */
   changeDisabled() {
     this.switchDisabledDeleteButton(true);
@@ -257,13 +262,10 @@ export class TunnelComponent implements OnInit {
     if (numSelected >= 1) {
       
       this.switchDisabledDeleteButton(false);
-      
-    }
 
-    if (this.dataSource.data.length >= 1) {
       this.switchDisabledUploadButton(false);
-
     }
+    
   }
 
 
@@ -281,10 +283,15 @@ export class TunnelComponent implements OnInit {
       .subscribe((response: any) => {
 
         this.dataSource.data = this.tunnelImageService.convertTunnelImageModels(response);
+
+        this.dataSource.data.forEach(data => {
+
+          this.seikahinImages.push(data.seikahinImage);
+        });
         
+
       },
       error => {
-        
       });
   }
 
@@ -311,8 +318,6 @@ export class TunnelComponent implements OnInit {
 
     this.dataSource.data = tunnelImages;
 
-    this.switchDisabledUploadButton(false);
-
     this.closeSideNav();
 
     this.selection.clear();
@@ -328,6 +333,13 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   deleteTunnelImageInfo() {
+
+    this.selection.selected.forEach(image => {
+      this.tunnelImageService.deleteTunnelImage(image).subscribe(
+        data => { },
+        error => {
+        });
+    });
 
     var data = this.dataSource.data;
 
@@ -354,41 +366,47 @@ export class TunnelComponent implements OnInit {
    */
   uploadTunnelImageInfo() {
 
-    this.notificationSnackbar = this.snackBar.openFromComponent(NotificationsnackbarComponent, { data: { message: 'アップロード中です' } });
+    this.message = 'アップロード開始';
+    
+    this.selection.selected.forEach(image => {
 
-    this.notificationSnackbar.afterOpened()
-      .subscribe(() => {
+      if (image.tunnelImageId === 0) {
 
-        this.dataSource.data.forEach(data => {
+        this.seikahinImageService.insertSeikahinImage(image.seikahinImage)
+          .subscribe((response: any) => {
 
-          this.seikahinImageService.insertSeikahinImage(data.seikahinImage)
-            .subscribe((response: any) => {
-              
-              var target = this.dataSource.data.find(data => {
-                return (data.seikahinImage.imageName === response.imageName);
-              });
+            this.message = image.seikahinImage.imageName;
 
-              target.seikahinImageId = response.seikahinImageId;
-              target.seikahinImage = null;
+            var target = this.dataSource.data.find(data => {
+              return (data.seikahinImage && data.seikahinImage.imageName === response.imageName);
+            });
 
-              this.tunnelImageService.insertTunnelImage(target)
-                .subscribe((response: any) => {
-                  
-                  console.log('アップロード完了');
-                },
+            target.seikahinImageId = response.seikahinImageId;
+            target.seikahinImage = null;
+
+            this.tunnelImageService.insertTunnelImage(target)
+              .subscribe((response: any) => {
+
+                this.message = 'アップロード完了';
+                console.log('アップロード完了');
+
+                target.tunnelImageId = response.tunnelImageId;
+                
+              },
                 error => {
 
                   console.log('アップロード失敗');
                 });
-              
-            },
-            error => {
-              
-            });
 
-        });
-        
-      });
+          },
+            error => {
+
+          });
+
+      }
+      
+    });
+    
   }
   
 
@@ -491,6 +509,28 @@ export class TunnelComponent implements OnInit {
     
     
   }
+
+
+
+  /**
+   *  displaySideNavAiRiyoujoukyou
+   *
+   *  AI利用状況のサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displaySideNavAiRiyoujoukyou() {
+
+    this.isSideNavImage = false;
+
+    this.isSideNavPreview = false;
+
+    this.isSideNavAiRiyoujoukyou = true;
+    
+    this.sideNav.open();
+  }
+
 
 
   /**
@@ -667,17 +707,24 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   deleteSelectedTunnelImage(selectedImage: SeikahinImageModel) {
+
     var targetIdx = this.seikahinImages.findIndex(seikahinImage => {
       return (seikahinImage.imageName === selectedImage.imageName);
     });
+
 
     if (targetIdx !== -1) {
       this.seikahinImages.splice(targetIdx, 1);
     }
 
-    if (this.seikahinImages.length === 0) {
+
+    if (this.isChangeImageFromAddSidenav()) {
+      this.switchDisabledSaveButton(false);
+    }
+    else {
       this.switchDisabledSaveButton(true);
     }
+
   }
 
 
@@ -787,7 +834,10 @@ export class TunnelComponent implements OnInit {
    */
   displayPreviewImagesFromIndex(targetIdx: number) {
 
-    if (targetIdx === -1 || targetIdx >= this.seikahinImages.length) return;
+    if (targetIdx === -1 || targetIdx >= this.seikahinImages.length) {
+      this.isLoadPreviewImageProgress = false;
+      return;
+    }
     
 
     var i = 0;
@@ -809,7 +859,7 @@ export class TunnelComponent implements OnInit {
 
           if (targetIdx > 0) this.switchDisabledPrevImageButton(false);
 
-          if (targetIdx < this.seikahinImages.length) this.switchDisabledNextImageButton(false);
+          if (targetIdx < this.seikahinImages.length - 1) this.switchDisabledNextImageButton(false);
 
         }
 
@@ -984,5 +1034,33 @@ export class TunnelComponent implements OnInit {
     this.isSummaryDisabled = disabled;
 
     this.summaryIconColor = disabled ? 'diabled' : 'primary';
+  }
+
+
+  /**
+   *  isChangeImageFromAddSidenav
+   *
+   *  追加用サイドナビで画像を変更したか判定
+   *  
+   *  
+   *  @return {boolean} 判定結果
+   */
+  isChangeImageFromAddSidenav(): boolean {
+
+    if (this.dataSource.data.length !== this.seikahinImages.length) {
+      return true;
+    }
+
+    this.dataSource.data.forEach(data => {
+      var result = this.seikahinImages.find(image => {
+        return (image.imageName === data.seikahinImage.imageName);
+      });
+
+      if (!result) {
+        return true;
+      }
+    });
+
+    return false;
   }
 }

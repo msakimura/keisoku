@@ -58,6 +58,21 @@ export class TunnelImageService {
 
 
   /**
+   *  deleteTunnelImage
+   *
+   *  tunnelImageをDBから削除する
+   *  
+   *
+   *  @param  {TunnelImageModel}    tunnelImage
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  deleteTunnelImage(tunnelImage: TunnelImageModel) {
+    return this.http.delete(this.routeUrl + '/' + tunnelImage.customerId + '/' + tunnelImage.ankenId + '/' + tunnelImage.tunnelId + '/' + tunnelImage.tunnelImageId);
+  }
+
+
+  /**
    *  convertTunnelImageModels
    *
    *  DBから取得したtunnelImagesをトンネル画像モデル配列に変換する
@@ -91,13 +106,25 @@ export class TunnelImageService {
    */
   convertTunnelImageModel(tunnelImage): TunnelImageModel {
 
+    var seikahinImage: SeikahinImageModel = {
+      seikahinImageId: tunnelImage.seikahinImageId,
+      imageName: tunnelImage.imageName,
+      imageData: tunnelImage.imageData,
+      width: tunnelImage.width,
+      height: tunnelImage.height,
+      hibiChushutsu: tunnelImage.hibiChushutsu,
+      sonshou: tunnelImage.sonshou,
+      hibiBunrui: tunnelImage.hibiBunrui,
+      imageUrl: tunnelImage.imageData
+    };
+
     var tunnelImageModel: TunnelImageModel = {
       customerId: tunnelImage.customerId,
       ankenId: tunnelImage.ankenId,
       tunnelId: tunnelImage.tunnelId,
       tunnelImageId: tunnelImage.tunnelImageId,
       seikahinImageId: tunnelImage.seikahinImageId,
-      seikahinImage: tunnelImage.seikahinImage
+      seikahinImage: seikahinImage
     };
 
 

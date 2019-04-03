@@ -440,7 +440,7 @@ namespace keisoku.Migrations
                 {
                     CustomerId = table.Column<int>(nullable: false),
                     AnkenId = table.Column<int>(nullable: false),
-                    Riyoubi = table.Column<string>(nullable: false),
+                    Riyoubi = table.Column<DateTime>(nullable: false),
                     TunnelNumber = table.Column<int>(nullable: false),
                     SouEnchou = table.Column<int>(nullable: false),
                     TankaId = table.Column<int>(nullable: false),

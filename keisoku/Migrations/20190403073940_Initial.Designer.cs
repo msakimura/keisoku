@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using keisoku.Data;
 
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190403073940_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,7 +206,7 @@ namespace keisoku.Migrations
 
                     b.Property<int>("AnkenId");
 
-                    b.Property<DateTime>("RiyouMonth");
+                    b.Property<DateTime>("Riyoubi");
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -216,7 +218,7 @@ namespace keisoku.Migrations
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("CustomerId", "AnkenId", "RiyouMonth");
+                    b.HasKey("CustomerId", "AnkenId", "Riyoubi");
 
                     b.HasIndex("TankaId");
 
@@ -571,7 +573,7 @@ namespace keisoku.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int>("Tanka");
+                    b.Property<string>("Tanka");
 
                     b.Property<DateTime>("UpdatedAt");
 

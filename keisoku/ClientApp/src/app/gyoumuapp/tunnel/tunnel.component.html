@@ -16,14 +16,14 @@
 
       <mat-divider></mat-divider>
 
-      <div *ngIf="isLoadPreviewImageProgress" >
+      <div *ngIf="isLoadPreviewImageProgress">
 
         <h4 class="mat-h4">{{loadPreviewImageMessage}}</h4>
 
         <mat-progress-bar mode="buffer"></mat-progress-bar>
 
       </div>
-      
+
 
       <div fxLayout="row">
         <div *ngFor="let image of previewImages">
@@ -74,6 +74,14 @@
       <mat-divider class="image-add-divider"></mat-divider>
 
     </div>
+
+
+    <div *ngIf="isSideNavAiRiyoujoukyou">
+
+      <app-airiyoujoukyou></app-airiyoujoukyou>
+
+
+    </div>
   </mat-sidenav>
 
 
@@ -91,7 +99,8 @@
 
     <button mat-button (click)="uploadTunnelImageInfo()" [disabled]="isUploadDisabled"><mat-icon color="{{uploadIconColor}}">cloud_upload</mat-icon>アップロード</button>
 
-    <button mat-button (click)="downloadFile()" [disabled]="isDownloadDisabled"><mat-icon color="{{downloadIconColor}}">cloud_download</mat-icon>ダウンロード</button>
+    <button mat-button (click)="displaySideNavAiRiyoujoukyou()"><mat-icon color="primary">cloud_download</mat-icon>ダウンロード</button>
+    <!--<button mat-button (click)="downloadFile()" [disabled]="isDownloadDisabled"><mat-icon color="{{downloadIconColor}}">cloud_download</mat-icon>ダウンロード</button>-->
 
     <button mat-button [disabled]="isDaichouDisabled"><mat-icon color="{{daichouIconColor}}">receipt</mat-icon>台帳</button>
 
@@ -104,6 +113,9 @@
     <mat-form-field>
       <input matInput (keyup)="applyFilterImageName($event.target.value)" placeholder="画像名でフィルタ">
     </mat-form-field>
+
+
+    <div *ngIf="message" class="alert alert-primary">{{message}}</div>
 
 
     <div>

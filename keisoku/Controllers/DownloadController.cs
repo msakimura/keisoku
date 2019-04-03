@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using keisoku.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage;
@@ -22,11 +23,7 @@ namespace keisoku.Controllers
         [HttpGet("{filename}")]
         public async Task<FileContentResult> Download(string filename)
         {
-            string accountname = "keisokuaccount";
-
-            string accesskey = "DchFUYDdOuIh0z2XICJ5xXs07aOwCgeXkWpMBqJliclpVyOk0s2hiOVnBJYdXtdaEsS+DAU/K4ldtpgOfS1mHQ==";
-
-            var credential = new StorageCredentials(accountname, accesskey);
+            var credential = new StorageCredentials(ApplicationConstants.AZURE_BLOB_STORAGE_ACCOUNTNAME, ApplicationConstants.AZURE_BLOB_STORAGE_ACCESSKEY);
             var storageAccount = new CloudStorageAccount(credential, true);
 
             //blob

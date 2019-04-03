@@ -154,7 +154,7 @@ namespace keisoku.Data
 
                 i.HasOne(j => j.Tunnel).WithMany(k => k.TunnelImages).OnDelete(DeleteBehavior.Cascade);
 
-                i.HasOne(j => j.SeikahinImage).WithMany(k => k.TunnelImages).OnDelete(DeleteBehavior.SetNull);
+                i.HasOne(j => j.SeikahinImage).WithMany(k => k.TunnelImages).OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<KanseiCadModel>(i =>

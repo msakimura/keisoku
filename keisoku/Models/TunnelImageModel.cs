@@ -29,7 +29,6 @@ namespace keisoku.Models
 
         public TunnelModel Tunnel { get; set; }
 
-        [JsonProperty("seikahinImage")]
         public SeikahinImageModel SeikahinImage { get; set; }
 
     }

@@ -22,7 +22,7 @@ export class GyoumuHeaderComponent implements OnInit {
         .subscribe((response: any) => {
           this.userService.loginUserModel = this.userService.convertUserModel(response);
 
-          this.customerName = this.userService.loginUserModel.customerName;
+          this.customerName = this.userService.loginUserModel.customerName + '　様';
 
           this.userName = this.userService.loginUserModel.userName;
         });

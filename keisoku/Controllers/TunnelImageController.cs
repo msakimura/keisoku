@@ -68,37 +68,24 @@ namespace keisoku.Controllers
         {
             using (var reader = new StreamReader(Request.Body))
             {
-                //Azure Blob Storageにアップロード
-                string accountname = "keisokuaccount";
-
-                string accesskey = "DchFUYDdOuIh0z2XICJ5xXs07aOwCgeXkWpMBqJliclpVyOk0s2hiOVnBJYdXtdaEsS+DAU/K4ldtpgOfS1mHQ==";
-
-                var credential = new StorageCredentials(accountname, accesskey);
-                var storageAccount = new CloudStorageAccount(credential, true);
-
-                //blob
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                //container
-                CloudBlobContainer container = blobClient.GetContainerReference("tunnel");
-
-
-
                 // JSON ⇒ Modelに変換
                 var body = reader.ReadToEnd();
 
                 var deserialized = JsonConvert.DeserializeObject<TunnelImageModel>(body);
 
 
-                var base64 = Convert.FromBase64String(deserialized.SeikahinImage.ImageData);
+                // トンネル画像情報追加
+                deserialized.CreatedAt = DateTime.Now;
+                deserialized.UpdatedAt = DateTime.Now;
 
-                MemoryStream fileStream = new MemoryStream(base64);
+                var model = _context.TunnelImages.Add(deserialized);
 
-                CloudBlockBlob blockBlob_upload = container.GetBlockBlobReference(deserialized.SeikahinImage.ImageName);
+                await _context.SaveChangesAsync();
 
-                await blockBlob_upload.UploadFromStreamAsync(fileStream);
+                var tunnelImage = ((ApplicationDbContext)model.Context).TunnelImages.Last();
 
 
-                return Ok();
+                return Ok(tunnelImage);
             }
         }
     }

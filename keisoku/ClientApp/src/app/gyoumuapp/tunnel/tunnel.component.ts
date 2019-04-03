@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav, MatSort, MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
-import { TunnelImageModel, TunnelImageService, SeikahinImageModel } from 'src/app/services/tunnel-image.service';
+import { TunnelImageModel, TunnelImageService } from 'src/app/services/tunnel-image.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AnkenService } from 'src/app/services/anken.service';
 import { Router } from '@angular/router';
 import { ValidationModule } from 'src/app/shared/validation.module';
 import { Chushutsu, TunnelImage } from 'src/app/shared/constant.module';
 import { NotificationsnackbarComponent } from 'src/app/components/notificationsnackbar/notificationsnackbar.component';
+import { SeikahinImageModel, SeikahinImageService } from 'src/app/services/seikahin-image.service';
 
 
 @Component({
@@ -108,6 +109,7 @@ export class TunnelComponent implements OnInit {
     private ankenService: AnkenService,
     private tunnelService: TunnelService,
     private tunnelImageService: TunnelImageService,
+    private seikahinImageService: SeikahinImageService,
     private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -357,42 +359,36 @@ export class TunnelComponent implements OnInit {
     this.notificationSnackbar.afterOpened()
       .subscribe(() => {
 
-        for (var i = 0; i < this.dataSource.data.length; i++) {
+        this.dataSource.data.forEach(data => {
 
-          this.tunnelImageService.insertTunnelImages(this.dataSource.data[i])
+          this.seikahinImageService.insertSeikahinImage(data.seikahinImage)
             .subscribe((response: any) => {
-
-              console.log('アップロード完了');
-            },
-              error => {
-
-
-                this.notificationSnackbar.instance.message = '失敗';
+              
+              var target = this.dataSource.data.find(data => {
+                return (data.seikahinImage.imageName === response.imageName);
               });
-        }
 
+              target.seikahinImageId = response.seikahinImageId;
+              target.seikahinImage = null;
+
+              this.tunnelImageService.insertTunnelImage(target)
+                .subscribe((response: any) => {
+                  
+                  console.log('アップロード完了');
+                },
+                error => {
+
+                  console.log('アップロード失敗');
+                });
+              
+            },
+            error => {
+              
+            });
+
+        });
         
-
-        //this.dataSource.data.forEach(data => {
-
-        //  this.tunnelImageService.insertTunnelImages(data)
-        //    .subscribe((response: any) => {
-
-        //      this.notificationSnackbar.instance.message = '成功';
-        //    },
-        //      error => {
-
-
-        //        this.notificationSnackbar.instance.message = '失敗';
-        //      });
-
-        //});
-
       });
-
-    
-
-    
   }
   
 
@@ -618,9 +614,6 @@ export class TunnelComponent implements OnInit {
   getSelectedTunnelImageModels(): TunnelImageModel[] {
 
     var tunnelImageModels: TunnelImageModel[] = [];
-
-    var tunnelImageId = 0;
-    
     
     this.seikahinImages.forEach(seikahinImage => {
       
@@ -628,12 +621,11 @@ export class TunnelComponent implements OnInit {
         customerId: this.tunnelService.selectedTunnel.customerId,
         ankenId: this.tunnelService.selectedTunnel.ankenId,
         tunnelId: this.tunnelService.selectedTunnel.tunnelId,
-        tunnelImageId: tunnelImageId,
+        tunnelImageId: 0,
         seikahinImageId: 0,
         seikahinImage: seikahinImage
       };
-
-      tunnelImageId++;
+      
 
       tunnelImageModels.push(tunnelImageModel);
 

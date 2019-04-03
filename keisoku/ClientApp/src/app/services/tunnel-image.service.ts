@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { SeikahinImageModel } from './seikahin-image.service';
 
 export interface TunnelImageModel {
   customerId: number;
@@ -9,19 +10,6 @@ export interface TunnelImageModel {
   seikahinImageId: number;
 
   seikahinImage: SeikahinImageModel;
-}
-
-export interface SeikahinImageModel {
-  seikahinImageId: number;
-  imageName: string;
-  imageData: string;
-  width: number;
-  height: number;
-  hibiChushutsu: string;
-  sonshou: string;
-  hibiBunrui: string;
-
-  imageUrl:string
 }
 
 @Injectable({
@@ -53,7 +41,7 @@ export class TunnelImageService {
 
 
   /**
-   *  insertTunnelImages
+   *  insertTunnelImage
    *
    *  tunnelImageをDBに追加する
    *  
@@ -62,7 +50,7 @@ export class TunnelImageService {
    *
    *  @return {Observable<Object>} フェッチ
    */
-  insertTunnelImages(tunnelImage: TunnelImageModel) {
+  insertTunnelImage(tunnelImage: TunnelImageModel) {
 
     return this.http.post(this.routeUrl, tunnelImage);
     

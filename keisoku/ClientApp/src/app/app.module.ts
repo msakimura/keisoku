@@ -14,9 +14,6 @@ import { HttpInterceptorService } from './Interceptor/http-interceptor.service';
 import { ErrorInterceptorService } from './Interceptor/error-interceptor.service';
 import { AuthorizationCheckService } from './services/authorization-check.service'
 import { AuthenticationService } from './services/authentication.service'
-import { TunnelService } from './services/tunnel.service';
-import { UserService } from './services/user.service';
-import { KengenService } from './services/kengen.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material.module';
@@ -47,10 +44,7 @@ import { NotificationsnackbarComponent } from './components/notificationsnackbar
     { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true },
     AuthorizationCheckService,
-    AuthenticationService,
-    TunnelService,
-    UserService,
-    KengenService],
+    AuthenticationService],
   bootstrap: [AppComponent],
   entryComponents: [SpinnerdialogComponent, NotificationsnackbarComponent]
 })

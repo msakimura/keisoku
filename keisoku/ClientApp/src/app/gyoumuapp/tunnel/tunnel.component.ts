@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSidenav, MatSort, MatSnackBar, MatSnackBarRef } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
@@ -12,6 +12,7 @@ import { NotificationsnackbarComponent } from 'src/app/components/notificationsn
 import { SeikahinImageModel, SeikahinImageService } from 'src/app/services/seikahin-image.service';
 import { findIndex } from 'rxjs/operators';
 import { Subject, Observable } from 'rxjs';
+import { AiriyoujoukyouComponent } from '../airiyoujoukyou/airiyoujoukyou.component';
 
 
 @Component({
@@ -30,15 +31,9 @@ export class TunnelComponent implements OnInit {
 
   isImageProgress: boolean = false;
 
-  isLoadPreviewImageProgress: boolean = false;
-
   isDeleteDisabled: boolean = true;
 
-  isSaveDisabled: boolean = true;
 
-  isPrevImageDisabled: boolean = true;
-
-  isNextImageDisabled: boolean = true;
 
   isUploadDisabled: boolean = true;
 
@@ -53,12 +48,6 @@ export class TunnelComponent implements OnInit {
 
   deleteIconColor = 'diabled';
 
-  saveIconColor = 'diabled';
-
-  prevImageIconColor = 'disabled';
-
-  nextImageIconColor = 'disabled';
-
   uploadIconColor = 'disabled';
 
   downloadIconColor = 'disabled';
@@ -70,7 +59,6 @@ export class TunnelComponent implements OnInit {
   summaryIconColor = 'disabled';
 
 
-  addImageMessage = TunnelImage.ADD_IMAGE;
 
   loadPreviewImageMessage = TunnelImage.LOAD_PREVIEWIMAGE;
 
@@ -81,17 +69,9 @@ export class TunnelComponent implements OnInit {
   
   seikahinImages: SeikahinImageModel[] = [];
 
-  previewImages: string[] = [];
-
-  selectedImageNumber: number;
-
-  readImageNumber: number;
 
   previewImageName: string;
-
-  basePreviewImageIndex: number;
-
-
+  
   message: string;
   
 
@@ -106,8 +86,9 @@ export class TunnelComponent implements OnInit {
   @ViewChild('sidenav') public sideNav: MatSidenav;
 
   @ViewChild(MatSort) sort: MatSort;
-  
-  
+
+  @ViewChild(AiriyoujoukyouComponent) aiRiyoujoukyou: AiriyoujoukyouComponent;
+
   constructor(private router: Router,
     private http: HttpClient,
     private ankenService: AnkenService,
@@ -294,35 +275,7 @@ export class TunnelComponent implements OnInit {
       error => {
       });
   }
-
-
-  /**
-   *  addDatasourceTunnelImage
-   *
-   *  トンネル画像をdatasourceに追加する
-   *  
-   *
-   *  @return {void}
-   */
-  addDatasourceTunnelImage() {
-
-    this.seikahinImages.sort(function (a, b) {
-
-      if (a.imageName < b.imageName) return -1;
-      if (a.imageName > b.imageName) return 1;
-
-      return 0;
-    });
-
-    var tunnelImages = this.getSelectedTunnelImageModels();
-
-    this.dataSource.data = tunnelImages;
-
-    this.closeSideNav();
-
-    this.selection.clear();
-  }
-
+  
 
   /**
    *  deleteTunnelImageInfo
@@ -475,9 +428,7 @@ export class TunnelComponent implements OnInit {
     this.isSideNavImage = true;
 
     this.isSideNavPreview = false;
-
-    this.switchDisabledSaveButton(true);
-
+    
     this.clearSideNavFormData();
 
     this.addSeikahinImagesFromDataSource();
@@ -503,7 +454,6 @@ export class TunnelComponent implements OnInit {
 
     this.previewImageName = row.seikahinImage.imageName;
 
-    this.initPreviewSideNav();
 
     this.sideNav.open();
     
@@ -548,184 +498,15 @@ export class TunnelComponent implements OnInit {
   }
 
 
-  /**
-   *  addTunnelImages
-   *
-   *  選択したトンネル画像：filesをtunnelImagesに追加する
-   *  
-   *  @param  {File[]}    files
-   *  
-   *  @return {void}
-   */
-   addTunnelImages(files) {
-    
-    if (files.length === 0) {
-      return;
-    }
-
-    var targetFiles: File[] = [];
-
-    for (var i = 0; i < files.length; i++) {
-      var isImage = ValidationModule.isImage(files[i]);
-
-      if (!isImage) continue;
-
-      var target = this.seikahinImages.find(seikahinImage => {
-        return (seikahinImage.imageName === files[i].name);
-      });
-
-      if (!target) {
-
-        targetFiles.push(files[i]);
-      }
-    }
-
-    if (targetFiles.length === 0) {
-      return;
-    }
-
-    this.isImageProgress = true;
-
-    this.selectedImageNumber = targetFiles.length;
-
-    this.readImageNumber = 0;
-
-    targetFiles.forEach(async file => {
-
-      this.addSeikahinImageModel(file);
-
-    });
-    
-  }
+  
 
 
-  /**
-   *  addSeikahinImageModel
-   *
-   *  fileを元にSeikahinImageModelを作成し、seikahinImagesに追加する
-   *  
-   *  @param  {File}    file
-   *  
-   *  @return {void}
-   */
-  addSeikahinImageModel(file: File) {
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-
-      const url = reader.result as string;
-
-      var base64 = url.substr(url.indexOf(',') + 1);
-
-      var seikahinImageModel: SeikahinImageModel = {
-        seikahinImageId: 0,
-        imageName: file.name,
-        imageData: base64,
-        width: 0,
-        height: 0,
-        hibiChushutsu: Chushutsu.NONE,
-        sonshou: Chushutsu.NONE,
-        hibiBunrui: Chushutsu.NONE,
-        imageUrl:url
-      };
-
-      this.seikahinImages.push(seikahinImageModel);
-
-      this.readImageNumber++;
-
-      this.progressbarReadImage();
-
-      
-    };
-
-    reader.readAsDataURL(file);
-  }
+  
 
 
-  /**
-   *  getSelectedTunnelImageModels
-   *
-   *  選択したトンネル画像のモデルを取得する
-   *  
-   *
-   *  @return {TunnelImageModel} トンネル画像情のモデルリスト
-   */
-  getSelectedTunnelImageModels(): TunnelImageModel[] {
+  
 
-    var tunnelImageModels: TunnelImageModel[] = [];
-    
-    this.seikahinImages.forEach(seikahinImage => {
-      
-      var tunnelImageModel: TunnelImageModel = {
-        customerId: this.tunnelService.selectedTunnel.customerId,
-        ankenId: this.tunnelService.selectedTunnel.ankenId,
-        tunnelId: this.tunnelService.selectedTunnel.tunnelId,
-        tunnelImageId: 0,
-        seikahinImageId: 0,
-        seikahinImage: seikahinImage
-      };
-      
-
-      tunnelImageModels.push(tunnelImageModel);
-
-    });
-    
-    return tunnelImageModels;
-  }
-
-  /**
-   *  progressbarReadImage
-   *
-   *  トンネル画像読み込み中のプログレスバーを表示する
-   *  
-   *
-   *  @return {void}
-   */
-  progressbarReadImage() {
-    if (this.readImageNumber === this.selectedImageNumber) {
-
-      this.isImageProgress = false;
-
-      this.switchDisabledSaveButton(false);
-    }
-    else {
-
-      this.isImageProgress = true;
-
-      this.switchDisabledSaveButton(true);
-    }
-  }
-
-  /**
-   *  deleteSelectedTunnelImage
-   *
-   *  選択したトンネル画像を削除する
-   *  
-   *  @param  {SeikahinImageModel}    selectedImage
-   *  
-   *  @return {void}
-   */
-  deleteSelectedTunnelImage(selectedImage: SeikahinImageModel) {
-
-    var targetIdx = this.seikahinImages.findIndex(seikahinImage => {
-      return (seikahinImage.imageName === selectedImage.imageName);
-    });
-
-
-    if (targetIdx !== -1) {
-      this.seikahinImages.splice(targetIdx, 1);
-    }
-
-
-    if (this.isChangeImageFromAddSidenav()) {
-      this.switchDisabledSaveButton(false);
-    }
-    else {
-      this.switchDisabledSaveButton(true);
-    }
-
-  }
+  
 
 
   /**
@@ -743,153 +524,10 @@ export class TunnelComponent implements OnInit {
   }
 
 
-  /**
-   *  clearFileValue
-   *
-   *  ファイル選択ダイアログのファイルパスをクリアする
-   *  
-   *  
-   *  @return {void}
-   */
-  clearFileValue(e) {
-    e.value = '';
-  }
+  
+  
 
-  /**
-   *  displayPreviewImages
-   *
-   *  選択したpreviewImageNameを基準とし、TunnelImage.SPAN数分のプレビュー画像を表示する
-   *  
-   *  
-   *  @return {void}
-   */
-  displayPreviewImages() {
-
-    if (!this.isSideNavPreview) return;
-    
-    this.basePreviewImageIndex = this.seikahinImages.findIndex(seikahinImage => {
-      return (seikahinImage.imageName === this.previewImageName);
-    });
-
-
-    this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
-    
-  }
-
-
-  /**
-   *  displayNextPreviewImages
-   *
-   *  previewImageNameの次の画像を基準とし、TunnelImage.PREVIEW_SPAN数分のプレビュー画像を表示する
-   *  
-   *  
-   *  @return {void}
-   */
-  displayNextPreviewImages() {
-    if (!this.isSideNavPreview) return;
-
-    this.basePreviewImageIndex += 1
-
-    if (this.basePreviewImageIndex >= this.seikahinImages.length) return;
-
-    this.initPreviewSideNav();
-
-    this.previewImageName = this.seikahinImages[this.basePreviewImageIndex].imageName;
-
-    this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
-  }
-
-
-  /**
-   *  displayPrevtPreviewImages
-   *
-   *  previewImageNameの前の画像を基準とし、TunnelImage.PREVIEW_SPAN数分のプレビュー画像を表示する
-   *  
-   *  
-   *  @return {void}
-   */
-  displayPrevPreviewImages() {
-
-    if (!this.isSideNavPreview) return;
-
-    this.basePreviewImageIndex -= 1;
-
-    if (this.basePreviewImageIndex === -1) return;
-
-    this.initPreviewSideNav();
-
-    this.previewImageName = this.seikahinImages[this.basePreviewImageIndex].imageName;
-
-    this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
-  }
-
-  /**
-   *  displayPreviewImagesFromIndex
-   *
-   *  targetIdxを基準とし、TunnelImage.PREVIEW_SPAN数分のプレビュー画像を表示
-   *  
-   *  @param  {number}    targetIdx
-   *  
-   *  @return {void}
-   */
-  displayPreviewImagesFromIndex(targetIdx: number) {
-
-    if (targetIdx === -1 || targetIdx >= this.seikahinImages.length) {
-      this.isLoadPreviewImageProgress = false;
-      return;
-    }
-    
-
-    var i = 0;
-
-    var j = 0;
-    
-
-    while (i < TunnelImage.PREVIEW_SPAN && targetIdx + i < this.seikahinImages.length) {
-
-      const img = new Image();
-
-      img.onload = () => {
-        this.previewImages[j] = this.seikahinImages[targetIdx + j].imageUrl;
-        j++;
-
-        if (i === j) {
-
-          this.isLoadPreviewImageProgress = false;
-
-          if (targetIdx > 0) this.switchDisabledPrevImageButton(false);
-
-          if (targetIdx < this.seikahinImages.length - 1) this.switchDisabledNextImageButton(false);
-
-        }
-
-      };
-
-      img.src = this.seikahinImages[targetIdx + i].imageUrl;
-
-      i++;
-    }
-  }
-
-  /**
-   *  initPreviewSideNav
-   *
-   *  プレビューサイドナビを初期設定する
-   *  
-   *  
-   *  @return {void}
-   */
-  initPreviewSideNav() {
-    this.previewImages = [];
-
-    this.isLoadPreviewImageProgress = true;
-
-    this.switchDisabledPrevImageButton(true);
-
-    this.switchDisabledNextImageButton(true);
-
-  }
-
+  
 
    /**
    *  switchDisabledDeleteButton
@@ -908,54 +546,7 @@ export class TunnelComponent implements OnInit {
     
   }
 
-  /**
-   *  switchDisabledSaveButton
-   *
-   *  保存ボタンの活性/不活性を切り替える
-   *  
-   *  @param  {boolean}    disabled
-   *  
-   *  @return {void}
-   */
-  switchDisabledSaveButton(disabled: boolean) {
-
-    this.isSaveDisabled = disabled;
-
-    this.saveIconColor = disabled ? 'diabled' : 'primary';
-  }
-
-  /**
-   *  switchDisabledPrevImageButton
-   *
-   *  前の画像ボタンの活性/不活性を切り替える
-   *  
-   *  @param  {boolean}    disabled
-   *  
-   *  @return {void}
-   */
-  switchDisabledPrevImageButton(disabled: boolean) {
-
-    this.isPrevImageDisabled = disabled;
-
-    this.prevImageIconColor = disabled ? 'diabled' : 'primary';
-  }
-
-  /**
-   *  switchDisabledNextImageButton
-   *
-   *  次の画像ボタンの活性/不活性を切り替える
-   *  
-   *  @param  {boolean}    disabled
-   *  
-   *  @return {void}
-   */
-  switchDisabledNextImageButton(disabled: boolean) {
-
-    this.isNextImageDisabled = disabled;
-
-    this.nextImageIconColor = disabled ? 'diabled' : 'primary';
-  }
-
+  
   /**
    *  switchDisabledUploadButton
    *
@@ -1038,29 +629,67 @@ export class TunnelComponent implements OnInit {
 
 
   /**
-   *  isChangeImageFromAddSidenav
+   *  initSidenav
    *
-   *  追加用サイドナビで画像を変更したか判定
+   *  サイドナビに表示するコンポーネントを初期化する
    *  
    *  
-   *  @return {boolean} 判定結果
+   *  @return {void}
    */
-  isChangeImageFromAddSidenav(): boolean {
+  initSidenav() {
 
-    if (this.dataSource.data.length !== this.seikahinImages.length) {
-      return true;
+    if (this.isSideNavAiRiyoujoukyou) {
+
+      this.initAiriyoujoukyouComponent();
     }
+    
+  }
 
-    this.dataSource.data.forEach(data => {
-      var result = this.seikahinImages.find(image => {
-        return (image.imageName === data.seikahinImage.imageName);
-      });
 
-      if (!result) {
-        return true;
-      }
-    });
+  /**
+   *  initAiriyoujoukyouComponent
+   *
+   *  サイドナビに表示するAiriyoujoukyouComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initAiriyoujoukyouComponent() {
 
-    return false;
+    this.aiRiyoujoukyou.initialize();
+    this.aiRiyoujoukyou.sideNav = this.sideNav;
+  }
+
+
+  /**
+   *  destroySideNav
+   *
+   *  サイドナビに表示したコンポーネントを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroySideNav() {
+
+    if (this.isSideNavAiRiyoujoukyou) {
+
+      this.destroyAiriyoujoukyouComponent();
+
+    }
+  }
+
+
+  /**
+   *  destroyAiriyoujoukyouComponent
+   *
+   *  サイドナビに表示したAiriyoujoukyouComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyAiriyoujoukyouComponent() {
+
+    this.aiRiyoujoukyou.destroy();
+
   }
 }

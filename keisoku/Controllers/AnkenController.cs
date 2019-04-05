@@ -38,7 +38,7 @@ namespace keisoku.Controllers
 
             var ankens = _context.Ankens.Where(x => x.CustomerId == customerId);
 
-            if (ankens.Count() == 0)
+            if (!ankens.Any())
             {
                 return NotFound();
             }

@@ -9,36 +9,36 @@
 <mat-divider></mat-divider>
 
 <div class="mat-elevation-z8">
-  <mat-table [dataSource]="dataSource">
+  <mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef> 案件名 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.anken.ankenName}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> 案件名 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.ankenName}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="month">
-      <mat-header-cell *matHeaderCellDef> 月 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.riyouMonth}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> 月 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.month}}月分 </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="tunnel">
-      <mat-header-cell *matHeaderCellDef> トンネル数 </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル数 </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.tunnelNumber}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="enchou">
-      <mat-header-cell *matHeaderCellDef> 総延長(ｍ) </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> 総延長(ｍ) </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.souEnchou}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="tanka">
-      <mat-header-cell *matHeaderCellDef> ｍ単価 </mat-header-cell>
-      <mat-cell *matCellDef="let element"></mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> ｍ単価 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> \{{element.tanka}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="kei">
-      <mat-header-cell *matHeaderCellDef> 計 </mat-header-cell>
-      <mat-cell *matCellDef="let element"></mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> 計 </mat-header-cell>
+      <mat-cell *matCellDef="let element"> \{{element.kei}} </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

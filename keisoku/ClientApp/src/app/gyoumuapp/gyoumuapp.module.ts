@@ -12,9 +12,9 @@ import { FormsModule  } from '@angular/forms';
 import { UserKanriComponent } from './user-kanri/user-kanri.component';
 import { CustomerKanriComponent } from './customer-kanri/customer-kanri.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
-import { CustomerService } from '../services/customer.service';
 import { AiriyoujoukyouComponent } from './airiyoujoukyou/airiyoujoukyou.component';
+import { AddimageComponent } from './addimage/addimage.component';
+import { PreviewComponent } from './preview/preview.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,9 @@ import { AiriyoujoukyouComponent } from './airiyoujoukyou/airiyoujoukyou.compone
     TunnelComponent,
     UserKanriComponent,
     CustomerKanriComponent,
-    AiriyoujoukyouComponent
+    AiriyoujoukyouComponent,
+    AddimageComponent,
+    PreviewComponent
   ],
 
   imports: [
@@ -49,7 +51,7 @@ import { AiriyoujoukyouComponent } from './airiyoujoukyou/airiyoujoukyou.compone
     ])
   ],
 
-  providers: [CustomerService],
+  providers: [],
 
   exports: [RouterModule]
   

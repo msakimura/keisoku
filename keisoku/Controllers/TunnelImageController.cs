@@ -52,15 +52,15 @@ namespace keisoku.Controllers
             var query =
                 tunnelImages.Join(
                     seikahinImages,
+                    tunnelImage => tunnelImage.SeikahinImageId,
                     seikahinImage => seikahinImage.SeikahinImageId,
-                    tunnewlImage => tunnewlImage.SeikahinImageId,
-                    (tunnewlImage, seikahinImage) => new
+                    (tunnelImage, seikahinImage) => new
                     {
-                        tunnewlImage.CustomerId,
-                        tunnewlImage.AnkenId,
-                        tunnewlImage.TunnelId,
-                        tunnewlImage.TunnelImageId,
-                        tunnewlImage.SeikahinImageId,
+                        tunnelImage.CustomerId,
+                        tunnelImage.AnkenId,
+                        tunnelImage.TunnelId,
+                        tunnelImage.TunnelImageId,
+                        tunnelImage.SeikahinImageId,
                         seikahinImage.ImageName,
                         seikahinImage.ImageData,
                         seikahinImage.Width,
@@ -71,7 +71,7 @@ namespace keisoku.Controllers
                     })
                     .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId);
 
-            if (query.Count() == 0)
+            if (!query.Any())
             {
                 return NotFound();
             }

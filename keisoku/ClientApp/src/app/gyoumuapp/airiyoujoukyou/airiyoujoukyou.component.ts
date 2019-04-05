@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { Component, OnInit, ViewChild, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
+import { MatTableDataSource, MatPaginator, MatSort, MatSidenav } from '@angular/material';
 import { TunnelComponent } from '../tunnel/tunnel.component';
 import { AiRiyouJoukyouModel, AiriyoujoukyouService } from 'src/app/services/airiyoujoukyou.service';
-import { UserService } from 'src/app/services/user.service';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import { AnkenService } from 'src/app/services/anken.service';
 
 @Component({
   selector: 'app-airiyoujoukyou',
@@ -16,71 +15,111 @@ export class AiriyoujoukyouComponent implements OnInit {
 
   dataSource = new MatTableDataSource<AiRiyouJoukyouModel>();
 
+  sideNav: MatSidenav;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private parent: TunnelComponent,
-    private userService: UserService,
-    private authenticationService: AuthenticationService,
+  
+
+  constructor(
+    private ankenService: AnkenService,
     private airiyoujoukyouService: AiriyoujoukyouService) { }
-
+  
   ngOnInit() {
+
+    this.initialize();
+
+  }
+  
+  /**
+   *  initialize
+   *
+   *  AI利用状況画面の内容を初期化する
+   *
+   *  
+   *
+   *  @return {void}
+   */
+  initialize() {
+
+    const sortingDataAccessor = (data: AiRiyouJoukyouModel, sortHeaderId: string): string | number => {
+      if (sortHeaderId === this.displayedColumns[0]) {
+        return data.ankenName;
+      }
+      else if (sortHeaderId === this.displayedColumns[1]) {
+        return data.month;
+      }
+      else if (sortHeaderId === this.displayedColumns[2]) {
+        return data.tunnelNumber;
+      }
+      else if (sortHeaderId === this.displayedColumns[3]) {
+        return data.souEnchou;
+      }
+      else if (sortHeaderId === this.displayedColumns[4]) {
+        return data.tanka;
+      }
+      else if (sortHeaderId === this.displayedColumns[5]) {
+        return data.kei;
+      }
+
+      return '';
+    };
 
     this.bindAllAiRiyouJoukyouInfoLoginUser();
 
     this.dataSource.paginator = this.paginator;
+
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
+
+    this.dataSource.sort = this.sort;
+  }
+
+
+  /**
+   *  destroy
+   *
+   *  AI利用状況画面の内容を破棄する
+   *
+   *  
+   *
+   *  @return {void}
+   */
+  destroy() {
+
+    this.dataSource.data = [];
+
   }
 
 
   /**
    *  bindAllAiRiyouJoukyouInfoLoginUser
    *
-   *  ログイン者の顧客IDに紐付いている全てのAI利用状況情報をdataSourceにバインドする
+   *  選択している案件の顧客ID、案件IDに紐付いている全てのAI利用状況情報をdataSourceにバインドする
+   *
    *  
    *
    *  @return {void}
    */
   bindAllAiRiyouJoukyouInfoLoginUser() {
-    if (this.userService.loginUserModel == null) {
 
-      if (this.authenticationService.hasTokenInfo()) {
-        this.userService.getUserFromLoginId(this.authenticationService.getTokenLoginId())
-          .subscribe((response: any) => {
-            this.userService.loginUserModel = this.userService.convertUserModel(response);
+    if (!this.ankenService.selectedAnken) return;
 
-            this.bindAllAiRiyouJoukyouInfoCustomer(this.userService.loginUserModel.customerId);
+    var customerId = this.ankenService.selectedAnken.customerId;
+    var ankenId = this.ankenService.selectedAnken.ankenId;
 
-          });
-      }
-    }
-    else {
-      this.bindAllAiRiyouJoukyouInfoCustomer(this.userService.loginUserModel.customerId);
-    }
-
-  }
-
-
-  /**
-   *  bindAllAiRiyouJoukyouInfoCustomer
-   *
-   *  customerIdに紐付く全てのAI利用状況情報をdataSourceにバインドする
-   *  
-   *  @param  {number}    customerId
-   *  
-   *  @return {void}
-   */
-  bindAllAiRiyouJoukyouInfoCustomer(customerId: number) {
-
-    this.airiyoujoukyouService.getAllAiRiyouJoukyous(customerId)
+    this.airiyoujoukyouService.getAllAiRiyouJoukyous(customerId, ankenId)
       .subscribe((response: any) => {
 
-
+        this.dataSource.data = this.airiyoujoukyouService.convertAiRiyouJoukyouModels(response);
       },
-        error => {
+      error => {
 
-        });
+      });
+
   }
-
+  
 
   /**
    *  closeSideNav
@@ -92,7 +131,7 @@ export class AiriyoujoukyouComponent implements OnInit {
    */
   closeSideNav() {
 
-    this.parent.closeSideNav();
+    this.sideNav.close();
 
   }
 

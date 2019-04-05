@@ -11,7 +11,9 @@ namespace keisoku.Models
 
         public int AnkenId { get; set; }
 
-        public DateTime RiyouMonth { get; set; }
+        public int Year { get; set; }
+
+        public int Month { get; set; }
 
         public int TunnelNumber { get; set; }
 

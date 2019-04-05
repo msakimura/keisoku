@@ -1,0 +1,27 @@
+<div class="mat-headline">{{previewImageName}}　プレビュー</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button mat-button [disabled]="isPrevImageDisabled" (click)="displayPrevPreviewImages()"><mat-icon color="{{prevImageIconColor}}">arrow_back_ios</mat-icon>前の画像</button>
+
+<button mat-button [disabled]="isNextImageDisabled" (click)="displayNextPreviewImages()"><mat-icon color="{{nextImageIconColor}}">arrow_forward_ios</mat-icon>次の画像</button>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="isLoadPreviewImageProgress">
+
+  <h4 class="mat-h4">{{loadPreviewImageMessage}}</h4>
+
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+
+</div>
+
+
+<div fxLayout="row">
+  <div *ngFor="let image of previewImages">
+    <img [src]="image" height="200" *ngIf="image">
+  </div>
+</div>
+

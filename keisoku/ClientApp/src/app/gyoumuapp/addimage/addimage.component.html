@@ -1,0 +1,36 @@
+<div class="mat-headline">画像選択</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button mat-button (click)="addDatasourceTunnelImage()" [disabled]="isSaveDisabled"><mat-icon color="{{saveIconColor}}">add_photo_alternate</mat-icon>保存</button>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="isImageProgress">
+
+  <h4 class="mat-h4">{{addImageMessage}}</h4>
+
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+
+</div>
+
+<mat-list #images>
+  <mat-list-item *ngFor="let seikahinImage of seikahinImages">
+    {{seikahinImage.imageName}}
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="deleteSelectedTunnelImage(seikahinImage)">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
+
+
+<input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" (click)="clearFileValue(file)" />
+
+<div layout="row" layout-align="start center" flex>
+  <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
+  <span flex></span>
+</div>
+
+<mat-divider class="image-add-divider"></mat-divider>

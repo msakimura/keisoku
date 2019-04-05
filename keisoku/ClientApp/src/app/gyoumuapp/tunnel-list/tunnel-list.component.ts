@@ -317,7 +317,7 @@ export class TunnelListComponent implements OnInit {
       ankenId: this.ankenService.selectedAnken.ankenId,
       tunnelId: tunnelId,
       tunnelName: this.tunnelNameFormControl.value,
-      tunnelEnchou: 0,
+      tunnelEnchou: 200,
       yoteiImageNumber: 0,
       imageNumber: 0,
       aiNumber: 0,

@@ -38,7 +38,7 @@ namespace keisoku.Controllers
 
             var tunnels = _context.Tunnels.Where(x => x.CustomerId == customerId && x.AnkenId == ankenId);
 
-            if (tunnels.Count() == 0)
+            if (!tunnels.Any())
             {
                 return NotFound();
             }

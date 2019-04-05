@@ -1,77 +1,16 @@
 <mat-sidenav-container class="mat-elevation-z8">
 
-  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" (opened)="displayPreviewImages()">
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" (opened)="initSidenav()" (closed)="destroySideNav()">
 
     <div *ngIf="isSideNavPreview">
 
-      <div class="mat-headline">{{previewImageName}}　プレビュー</div>
-
-      <mat-divider></mat-divider>
-
-      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
-
-      <button mat-button [disabled]="isPrevImageDisabled" (click)="displayPrevPreviewImages()"><mat-icon color="{{prevImageIconColor}}">arrow_back_ios</mat-icon>前の画像</button>
-
-      <button mat-button [disabled]="isNextImageDisabled" (click)="displayNextPreviewImages()"><mat-icon color="{{nextImageIconColor}}">arrow_forward_ios</mat-icon>次の画像</button>
-
-      <mat-divider></mat-divider>
-
-      <div *ngIf="isLoadPreviewImageProgress">
-
-        <h4 class="mat-h4">{{loadPreviewImageMessage}}</h4>
-
-        <mat-progress-bar mode="buffer"></mat-progress-bar>
-
-      </div>
-
-
-      <div fxLayout="row">
-        <div *ngFor="let image of previewImages">
-          <img [src]="image" height="200" *ngIf="image">
-        </div>
-      </div>
-
+      <app-preview></app-preview>
 
     </div>
 
     <div *ngIf="isSideNavImage" class="image_sidenav">
 
-      <div class="mat-headline">画像選択</div>
-
-      <mat-divider></mat-divider>
-
-      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
-
-      <button mat-button (click)="addDatasourceTunnelImage()" [disabled]="isSaveDisabled"><mat-icon color="{{saveIconColor}}">add_photo_alternate</mat-icon>保存</button>
-
-      <mat-divider></mat-divider>
-
-      <div *ngIf="isImageProgress">
-
-        <h4 class="mat-h4">{{addImageMessage}}</h4>
-
-        <mat-progress-bar mode="buffer"></mat-progress-bar>
-
-      </div>
-
-      <mat-list #images>
-        <mat-list-item *ngFor="let seikahinImage of seikahinImages">
-          {{seikahinImage.imageName}}
-          <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="deleteSelectedTunnelImage(seikahinImage)">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-list-item>
-      </mat-list>
-
-
-      <input class="ng-hide" #file id="input-file-id" multiple type="file" (change)="addTunnelImages(file.files)" (click)="clearFileValue(file)" />
-
-      <div layout="row" layout-align="start center" flex>
-        <button mat-button class="image-mat-button" (click)="file.click()">トンネル画像追加</button>
-        <span flex></span>
-      </div>
-
-      <mat-divider class="image-add-divider"></mat-divider>
+      <app-addimage></app-addimage>
 
     </div>
 
@@ -82,6 +21,7 @@
 
 
     </div>
+
   </mat-sidenav>
 
 
@@ -170,7 +110,7 @@
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"
-                 (click)="selectToggle(row)">
+                  (click)="selectToggle(row)">
         </mat-row>
       </mat-table>
 

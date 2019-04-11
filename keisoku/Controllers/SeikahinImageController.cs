@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -120,6 +121,9 @@ namespace keisoku.Controllers
             var blob = container.GetBlobReference(seikahinImage.ImageName);
             seikahinImage.ImageData = blob.Uri.OriginalString;
 
+            Bitmap image = new Bitmap(fileStream, false);
+            seikahinImage.Width = image.Width;
+            seikahinImage.Height = image.Height;
 
             return Ok();
         }

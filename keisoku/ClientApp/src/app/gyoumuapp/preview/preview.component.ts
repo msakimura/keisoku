@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TunnelComponent } from '../tunnel/tunnel.component';
 import { TunnelImage } from 'src/app/shared/constant.module';
+import { MatSidenav } from '@angular/material';
+import { SeikahinImageModel } from 'src/app/services/seikahin-image.service';
 
 @Component({
   selector: 'app-preview',
@@ -9,13 +11,13 @@ import { TunnelImage } from 'src/app/shared/constant.module';
 })
 export class PreviewComponent implements OnInit {
 
-  previewImageName: string;
+  @Input('childToPreview') previewImageName: string;
 
   isPrevImageDisabled: boolean = true;
 
   basePreviewImageIndex: number;
 
-  isLoadPreviewImageProgress: boolean = false;
+  isLoadPreviewImageProgress: boolean = true;
 
   previewImages: string[] = [];
 
@@ -25,9 +27,32 @@ export class PreviewComponent implements OnInit {
 
   isNextImageDisabled: boolean = true;
 
-  constructor(private parent: TunnelComponent) { }
+  sideNav: MatSidenav;
+
+  seikahinImages: SeikahinImageModel[] = [];
+
+  loadPreviewImageMessage = TunnelImage.LOAD_PREVIEWIMAGE;
+
+
+  constructor() { }
 
   ngOnInit() {
+  }
+
+
+  /**
+   *  destroy
+   *
+   *  プレビュー画面の内容を破棄する
+   *
+   *  
+   *
+   *  @return {void}
+   */
+  destroy() {
+
+    this.initPreviewContent();
+
   }
 
 
@@ -41,7 +66,7 @@ export class PreviewComponent implements OnInit {
    */
   closeSideNav() {
 
-    this.parent.closeSideNav();
+    this.sideNav.close();
 
   }
 
@@ -56,15 +81,13 @@ export class PreviewComponent implements OnInit {
    */
   displayPrevPreviewImages() {
 
-    if (!this.parent.isSideNavPreview) return;
-
     this.basePreviewImageIndex -= 1;
 
     if (this.basePreviewImageIndex === -1) return;
 
-    this.initPreviewSideNav();
+    this.initPreviewContent();
 
-    this.previewImageName = this.parent.seikahinImages[this.basePreviewImageIndex].imageName;
+    this.previewImageName = this.seikahinImages[this.basePreviewImageIndex].imageName;
 
     this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
   }
@@ -79,15 +102,14 @@ export class PreviewComponent implements OnInit {
    *  @return {void}
    */
   displayNextPreviewImages() {
-    if (!this.parent.isSideNavPreview) return;
 
     this.basePreviewImageIndex += 1
 
-    if (this.basePreviewImageIndex >= this.parent.seikahinImages.length) return;
+    if (this.basePreviewImageIndex >= this.seikahinImages.length) return;
 
-    this.initPreviewSideNav();
+    this.initPreviewContent();
 
-    this.previewImageName = this.parent.seikahinImages[this.basePreviewImageIndex].imageName;
+    this.previewImageName = this.seikahinImages[this.basePreviewImageIndex].imageName;
 
     this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
   }
@@ -97,24 +119,20 @@ export class PreviewComponent implements OnInit {
    *  displayPreviewImages
    *
    *  選択したpreviewImageNameを基準とし、TunnelImage.SPAN数分のプレビュー画像を表示する
-   *  
-   *  
+   *
+   *
    *  @return {void}
    */
   displayPreviewImages() {
 
-    if (!this.parent.isSideNavPreview) return;
-
-    this.basePreviewImageIndex = this.parent.seikahinImages.findIndex(seikahinImage => {
+    this.basePreviewImageIndex = this.seikahinImages.findIndex(seikahinImage => {
       return (seikahinImage.imageName === this.previewImageName);
     });
-
-
+    
     this.displayPreviewImagesFromIndex(this.basePreviewImageIndex);
 
   }
-
-
+  
 
   /**
    *  displayPreviewImagesFromIndex
@@ -127,7 +145,7 @@ export class PreviewComponent implements OnInit {
    */
   displayPreviewImagesFromIndex(targetIdx: number) {
 
-    if (targetIdx === -1 || targetIdx >= this.parent.seikahinImages.length) {
+    if (targetIdx === -1 || targetIdx >= this.seikahinImages.length) {
       this.isLoadPreviewImageProgress = false;
       return;
     }
@@ -138,12 +156,12 @@ export class PreviewComponent implements OnInit {
     var j = 0;
 
 
-    while (i < TunnelImage.PREVIEW_SPAN && targetIdx + i < this.parent.seikahinImages.length) {
+    while (i < TunnelImage.PREVIEW_SPAN && targetIdx + i < this.seikahinImages.length) {
 
       const img = new Image();
 
       img.onload = () => {
-        this.previewImages[j] = this.parent.seikahinImages[targetIdx + j].imageUrl;
+        this.previewImages[j] = this.seikahinImages[targetIdx + j].imageUrl;
         j++;
 
         if (i === j) {
@@ -152,31 +170,16 @@ export class PreviewComponent implements OnInit {
 
           if (targetIdx > 0) this.switchDisabledPrevImageButton(false);
 
-          if (targetIdx < this.parent.seikahinImages.length - 1) this.switchDisabledNextImageButton(false);
+          if (targetIdx < this.seikahinImages.length - 1) this.switchDisabledNextImageButton(false);
 
         }
 
       };
 
-      img.src = this.parent.seikahinImages[targetIdx + i].imageUrl;
+      img.src = this.seikahinImages[targetIdx + i].imageUrl;
 
       i++;
     }
-  }
-
-  /**
-   *  initPreviewSideNav
-   *
-   *  プレビューサイドナビを初期設定する
-   *  
-   *  
-   *  @return {void}
-   */
-  initPreviewSideNav() {
-    this.previewImages = [];
-
-    this.isLoadPreviewImageProgress = true;
-
   }
 
 
@@ -212,4 +215,23 @@ export class PreviewComponent implements OnInit {
     this.nextImageIconColor = disabled ? 'diabled' : 'primary';
   }
 
+
+  /**
+   *  initPreviewContent
+   *
+   *  プレビュー画面の内容を初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initPreviewContent() {
+
+    this.isLoadPreviewImageProgress = true;
+
+    this.previewImages = [];
+
+    this.switchDisabledPrevImageButton(true);
+
+    this.switchDisabledNextImageButton(true);
+  }
 }

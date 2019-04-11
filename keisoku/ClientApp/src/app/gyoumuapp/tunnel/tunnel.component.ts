@@ -13,6 +13,8 @@ import { SeikahinImageModel, SeikahinImageService } from 'src/app/services/seika
 import { findIndex } from 'rxjs/operators';
 import { Subject, Observable } from 'rxjs';
 import { AiriyoujoukyouComponent } from '../airiyoujoukyou/airiyoujoukyou.component';
+import { AddimageComponent } from '../addimage/addimage.component';
+import { PreviewComponent } from '../preview/preview.component';
 
 
 @Component({
@@ -27,13 +29,9 @@ export class TunnelComponent implements OnInit {
   isSideNavPreview: boolean = false;
 
   isSideNavAiRiyoujoukyou: boolean = false;
-
-
-  isImageProgress: boolean = false;
+  
 
   isDeleteDisabled: boolean = true;
-
-
 
   isUploadDisabled: boolean = true;
 
@@ -59,18 +57,13 @@ export class TunnelComponent implements OnInit {
   summaryIconColor = 'disabled';
 
 
-
-  loadPreviewImageMessage = TunnelImage.LOAD_PREVIEWIMAGE;
-
-
   ankenName: string;
 
   tunnelName: string;
   
-  seikahinImages: SeikahinImageModel[] = [];
-
-
   previewImageName: string;
+
+  seikahinImages: SeikahinImageModel[] = [];
   
   message: string;
   
@@ -87,15 +80,19 @@ export class TunnelComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  @ViewChild(AiriyoujoukyouComponent) aiRiyoujoukyou: AiriyoujoukyouComponent;
+  @ViewChild(AiriyoujoukyouComponent) aiRiyoujoukyouComponent: AiriyoujoukyouComponent;
+
+  @ViewChild(AddimageComponent) addImageComponent: AddimageComponent;
+
+  @ViewChild(PreviewComponent) previewComponent: PreviewComponent;
+
 
   constructor(private router: Router,
     private http: HttpClient,
     private ankenService: AnkenService,
     private tunnelService: TunnelService,
     private tunnelImageService: TunnelImageService,
-    private seikahinImageService: SeikahinImageService,
-    private snackBar: MatSnackBar) { }
+    private seikahinImageService: SeikahinImageService) { }
 
 
   ngOnInit() {
@@ -130,7 +127,6 @@ export class TunnelComponent implements OnInit {
     };
 
 
-
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.sortingDataAccessor = sortingDataAccessor;
@@ -163,6 +159,7 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   applyFilterImageName(filterValue: string) {
+
     this.dataSource.filterPredicate = function (data, filter: string): boolean {
       return data.seikahinImage.imageName.toLowerCase().includes(filter);
     };
@@ -270,7 +267,6 @@ export class TunnelComponent implements OnInit {
           this.seikahinImages.push(data.seikahinImage);
         });
         
-
       },
       error => {
       });
@@ -298,7 +294,7 @@ export class TunnelComponent implements OnInit {
 
     this.selection.selected.forEach(image => {
 
-      data = data.filter(function (element) { return (element.customerId != image.customerId || element.ankenId != image.ankenId || element.tunnelId != image.tunnelId || element.tunnelImageId != image.tunnelImageId); });
+      data = data.filter(function (element) { return (element.customerId != image.customerId || element.ankenId != image.ankenId || element.tunnelId != image.tunnelId || element.innerId != image.innerId); });
     });
 
     this.dataSource.data = data;
@@ -325,9 +321,12 @@ export class TunnelComponent implements OnInit {
 
       if (image.tunnelImageId === 0) {
 
+        // 成果品画像アップロード後、取得した成果品画像IDをトンネル画像情報に設定し
+        // トンネル画像情報をDBに追加する
         this.seikahinImageService.insertSeikahinImage(image.seikahinImage)
           .subscribe((response: any) => {
 
+            var seikahinImage = response;
             this.message = image.seikahinImage.imageName;
 
             var target = this.dataSource.data.find(data => {
@@ -341,25 +340,28 @@ export class TunnelComponent implements OnInit {
               .subscribe((response: any) => {
 
                 this.message = 'アップロード完了';
-                console.log('アップロード完了');
 
                 target.tunnelImageId = response.tunnelImageId;
-                
+                target.seikahinImage = seikahinImage;
               },
-                error => {
+              error => {
 
-                  console.log('アップロード失敗');
-                });
+                this.message = 'アップロード失敗';
+              });
 
           },
-            error => {
+          error => {
 
           });
 
       }
       
     });
-    
+
+
+    this.selection.clear();
+
+    this.changeDisabled();
   }
   
 
@@ -428,7 +430,9 @@ export class TunnelComponent implements OnInit {
     this.isSideNavImage = true;
 
     this.isSideNavPreview = false;
-    
+
+    this.isSideNavAiRiyoujoukyou = false;
+
     this.clearSideNavFormData();
 
     this.addSeikahinImagesFromDataSource();
@@ -452,8 +456,11 @@ export class TunnelComponent implements OnInit {
 
     this.isSideNavPreview = true;
 
+    this.isSideNavAiRiyoujoukyou = false;
+
     this.previewImageName = row.seikahinImage.imageName;
 
+    this.preInitPreviewComponent();
 
     this.sideNav.open();
     
@@ -496,18 +503,7 @@ export class TunnelComponent implements OnInit {
     this.seikahinImages = [];
     
   }
-
-
   
-
-
-  
-
-
-  
-
-  
-
 
   /**
    *  addSeikahinImagesFromDataSource
@@ -522,11 +518,6 @@ export class TunnelComponent implements OnInit {
       this.seikahinImages.push(data.seikahinImage);
     });
   }
-
-
-  
-  
-
   
 
    /**
@@ -638,11 +629,86 @@ export class TunnelComponent implements OnInit {
    */
   initSidenav() {
 
-    if (this.isSideNavAiRiyoujoukyou) {
+    if (this.isSideNavImage) {
+
+      this.initAddimageComponent();
+
+    }
+    else if (this.isSideNavPreview) {
+
+      this.initPreviewComponent();
+
+    }
+    else if (this.isSideNavAiRiyoujoukyou) {
 
       this.initAiriyoujoukyouComponent();
+
     }
-    
+
+  }
+
+
+  /**
+   *  initAddimageComponent
+   *
+   *  サイドナビに表示するAddimageComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initAddimageComponent() {
+
+    if (this.addImageComponent) {
+
+      this.addImageComponent.sideNav = this.sideNav;
+
+      this.addImageComponent.seikahinImages = this.seikahinImages;
+
+      this.addImageComponent.dataSource = this.dataSource;
+
+    }
+  }
+
+
+  /**
+   *  preInitPreviewComponent
+   *
+   *  サイドナビオープン前にPreviewComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  preInitPreviewComponent() {
+
+    if (this.previewComponent) {
+
+      this.previewComponent.initPreviewContent();
+
+    }
+
+  }
+
+  /**
+   *  initPreviewComponent
+   *
+   *  サイドナビに表示するPreviewComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initPreviewComponent() {
+
+    if (this.previewComponent) {
+
+      this.previewComponent.sideNav = this.sideNav;
+
+      this.previewComponent.seikahinImages = this.seikahinImages;
+
+      this.previewComponent.isLoadPreviewImageProgress = true;
+
+      this.previewComponent.displayPreviewImages();
+      
+    }
   }
 
 
@@ -656,26 +722,76 @@ export class TunnelComponent implements OnInit {
    */
   initAiriyoujoukyouComponent() {
 
-    this.aiRiyoujoukyou.initialize();
-    this.aiRiyoujoukyou.sideNav = this.sideNav;
+    if (this.aiRiyoujoukyouComponent) {
+
+      this.aiRiyoujoukyouComponent.initialize();
+      this.aiRiyoujoukyouComponent.sideNav = this.sideNav;
+
+    }
   }
 
 
   /**
    *  destroySideNav
    *
-   *  サイドナビに表示したコンポーネントを破棄する
+   *  サイドナビに表示したコンポーネントの内容を破棄する
    *  
    *  
    *  @return {void}
    */
   destroySideNav() {
 
-    if (this.isSideNavAiRiyoujoukyou) {
+    if (this.isSideNavImage) {
+
+      this.destroyAddimageComponent();
+
+    }
+    else if (this.isSideNavPreview) {
+
+      this.destroyPreviewComponent();
+
+    }
+    else if (this.isSideNavAiRiyoujoukyou) {
 
       this.destroyAiriyoujoukyouComponent();
 
     }
+  }
+
+
+  /**
+   *  destroyAddimageComponent
+   *
+   *  サイドナビに表示したAddimageComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyAddimageComponent() {
+
+    if (this.addImageComponent.isSave) {
+      this.selection.clear();
+
+      this.changeDisabled();
+    }
+    
+    this.addImageComponent.destroy();
+    
+  }
+
+
+  /**
+   *  destroyPreviewComponent
+   *
+   *  サイドナビに表示したPreviewComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyPreviewComponent() {
+
+    this.previewComponent.destroy();
+
   }
 
 
@@ -689,7 +805,7 @@ export class TunnelComponent implements OnInit {
    */
   destroyAiriyoujoukyouComponent() {
 
-    this.aiRiyoujoukyou.destroy();
+    this.aiRiyoujoukyouComponent.destroy();
 
   }
 }

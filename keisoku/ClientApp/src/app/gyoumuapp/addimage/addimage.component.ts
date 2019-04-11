@@ -4,7 +4,7 @@ import { TunnelImage, Chushutsu } from 'src/app/shared/constant.module';
 import { SeikahinImageModel } from 'src/app/services/seikahin-image.service';
 import { ValidationModule } from 'src/app/shared/validation.module';
 import { MatSidenav } from '@angular/material';
-import { TunnelImageModel } from 'src/app/services/tunnel-image.service';
+import { TunnelImageModel, TunnelImageService } from 'src/app/services/tunnel-image.service';
 import { TunnelService } from 'src/app/services/tunnel.service';
 
 @Component({
@@ -28,20 +28,23 @@ export class AddimageComponent implements OnInit {
 
   seikahinImages: SeikahinImageModel[] = [];
 
-  dataSource: TunnelImageModel[] = [];
+  deletedTunnelImages: TunnelImageModel[] = [];
+
+  dataSource: any;
 
   sideNav: MatSidenav;
 
-  constructor(private tunnelService: TunnelService) { }
+  isSave: boolean = false;
+
+  constructor(private tunnelService: TunnelService, private tunnelImageService: TunnelImageService) { }
 
   ngOnInit() {
   }
-
-
+  
   /**
    *  destroy
    *
-   *  AI利用状況画面の内容を破棄する
+   *  画像追加画面の内容を破棄する
    *
    *  
    *
@@ -49,8 +52,15 @@ export class AddimageComponent implements OnInit {
    */
   destroy() {
 
+    this.switchDisabledSaveButton(true);
 
+    this.seikahinImages = [];
+
+    this.deletedTunnelImages = [];
+
+    this.isSave = false;
   }
+
 
   /**
    *  closeSideNav
@@ -87,7 +97,9 @@ export class AddimageComponent implements OnInit {
 
     var tunnelImages = this.getSelectedTunnelImageModels();
 
-    this.dataSource = tunnelImages;
+    this.dataSource.data = tunnelImages;
+
+    this.isSave = true;
 
     this.closeSideNav();
     
@@ -104,17 +116,24 @@ export class AddimageComponent implements OnInit {
    */
   getSelectedTunnelImageModels(): TunnelImageModel[] {
 
+    var innerId = 0;
+
     var tunnelImageModels: TunnelImageModel[] = [];
 
     this.seikahinImages.forEach(seikahinImage => {
+
+      var target = this.dataSource.data.find(data => {
+        return (data.seikahinImage.imageName === seikahinImage.imageName);
+      });
 
       var tunnelImageModel: TunnelImageModel = {
         customerId: this.tunnelService.selectedTunnel.customerId,
         ankenId: this.tunnelService.selectedTunnel.ankenId,
         tunnelId: this.tunnelService.selectedTunnel.tunnelId,
-        tunnelImageId: 0,
+        tunnelImageId: target ? target.tunnelImageId : 0,
         seikahinImageId: 0,
-        seikahinImage: seikahinImage
+        seikahinImage: seikahinImage,
+        innerId: innerId++
       };
 
 
@@ -123,6 +142,35 @@ export class AddimageComponent implements OnInit {
     });
 
     return tunnelImageModels;
+  }
+
+
+  /**
+   *  deleteTunnelImageInfoFromAddImage
+   *
+   *  削除したdeletedTunnelImagesについて、datasourceから削除する
+   *  
+   *  
+   *  @return {void}
+   */
+  deleteTunnelImageInfoFromAddImage() {
+
+    this.deletedTunnelImages.forEach(image => {
+      this.tunnelImageService.deleteTunnelImage(image).subscribe(
+        data => { },
+        error => {
+        });
+    });
+
+    var data = this.dataSource.data;
+
+    this.deletedTunnelImages.forEach(image => {
+
+      data = data.filter(function (element) { return (element.customerId != image.customerId || element.ankenId != image.ankenId || element.tunnelId != image.tunnelId || element.innerId != image.innerId); });
+    });
+
+    this.dataSource.data = data;
+
   }
 
 
@@ -143,7 +191,17 @@ export class AddimageComponent implements OnInit {
 
 
     if (targetIdx !== -1) {
-      this.seikahinImages.splice(targetIdx, 1);
+      var target = this.seikahinImages.splice(targetIdx, 1);
+
+      var tunnelImage = this.dataSource.data.find(data => {
+        return (data.seikahinImage.imageName === target[0].imageName);
+      });
+
+      if (tunnelImage) {
+
+        this.deletedTunnelImages.push(tunnelImage);
+
+      }
     }
 
 
@@ -155,8 +213,7 @@ export class AddimageComponent implements OnInit {
     }
 
   }
-
-
+  
 
   /**
    *  isChangeImageFromAddSidenav
@@ -168,11 +225,11 @@ export class AddimageComponent implements OnInit {
    */
   isChangeImageFromAddSidenav(): boolean {
 
-    if (this.dataSource.length !== this.seikahinImages.length) {
+    if (this.dataSource.data.length !== this.seikahinImages.length) {
       return true;
     }
 
-    this.dataSource.forEach(data => {
+    this.dataSource.data.forEach(data => {
       var result = this.seikahinImages.find(image => {
         return (image.imageName === data.seikahinImage.imageName);
       });
@@ -252,15 +309,16 @@ export class AddimageComponent implements OnInit {
     });
   }
 
+
   /**
-    *  addSeikahinImageModel
-    *
-    *  fileを元にSeikahinImageModelを作成し、seikahinImagesに追加する
-    *  
-    *  @param  {File}    file
-    *  
-    *  @return {void}
-    */
+   *  addSeikahinImageModel
+   *
+   *  fileを元にSeikahinImageModelを作成し、seikahinImagesに追加する
+   *  
+   *  @param  {File}    file
+   *  
+   *  @return {void}
+   */
   addSeikahinImageModel(file: File) {
 
     const reader = new FileReader();
@@ -289,12 +347,10 @@ export class AddimageComponent implements OnInit {
 
       this.progressbarReadImage();
 
-
     };
 
     reader.readAsDataURL(file);
   }
-
 
 
   /**
@@ -321,15 +377,14 @@ export class AddimageComponent implements OnInit {
   }
 
 
-
   /**
-    *  clearFileValue
-    *
-    *  ファイル選択ダイアログのファイルパスをクリアする
-    *  
-    *  
-    *  @return {void}
-    */
+   *  clearFileValue
+   *
+   *  ファイル選択ダイアログのファイルパスをクリアする
+   *  
+   *  
+   *  @return {void}
+   */
   clearFileValue(e) {
     e.value = '';
   }

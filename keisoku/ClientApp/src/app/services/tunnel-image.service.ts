@@ -10,6 +10,7 @@ export interface TunnelImageModel {
   seikahinImageId: number;
 
   seikahinImage: SeikahinImageModel;
+  innerId: number;
 }
 
 @Injectable({
@@ -124,7 +125,8 @@ export class TunnelImageService {
       tunnelId: tunnelImage.tunnelId,
       tunnelImageId: tunnelImage.tunnelImageId,
       seikahinImageId: tunnelImage.seikahinImageId,
-      seikahinImage: seikahinImage
+      seikahinImage: seikahinImage,
+      innerId: tunnelImage.tunnelImageId
     };
 
 

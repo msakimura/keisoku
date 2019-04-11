@@ -69,7 +69,8 @@ namespace keisoku.Controllers
                         seikahinImage.Sonshou,
                         seikahinImage.HibiBunrui
                     })
-                    .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId);
+                    .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId)
+                    .OrderBy(x => x.ImageName);
 
             if (!query.Any())
             {

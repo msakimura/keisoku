@@ -1,23 +1,31 @@
 <mat-sidenav-container class="mat-elevation-z8">
 
-  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" (opened)="initSidenav()" (closed)="destroySideNav()">
+  <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" (opened)="initSidenav()" (closed)="destroySideNav()" (closedStart)="closeSideNavAction()">
 
     <div *ngIf="isSideNavPreview">
 
-      <app-preview [childToPreview]="previewImageName"></app-preview>
+      <app-preview [childToPreview]="previewImageName" [childToSidenav]="sideNav"></app-preview>
 
     </div>
 
     <div *ngIf="isSideNavImage" class="image_sidenav">
 
-      <app-addimage></app-addimage>
+      <app-addimage [childToSidenav]="sideNav"></app-addimage>
 
     </div>
 
 
     <div *ngIf="isSideNavAiRiyoujoukyou">
 
-      <app-airiyoujoukyou></app-airiyoujoukyou>
+      <app-airiyoujoukyou [childToSidenav]="sideNav"></app-airiyoujoukyou>
+
+
+    </div>
+
+
+    <div *ngIf="isSideNavOsirase">
+
+      <app-osirase [childToSidenav]="sideNav"></app-osirase>
 
 
     </div>
@@ -47,14 +55,13 @@
 
     <button mat-button [disabled]="isSummaryDisabled"><mat-icon color="{{summaryIconColor}}">view_list</mat-icon>サマリー</button>
 
+    <button mat-button (click)="displaySideNavOshirase()" *ngIf="isOsirase"><mat-icon color="primary">notifications_active</mat-icon>お知らせ</button>
+
     <mat-divider></mat-divider>
 
     <mat-form-field>
       <input matInput (keyup)="applyFilterImageName($event.target.value)" placeholder="画像名でフィルタ">
     </mat-form-field>
-
-
-    <div *ngIf="message" class="alert alert-primary">{{message}}</div>
 
 
     <div>
@@ -109,7 +116,7 @@
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"
-                  (click)="selectToggle(row)">
+                 (click)="selectToggle(row)">
         </mat-row>
       </mat-table>
 

@@ -46,3 +46,9 @@ export class TunnelImage {
 
 }
 
+export class ProgressMessage {
+  public static readonly UPLOAD_START = 'アップロードしています';
+  public static readonly UPLOAD_SUCCESS = 'アップロードが完了しました';
+  public static readonly UPLOAD_ERROR = 'アップロードに失敗しました';
+
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSidenav, MatSort, MatDialogRef, MatDialog } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
-import { TunnelService } from 'src/app/services/tunnel.service';
+import { TunnelService, OsiraseModel } from 'src/app/services/tunnel.service';
 import { TunnelImageModel, TunnelImageService } from 'src/app/services/tunnel-image.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AnkenService } from 'src/app/services/anken.service';
@@ -11,6 +11,10 @@ import { AiriyoujoukyouComponent } from '../airiyoujoukyou/airiyoujoukyou.compon
 import { AddimageComponent } from '../addimage/addimage.component';
 import { PreviewComponent } from '../preview/preview.component';
 import { UserService } from 'src/app/services/user.service';
+import { ProgressMessage } from 'src/app/shared/constant.module';
+import { OsiraseComponent } from '../osirase/osirase.component';
+import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinnerdialog.component';
+import { AiriyoujoukyouService } from 'src/app/services/airiyoujoukyou.service';
 
 
 @Component({
@@ -25,7 +29,9 @@ export class TunnelComponent implements OnInit {
   isSideNavPreview: boolean = false;
 
   isSideNavAiRiyoujoukyou: boolean = false;
-  
+
+  isSideNavOsirase: boolean = false;
+
 
   isDeleteDisabled: boolean = true;
 
@@ -38,6 +44,8 @@ export class TunnelComponent implements OnInit {
   isPrintDisabled: boolean = true;
 
   isSummaryDisabled: boolean = true;
+
+  isOsirase: boolean = false;
 
 
   deleteIconColor = 'diabled';
@@ -62,6 +70,8 @@ export class TunnelComponent implements OnInit {
   seikahinImages: SeikahinImageModel[] = [];
   
   message: string;
+
+  osirases: OsiraseModel[] = [];
   
 
   displayedColumns: string[] = ['select', 'name', 'width', 'height', 'hibiChushutsu', 'sonshou', 'hibiBunrui'];
@@ -69,6 +79,9 @@ export class TunnelComponent implements OnInit {
   dataSource = new MatTableDataSource<TunnelImageModel>();
 
   selection = new SelectionModel<TunnelImageModel>(true, []);
+
+  dialogRef: MatDialogRef<SpinnerdialogComponent>;
+  
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -82,6 +95,8 @@ export class TunnelComponent implements OnInit {
 
   @ViewChild(PreviewComponent) previewComponent: PreviewComponent;
 
+  @ViewChild(OsiraseComponent) osiraseComponent: OsiraseComponent;
+
 
   constructor(private router: Router,
     private http: HttpClient,
@@ -89,7 +104,9 @@ export class TunnelComponent implements OnInit {
     private tunnelService: TunnelService,
     private tunnelImageService: TunnelImageService,
     private seikahinImageService: SeikahinImageService,
-    private userService: UserService) { }
+    private userService: UserService,
+    private dialog: MatDialog,
+    private airiyoujoukyouService: AiriyoujoukyouService) { }
 
 
   ngOnInit() {
@@ -143,6 +160,7 @@ export class TunnelComponent implements OnInit {
 
       this.showHome();
     }
+    
   }
   
 
@@ -311,8 +329,9 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   uploadTunnelImageInfo() {
+    
+    this.addOsiraseInfo();
 
-    this.message = 'アップロード開始';
     
     this.selection.selected.forEach(image => {
 
@@ -324,7 +343,6 @@ export class TunnelComponent implements OnInit {
           .subscribe((response: any) => {
 
             var seikahinImage = response;
-            this.message = image.seikahinImage.imageName;
 
             var target = this.dataSource.data.find(data => {
               return (data.seikahinImage && data.seikahinImage.imageName === response.imageName);
@@ -336,18 +354,22 @@ export class TunnelComponent implements OnInit {
             this.tunnelImageService.insertTunnelImage(target)
               .subscribe((response: any) => {
 
-                this.message = 'アップロード完了';
-
                 target.tunnelImageId = response.tunnelImageId;
                 target.seikahinImage = seikahinImage;
+
+
+                this.successOshiraseInfo(image.seikahinImage.imageName, ProgressMessage.UPLOAD_SUCCESS);
+
               },
               error => {
 
-                this.message = 'アップロード失敗';
+                this.errorOshiraseInfo(image.seikahinImage.imageName, ProgressMessage.UPLOAD_ERROR);
               });
 
           },
           error => {
+
+            this.errorOshiraseInfo(image.seikahinImage.imageName, ProgressMessage.UPLOAD_ERROR);
 
           });
 
@@ -430,6 +452,9 @@ export class TunnelComponent implements OnInit {
 
     this.isSideNavAiRiyoujoukyou = false;
 
+    this.isSideNavOsirase = false;
+
+
     this.clearSideNavFormData();
 
     this.addSeikahinImagesFromDataSource();
@@ -454,6 +479,9 @@ export class TunnelComponent implements OnInit {
     this.isSideNavPreview = true;
 
     this.isSideNavAiRiyoujoukyou = false;
+
+    this.isSideNavOsirase = false;
+
 
     this.previewImageName = row.seikahinImage.imageName;
 
@@ -481,10 +509,34 @@ export class TunnelComponent implements OnInit {
     this.isSideNavPreview = false;
 
     this.isSideNavAiRiyoujoukyou = true;
+
+    this.isSideNavOsirase = false;
+
     
     this.sideNav.open();
   }
 
+
+  /**
+   *  displaySideNavOshirase
+   *
+   *  お知らせのサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displaySideNavOshirase() {
+
+    this.isSideNavImage = false;
+
+    this.isSideNavPreview = false;
+
+    this.isSideNavAiRiyoujoukyou = false;
+
+    this.isSideNavOsirase = true;
+
+    this.sideNav.open();
+  }
 
 
   /**
@@ -641,7 +693,11 @@ export class TunnelComponent implements OnInit {
       this.initAiriyoujoukyouComponent();
 
     }
+    else if (this.isSideNavOsirase) {
 
+      this.initOsiraseComponent();
+
+    }
   }
 
 
@@ -657,13 +713,11 @@ export class TunnelComponent implements OnInit {
 
     if (this.addImageComponent) {
 
-      this.addImageComponent.sideNav = this.sideNav;
-
       this.addImageComponent.seikahinImages = this.seikahinImages;
 
       this.addImageComponent.dataSource = this.dataSource;
-
     }
+    
   }
 
 
@@ -678,11 +732,9 @@ export class TunnelComponent implements OnInit {
   preInitPreviewComponent() {
 
     if (this.previewComponent) {
-
       this.previewComponent.initPreviewContent();
-
     }
-
+    
   }
 
   /**
@@ -696,7 +748,6 @@ export class TunnelComponent implements OnInit {
   initPreviewComponent() {
 
     if (this.previewComponent) {
-
       this.previewComponent.sideNav = this.sideNav;
 
       this.previewComponent.seikahinImages = this.seikahinImages;
@@ -704,8 +755,8 @@ export class TunnelComponent implements OnInit {
       this.previewComponent.isLoadPreviewImageProgress = true;
 
       this.previewComponent.displayPreviewImages();
-      
     }
+    
   }
 
 
@@ -720,11 +771,26 @@ export class TunnelComponent implements OnInit {
   initAiriyoujoukyouComponent() {
 
     if (this.aiRiyoujoukyouComponent) {
-
       this.aiRiyoujoukyouComponent.initialize();
-      this.aiRiyoujoukyouComponent.sideNav = this.sideNav;
-
     }
+    
+  }
+
+
+  /**
+   *  initOsiraseComponent
+   *
+   *  サイドナビに表示するOsiraseComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initOsiraseComponent() {
+
+    if (this.osiraseComponent) {
+      this.osiraseComponent.dataSource.data = this.osirases;
+    }
+    
   }
 
 
@@ -802,8 +868,14 @@ export class TunnelComponent implements OnInit {
    */
   destroyAiriyoujoukyouComponent() {
 
+    if (this.aiRiyoujoukyouComponent.isKakutei) {
+      this.uploadTunnelImageInfo();
+    }
+    
+
     this.aiRiyoujoukyouComponent.destroy();
 
+    this.dialogRef.close();
   }
 
 
@@ -842,5 +914,94 @@ export class TunnelComponent implements OnInit {
 
     return true;
 
+  }
+
+
+  /**
+  *  addOsiraseInfo
+  *
+  *  お知らせに表示する情報を追加する
+  *  
+  *  
+  *  @return {void}
+  */
+  addOsiraseInfo() {
+
+    this.selection.selected.forEach(data => {
+
+      var value: OsiraseModel = { fileName: data.seikahinImage.imageName, message: ProgressMessage.UPLOAD_START, success: false, error:false};
+
+      this.osirases.push(value);
+
+    });
+
+    this.isOsirase = true;
+  }
+
+
+  /**
+  *  successOshiraseInfo
+  *
+  *  fileNameに一致するお知らせ情報の状態を成功にする
+  *  
+  *  @param  {string}    fileName
+  *  @param  {string}    message
+  *
+  *  @return {void}
+  */
+  successOshiraseInfo(fileName: string, message: string) {
+
+    var target = this.osirases.find(data => {
+      return (data.fileName === fileName);
+    });
+
+    if (target) {
+      target.message = message;
+      target.success = true;
+
+    }
+  }
+
+  /**
+  *  errorOshiraseInfo
+  *
+  *  fileNameに一致するお知らせ情報の進捗を失敗にする
+  *
+  *  @param  {string}    fileName
+  *  @param  {string}    message
+  *
+  *  @return {void}
+  */
+  errorOshiraseInfo(fileName: string, message: string) {
+
+    var target = this.osirases.find(data => {
+      return (data.fileName === fileName);
+    });
+
+    if (target) {
+      target.message = message;
+      target.error = true;
+    }
+  }
+
+
+  /**
+  *  closeSideNavAction
+  *
+  *  サイドナビを閉じるときにアクションする
+  *
+  *
+  *  @return {void}
+  */
+  closeSideNavAction() {
+
+    if (this.isSideNavAiRiyoujoukyou) {
+
+      this.dialogRef = this.dialog.open(SpinnerdialogComponent, {
+        panelClass: 'myapp-spinner-dialog',
+        disableClose: true
+      });
+      
+    }
   }
 }

@@ -13,6 +13,9 @@ export class PreviewComponent implements OnInit {
 
   @Input('childToPreview') previewImageName: string;
 
+  @Input('childToSidenav') sideNav: MatSidenav;
+
+
   isPrevImageDisabled: boolean = true;
 
   basePreviewImageIndex: number;
@@ -26,8 +29,7 @@ export class PreviewComponent implements OnInit {
   nextImageIconColor = 'disabled';
 
   isNextImageDisabled: boolean = true;
-
-  sideNav: MatSidenav;
+  
 
   seikahinImages: SeikahinImageModel[] = [];
 

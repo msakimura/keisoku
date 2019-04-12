@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TunnelComponent } from '../tunnel/tunnel.component';
 import { TunnelImage, Chushutsu } from 'src/app/shared/constant.module';
 import { SeikahinImageModel } from 'src/app/services/seikahin-image.service';
@@ -13,6 +13,8 @@ import { TunnelService } from 'src/app/services/tunnel.service';
   styleUrls: ['./addimage.component.css']
 })
 export class AddimageComponent implements OnInit {
+
+  @Input('childToSidenav') sideNav: MatSidenav;
 
   isSaveDisabled: boolean = true;
 
@@ -31,8 +33,7 @@ export class AddimageComponent implements OnInit {
   deletedTunnelImages: TunnelImageModel[] = [];
 
   dataSource: any;
-
-  sideNav: MatSidenav;
+  
 
   isSave: boolean = false;
 

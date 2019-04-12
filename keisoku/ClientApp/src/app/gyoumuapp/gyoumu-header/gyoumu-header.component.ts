@@ -10,7 +10,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 })
 export class GyoumuHeaderComponent implements OnInit {
 
-  isKanriDisplay: false;
+  isKanriDisplay: boolean=false;
 
   customerName: string;
 

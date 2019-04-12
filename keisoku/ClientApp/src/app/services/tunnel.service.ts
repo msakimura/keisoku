@@ -13,6 +13,12 @@ export interface TunnelModel {
   createdAt: Date;
 }
 
+export interface OsiraseModel {
+  fileName: string;
+  message: string;
+  success: boolean;
+  error: boolean;
+}
 
 @Injectable({
   providedIn: 'root'

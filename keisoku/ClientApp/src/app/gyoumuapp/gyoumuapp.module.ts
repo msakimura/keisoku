@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AiriyoujoukyouComponent } from './airiyoujoukyou/airiyoujoukyou.component';
 import { AddimageComponent } from './addimage/addimage.component';
 import { PreviewComponent } from './preview/preview.component';
+import { OsiraseComponent } from './osirase/osirase.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PreviewComponent } from './preview/preview.component';
     CustomerKanriComponent,
     AiriyoujoukyouComponent,
     AddimageComponent,
-    PreviewComponent
+    PreviewComponent,
+    OsiraseComponent
   ],
 
   imports: [

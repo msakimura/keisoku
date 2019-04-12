@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort, MatSidenav } from '@angular/material';
-import { TunnelComponent } from '../tunnel/tunnel.component';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { MatTableDataSource, MatPaginator, MatSort, MatSidenav, MatDialogRef, MatDialog } from '@angular/material';
 import { AiRiyouJoukyouModel, AiriyoujoukyouService } from 'src/app/services/airiyoujoukyou.service';
 import { AnkenService } from 'src/app/services/anken.service';
+import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinnerdialog.component';
 
 @Component({
   selector: 'app-airiyoujoukyou',
@@ -11,17 +11,19 @@ import { AnkenService } from 'src/app/services/anken.service';
 })
 export class AiriyoujoukyouComponent implements OnInit {
 
+  @Input('childToSidenav') sideNav: MatSidenav;
+
   isKakuteiDisabled: boolean = true;
 
   kakuteiIconColor = 'diabled';
 
-
+  isKakutei: boolean = false;
+  
 
   displayedColumns: string[] = ['name', 'month', 'tunnel', 'enchou', 'tanka', 'kei'];
 
   dataSource = new MatTableDataSource<AiRiyouJoukyouModel>();
-
-  sideNav: MatSidenav;
+  
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -33,11 +35,7 @@ export class AiriyoujoukyouComponent implements OnInit {
     private ankenService: AnkenService,
     private airiyoujoukyouService: AiriyoujoukyouService) { }
   
-  ngOnInit() {
-
-    this.initialize();
-
-  }
+  ngOnInit() {}
   
   /**
    *  initialize
@@ -80,6 +78,8 @@ export class AiriyoujoukyouComponent implements OnInit {
     this.dataSource.sortingDataAccessor = sortingDataAccessor;
 
     this.dataSource.sort = this.sort;
+
+    this.isKakutei = false;
   }
 
 
@@ -95,6 +95,7 @@ export class AiriyoujoukyouComponent implements OnInit {
   destroy() {
 
     this.dataSource.data = [];
+    
 
   }
 
@@ -146,4 +147,20 @@ export class AiriyoujoukyouComponent implements OnInit {
 
   }
 
+
+  /**
+   *  kakutei
+   *
+   *  確定する
+   *  
+   *
+   *  @return {void}
+   */
+  kakutei() {
+
+    this.isKakutei = true;
+
+
+    this.sideNav.close();
+  }
 }

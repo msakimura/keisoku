@@ -59,7 +59,7 @@ export class LoginDialogComponent implements OnInit {
 
     // プログレススピナー表示
     this.dialogRef = this.dialog.open(SpinnerdialogComponent, {
-      panelClass: 'transparent',
+      panelClass: 'myapp-spinner-dialog',
       disableClose: true
     });
     

@@ -11,6 +11,12 @@ import { AnkenService } from 'src/app/services/anken.service';
 })
 export class AiriyoujoukyouComponent implements OnInit {
 
+  isKakuteiDisabled: boolean = true;
+
+  kakuteiIconColor = 'diabled';
+
+
+
   displayedColumns: string[] = ['name', 'month', 'tunnel', 'enchou', 'tanka', 'kei'];
 
   dataSource = new MatTableDataSource<AiRiyouJoukyouModel>();
@@ -113,6 +119,11 @@ export class AiriyoujoukyouComponent implements OnInit {
       .subscribe((response: any) => {
 
         this.dataSource.data = this.airiyoujoukyouService.convertAiRiyouJoukyouModels(response);
+
+        this.isKakuteiDisabled = false;
+
+        this.kakuteiIconColor = 'primary';
+
       },
       error => {
 

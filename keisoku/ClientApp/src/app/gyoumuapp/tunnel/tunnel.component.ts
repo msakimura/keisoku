@@ -1,20 +1,16 @@
-import { Component, OnInit, ViewChild, Input, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSidenav, MatSort, MatSnackBar, MatSnackBarRef } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { TunnelService } from 'src/app/services/tunnel.service';
 import { TunnelImageModel, TunnelImageService } from 'src/app/services/tunnel-image.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AnkenService } from 'src/app/services/anken.service';
 import { Router } from '@angular/router';
-import { ValidationModule } from 'src/app/shared/validation.module';
-import { Chushutsu, TunnelImage } from 'src/app/shared/constant.module';
-import { NotificationsnackbarComponent } from 'src/app/components/notificationsnackbar/notificationsnackbar.component';
 import { SeikahinImageModel, SeikahinImageService } from 'src/app/services/seikahin-image.service';
-import { findIndex } from 'rxjs/operators';
-import { Subject, Observable } from 'rxjs';
 import { AiriyoujoukyouComponent } from '../airiyoujoukyou/airiyoujoukyou.component';
 import { AddimageComponent } from '../addimage/addimage.component';
 import { PreviewComponent } from '../preview/preview.component';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -92,7 +88,8 @@ export class TunnelComponent implements OnInit {
     private ankenService: AnkenService,
     private tunnelService: TunnelService,
     private tunnelImageService: TunnelImageService,
-    private seikahinImageService: SeikahinImageService) { }
+    private seikahinImageService: SeikahinImageService,
+    private userService: UserService) { }
 
 
   ngOnInit() {
@@ -241,7 +238,7 @@ export class TunnelComponent implements OnInit {
       
       this.switchDisabledDeleteButton(false);
 
-      this.switchDisabledUploadButton(false);
+      if (this.isUploadKengen()) { this.switchDisabledUploadButton(false); }
     }
     
   }
@@ -806,6 +803,44 @@ export class TunnelComponent implements OnInit {
   destroyAiriyoujoukyouComponent() {
 
     this.aiRiyoujoukyouComponent.destroy();
+
+  }
+
+
+  /**
+  *  isUploadKengen
+  *
+  *  アップロードの権限があるか判定する
+  *  
+  *  
+  *  @return {boolean} 判定結果
+  */
+  isUploadKengen(): boolean {
+
+    if (!this.userService.loginUserModel) return false;
+
+    if (this.userService.loginUserModel.upload === '✕') return false;
+
+    return true;
+
+  }
+
+
+  /**
+  *  isDownloadKengen
+  *
+  *  ダウンロードの権限があるか判定する
+  *  
+  *  
+  *  @return {boolean} 判定結果
+  */
+  isDownloadKengen(): boolean {
+
+    if (!this.userService.loginUserModel) return false;
+
+    if (this.userService.loginUserModel.download === '✕') return false;
+
+    return true;
 
   }
 }

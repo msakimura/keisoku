@@ -34,7 +34,7 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="displayAddSideNav()"><mat-icon color="primary">add</mat-icon>追加</button>
+    <button mat-button (click)="displayAddSideNav()" [disabled]="isAddDisabled"><mat-icon color="{{addIconColor}}">add</mat-icon>追加</button>
 
     <button mat-button (click)="displayEditSideNav()" [disabled]="isEditDisabled"><mat-icon color="{{editIconColor}}">create</mat-icon>編集</button>
 

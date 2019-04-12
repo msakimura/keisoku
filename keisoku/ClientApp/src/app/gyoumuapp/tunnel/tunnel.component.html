@@ -37,10 +37,9 @@
 
     <button mat-button (click)="deleteTunnelImageInfo()" [disabled]="isDeleteDisabled"><mat-icon color="{{deleteIconColor}}">delete_forever</mat-icon>削除</button>
 
-    <button mat-button (click)="uploadTunnelImageInfo()" [disabled]="isUploadDisabled"><mat-icon color="{{uploadIconColor}}">cloud_upload</mat-icon>アップロード</button>
+    <button mat-button (click)="displaySideNavAiRiyoujoukyou()" [disabled]="isUploadDisabled"><mat-icon color="{{uploadIconColor}}">cloud_upload</mat-icon>アップロード</button>
 
-    <button mat-button (click)="displaySideNavAiRiyoujoukyou()"><mat-icon color="primary">cloud_download</mat-icon>ダウンロード</button>
-    <!--<button mat-button (click)="downloadFile()" [disabled]="isDownloadDisabled"><mat-icon color="{{downloadIconColor}}">cloud_download</mat-icon>ダウンロード</button>-->
+    <button mat-button (click)="downloadFile()" [disabled]="isDownloadDisabled"><mat-icon color="{{downloadIconColor}}">cloud_download</mat-icon>ダウンロード</button>
 
     <button mat-button [disabled]="isDaichouDisabled"><mat-icon color="{{daichouIconColor}}">receipt</mat-icon>台帳</button>
 

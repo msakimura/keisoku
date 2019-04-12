@@ -6,6 +6,7 @@ import { AnkenService } from 'src/app/services/anken.service';
 import { FormControl, Validators } from '@angular/forms';
 import { InputMessage } from 'src/app/shared/constant.module';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-tunnel-list',
@@ -19,6 +20,10 @@ export class TunnelListComponent implements OnInit {
   isAdd: boolean = false;
 
   isEdit: boolean = false;
+
+  isAddDisabled: boolean = true;
+
+  addIconColor = 'diabled';
 
   isEditDisabled: boolean = true;
 
@@ -52,7 +57,7 @@ export class TunnelListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private router: Router, private tunnelService: TunnelService, private ankenService: AnkenService) { }
+  constructor(private router: Router, private tunnelService: TunnelService, private ankenService: AnkenService, private userService: UserService) { }
 
   ngOnInit() {
 
@@ -90,6 +95,8 @@ export class TunnelListComponent implements OnInit {
       this.ankenName = this.ankenService.selectedAnken.ankenName;
 
       this.bindAllTunnelInfo();
+
+      if (this.isTunnelKengen()) { this.switchDisabledAddButton(false);}
     }
     else {
 
@@ -174,6 +181,9 @@ export class TunnelListComponent implements OnInit {
    *  @return {boid}
    */
   changeDisabled() {
+
+    if (!this.isTunnelKengen()) return;
+
     this.switchDisabledEditButton(true);
 
     this.switchDisabledDeleteButton(true);
@@ -523,6 +533,42 @@ export class TunnelListComponent implements OnInit {
     this.isEditDisabled = disabled;
 
     this.editIconColor = disabled ? 'diabled' : 'primary';
+
+  }
+
+  /**
+   *  switchDisabledAddButton
+   *
+   *  追加ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledAddButton(disabled: boolean) {
+
+    this.isAddDisabled = disabled;
+
+    this.addIconColor = disabled ? 'diabled' : 'primary';
+
+  }
+
+
+  /**
+   *  isTunnelKengen
+   *
+   *  トンネル作成の権限があるか判定する
+   *  
+   *  
+   *  @return {boolean} 判定結果
+   */
+  isTunnelKengen(): boolean {
+
+    if (!this.userService.loginUserModel) return false;
+
+    if (this.userService.loginUserModel.tunnel === '✕') return false;
+
+    return true;
 
   }
 }

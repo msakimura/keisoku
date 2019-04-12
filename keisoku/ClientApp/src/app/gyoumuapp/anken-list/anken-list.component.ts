@@ -19,6 +19,11 @@ export class AnkenListComponent implements OnInit {
 
   isEdit: boolean = false;
 
+
+  isAddDisabled: boolean = true;
+
+  addIconColor = 'diabled';
+
   isEditDisabled: boolean = true;
 
   editIconColor = 'diabled';
@@ -49,7 +54,9 @@ export class AnkenListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private ankenService: AnkenService, private userService: UserService, private authenticationService: AuthenticationService) { }
+  constructor(private ankenService: AnkenService,
+    private userService: UserService,
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     const sortingDataAccessor = (data: AnkenModel, sortHeaderId: string): string | number => {
@@ -80,6 +87,7 @@ export class AnkenListComponent implements OnInit {
 
 
     this.bindAllAnkenInfoLoginUser();
+
   }
 
 
@@ -160,6 +168,9 @@ export class AnkenListComponent implements OnInit {
    *  @return {boid}
    */
   changeDisabled() {
+
+    if (!this.isAnkenKengen()) return;
+
     this.switchDisabledEditButton(true);
 
     this.switchDisabledDeleteButton(true);
@@ -225,6 +236,8 @@ export class AnkenListComponent implements OnInit {
       error => {
         
       });
+
+    if (this.isAnkenKengen()) { this.switchDisabledAddButton(false); }
   }
 
 
@@ -502,6 +515,42 @@ export class AnkenListComponent implements OnInit {
     this.isEditDisabled = disabled;
 
     this.editIconColor = disabled ? 'diabled' : 'primary';
+
+  }
+
+  /**
+   *  switchDisabledAddButton
+   *
+   *  追加ボタンの活性/不活性を切り替える
+   *  
+   *  @param  {boolean}    disabled
+   *  
+   *  @return {void}
+   */
+  switchDisabledAddButton(disabled: boolean) {
+
+    this.isAddDisabled = disabled;
+
+    this.addIconColor = disabled ? 'diabled' : 'primary';
+
+  }
+
+
+  /**
+   *  isAnkenKengen
+   *
+   *  案件作成の権限があるか判定する
+   *  
+   *  
+   *  @return {boolean} 判定結果
+   */
+  isAnkenKengen(): boolean{
+
+    if (!this.userService.loginUserModel) return false;
+
+    if (this.userService.loginUserModel.anken === '✕') return false;
+
+    return true;
 
   }
 }

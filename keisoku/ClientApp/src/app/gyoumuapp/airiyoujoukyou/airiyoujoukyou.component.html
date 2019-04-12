@@ -4,7 +4,7 @@
 
 <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-<button mat-button><mat-icon color="primary">save_alt</mat-icon>確定</button>
+<button mat-button [disabled]="isKakuteiDisabled"><mat-icon color="{{kakuteiIconColor}}">save_alt</mat-icon>確定</button>
 
 <mat-divider></mat-divider>
 

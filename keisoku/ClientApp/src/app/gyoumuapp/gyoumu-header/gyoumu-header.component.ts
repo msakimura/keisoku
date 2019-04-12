@@ -9,15 +9,20 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./gyoumu-header.component.css']
 })
 export class GyoumuHeaderComponent implements OnInit {
+
+  isKanriDisplay: false;
+
   customerName: string;
 
   userName: string;
+
 
   constructor(private router: Router, private userService:UserService, private authenticationService:AuthenticationService) {}
 
   ngOnInit() {
 
     if (this.authenticationService.hasTokenInfo()) {
+
       this.userService.getUserFromLoginId(this.authenticationService.getTokenLoginId())
         .subscribe((response: any) => {
           this.userService.loginUserModel = this.userService.convertUserModel(response);
@@ -25,6 +30,12 @@ export class GyoumuHeaderComponent implements OnInit {
           this.customerName = this.userService.loginUserModel.customerName + '　様';
 
           this.userName = this.userService.loginUserModel.userName;
+
+
+          if (this.isKanriKengen()) {
+            this.isKanriDisplay = true;
+          }
+
         });
     }
     
@@ -76,5 +87,24 @@ export class GyoumuHeaderComponent implements OnInit {
    */
   showHome() {
     this.router.navigate(["/gyoumu"]);
+  }
+
+
+  /**
+  *  isKanriKengen
+  *
+  *  管理の権限があるか判定する
+  *  
+  *  
+  *  @return {boolean} 判定結果
+  */
+  isKanriKengen(): boolean {
+
+    if (!this.userService.loginUserModel) return false;
+
+    if (this.userService.loginUserModel.kanri === '✕') return false;
+
+    return true;
+
   }
 }

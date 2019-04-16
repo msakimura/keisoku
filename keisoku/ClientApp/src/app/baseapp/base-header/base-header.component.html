@@ -1,46 +1,56 @@
-<div>
+<mat-sidenav-container fxFlexFill>
 
-  <mat-toolbar class="portal_toolbar">
+  <mat-sidenav #sidenav position="end" fixedInViewport="true">
 
-    <span class="portal_toolbar_title">AI変状抽出システム</span>
+    <mat-list>
+      <mat-list-item>
+        <button mat-button (click)="sidenav.toggle()"><mat-icon>close</mat-icon>閉じる</button>
+      </mat-list-item>
 
-    <span class="portal_toolbar-spacer"></span>
+      <mat-list-item>
+        <button mat-button (click)="gyoumuJump()">ポータル</button>
+      </mat-list-item>
 
-    <div fxShow="true" fxHide.lt-md="true">
+      <mat-list-item>
+        <button mat-button (click)="openSignin()">{{signinCaption}}</button>
+      </mat-list-item>
+    </mat-list>
 
-      <!-- The following menu items will be hidden on both SM and XS screen sizes -->
-
-      <button mat-button class="portal_toolbar_menu" (click)="gyoumuJump()">ポータル</button>
-
-      <button mat-button class="portal_toolbar_menu" (click)="openSignin()">{{signinCaption}}</button>
+  </mat-sidenav>
 
 
-    </div>
+  <mat-sidenav-content>
 
-    <div fxShow="true" fxHide.gt-sm="true">
 
-      <a href="#" (click)="sidenav.toggle()"><mat-icon>reorder</mat-icon></a>
+    <mat-toolbar class="portal_toolbar">
 
-    </div>
+      <mat-toolbar-row>
 
-  </mat-toolbar>
+        <img src="assets/logo.png" width="50" class="logo_img">
 
-  <mat-sidenav-container fxFlexFill class="example-container">
+        <span class="portal_toolbar_title">AI変状抽出システム</span>
 
-    <mat-sidenav #sidenav position="end" fxLayout="column">
+        <span class="portal_toolbar-spacer"></span>
 
-      <div fxLayout="column">
+        <div fxShow="true" fxHide.lt-md="true">
 
-        <a (click)="sidenav.toggle()" href="#" mat-button>Close</a>
+          <button mat-button class="portal_toolbar_menu" (click)="gyoumuJump()">ポータル</button>
 
-        <button mat-button>ポータル</button>
+          <button mat-button class="portal_toolbar_menu" (click)="openSignin()">{{signinCaption}}</button>
 
-        <button mat-button>サインイン</button>
 
-      </div>
+        </div>
 
-    </mat-sidenav>
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm="true">
 
-  </mat-sidenav-container>
+          <mat-icon class="menu_icon">menu</mat-icon>
 
-</div>
+        </button>
+
+      </mat-toolbar-row>
+
+    </mat-toolbar>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

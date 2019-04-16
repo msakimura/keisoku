@@ -8,13 +8,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TopComponent } from './top/top.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BaseFooterComponent } from './base-footer/base-footer.component';
 
 @NgModule({
   declarations: [
     BaseappComponent,
     BaseHeaderComponent,
     TopComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    BaseFooterComponent
   ],
 
   imports: [

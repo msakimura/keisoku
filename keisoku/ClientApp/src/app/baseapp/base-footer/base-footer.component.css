@@ -1,0 +1,22 @@
+.portal_toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.portal_toolbar_menu {
+  color: white;
+}
+
+.portal_toolbar_copyright {
+  color: white;
+  font-size:14px;
+}
+
+.portal_toolbar {
+  background-color: black;
+  max-height:40px;
+}
+
+.portal_toolbar-spacer {
+  flex: 1 1 auto;
+}
+

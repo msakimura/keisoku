@@ -1,26 +1,48 @@
-<h4>成果品</h4>
-<mat-grid-list cols="3" rowHeight="200px">
+<div class="jumbotron jumbotron-fluid text-white">
 
-  <mat-grid-tile *ngFor="let card of cards" [colspan]="card.cols" [rowspan]="card.rows">
+  <div class="container">
+    <h1>クラウドAIによる</h1>
 
-    <mat-card class="dashboard-card">
+    <h1>コンクリート構造物の変状自動抽出サービス</h1>
+  </div>
 
-      <mat-card-header>
+</div>
 
-        <mat-card-title>{{card.title}}</mat-card-title>
+<div fxLayout="row" fxLayout.xs="column" fxLayoutWrap="wrap" fxLayoutGap="0.5%" fxLayoutAlign="center">
+  
+  <mat-card>
+    <mat-card-title>
+      <span>ひび割れ自動抽出サービス</span>
+    </mat-card-title>
 
-      </mat-card-header>
+    <mat-card-content>
+      <p>
+        従来、人が行っていたひび割れ箇所などの選定作業（パソコン上でのトレース描画作業）を、AIにより自動抽出します。
+      </p>
+    </mat-card-content>
+  </mat-card>
 
+  <mat-card>
+    <mat-card-title>
+      <span>ひび割れ幅分類サービス</span>
+    </mat-card-title>
 
-      <mat-card-content class="dashboard-card-content">
+    <mat-card-content>
+      <p>
+        従来、人が行っていた損傷区分を絞る（スクリーニング）作業を、AIにより自動判別します。
+      </p>
+    </mat-card-content>
+  </mat-card>
 
-        <p>{{card.content}}</p>
+  <mat-card>
+    <mat-card-title>
+      <span>その他変状自動抽出サービス</span>
+    </mat-card-title>
 
-      </mat-card-content>
-
-    </mat-card>
-
-  </mat-grid-tile>
-
-</mat-grid-list>
-
+    <mat-card-content>
+      <p>
+        従来、人が行っていた変状箇所（漏水、遊離石灰、豆板および剥落後、鉄筋露出（錆汁）、補修後、導水工）などの選定作業（パソコン上でのトレース描画作業）を、AIにより自動抽出します。
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

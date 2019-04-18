@@ -1,60 +1,93 @@
-<div>
 
-  <mat-toolbar color="primary">
-    <div fxLayout="column">
+<mat-sidenav-container fxFlexFill>
 
-      <span>{{customerName}}</span>
+  <mat-sidenav #sidenav position="end" fixedInViewport="true">
 
-      <span>{{userName}}</span>
+    <mat-list>
+      <mat-list-item>
+        <button mat-button (click)="sidenav.toggle()"><mat-icon>close</mat-icon>　閉じる</button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item>
+        <button mat-button (click)="showHome()"><mat-icon>home</mat-icon>　ホーム</button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item *ngIf="isKanriDisplay">
+        <button mat-menu-item (click)="showCustomerKanri()"><mat-icon>business</mat-icon>顧客管理</button>
+      </mat-list-item>
+
+      <mat-divider *ngIf="isKanriDisplay"></mat-divider>
+
+      <mat-list-item *ngIf="isKanriDisplay">
+        <button mat-menu-item (click)="showUserKanri()"><mat-icon>group</mat-icon>ユーザ管理</button>
+      </mat-list-item>
+
+      <mat-divider *ngIf="isKanriDisplay"></mat-divider>
+
+      <mat-list-item>
+        <button mat-button><mat-icon>face</mat-icon>　{{userName}}</button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item>
+        <button mat-button (click)="baseJump()"><mat-icon>exit_to_app</mat-icon>　ログアウト</button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+    </mat-list>
+
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+
+    <div class="layout-header">
+
+      <mat-toolbar color="primary">
+        <mat-toolbar-row>
+
+          <span>{{customerName}}</span>
+
+          <span class="portal_toolbar-spacer"></span>
+
+          <div fxShow="true" fxHide.lt-md="true">
+
+            <button mat-button (click)="showHome()">ホーム</button>
+
+            <button *ngIf="isKanriDisplay" mat-button [matMenuTriggerFor]="kanri">管理</button>
+            <mat-menu #kanri="matMenu">
+              <button mat-menu-item (click)="showCustomerKanri()">顧客管理</button>
+              <button mat-menu-item (click)="showUserKanri()">ユーザ管理</button>
+            </mat-menu>
+
+            <button mat-button>{{userName}}</button>
+
+            <button mat-button (click)="baseJump()">ログアウト</button>
+
+          </div>
+
+          <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm="true">
+
+            <mat-icon class="menu_icon">menu</mat-icon>
+
+          </button>
+
+        </mat-toolbar-row>
+
+      </mat-toolbar>
 
     </div>
 
-    <span class="portal_toolbar-spacer"></span>
-
-    <div fxShow="true" fxHide.lt-md="true">
-
-      <!-- The following menu items will be hidden on both SM and XS screen sizes -->
-
-      <button mat-button (click)="showHome()">ホーム</button>
-
-      <button *ngIf="isKanriDisplay" mat-button [matMenuTriggerFor]="kanri">管理</button>
-      <mat-menu #kanri="matMenu">
-        <button mat-menu-item (click)="showCustomerKanri()">顧客管理</button>
-        <button mat-menu-item (click)="showUserKanri()">ユーザ管理</button>
-      </mat-menu>
-
-      <button mat-button>パスワード変更</button>
-
-      <button mat-button (click)="baseJump()">ログアウト</button>
+    <div class="layout-body">
+      <router-outlet></router-outlet>
     </div>
 
-    <div fxShow="true" fxHide.gt-sm="true">
+  </mat-sidenav-content>
 
-      <a href="#" (click)="sidenav.toggle()"><mat-icon>reorder</mat-icon></a>
+</mat-sidenav-container>
 
-    </div>
-
-  </mat-toolbar>
-
-  <mat-sidenav-container fxFlexFill class="example-container">
-
-    <mat-sidenav #sidenav position="end" fxLayout="column">
-
-      <div fxLayout="column">
-
-        <a (click)="sidenav.toggle()" href="#" mat-button>Close</a>
-
-        <button mat-button>ホーム</button>
-
-        <button mat-button>管理</button>
-
-        <button mat-button>パスワード変更</button>
-
-        <button mat-button>ログアウト</button>
-      </div>
-
-    </mat-sidenav>
-
-  </mat-sidenav-container>
-
-</div>

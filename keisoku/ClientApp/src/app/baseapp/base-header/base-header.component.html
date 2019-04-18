@@ -1,19 +1,26 @@
+
 <mat-sidenav-container fxFlexFill>
 
   <mat-sidenav #sidenav position="end" fixedInViewport="true">
 
     <mat-list>
       <mat-list-item>
-        <button mat-button (click)="sidenav.toggle()"><mat-icon>close</mat-icon>閉じる</button>
+        <button mat-button (click)="sidenav.toggle()"><mat-icon>close</mat-icon>　閉じる</button>
       </mat-list-item>
 
-      <mat-list-item>
-        <button mat-button (click)="gyoumuJump()">ポータル</button>
-      </mat-list-item>
+      <mat-divider></mat-divider>
 
       <mat-list-item>
-        <button mat-button (click)="openSignin()">{{signinCaption}}</button>
+        <button mat-button (click)="gyoumuJump()"><mat-icon>apps</mat-icon>　ポータル</button>
       </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item>
+        <button mat-button (click)="openSignin()"><mat-icon>assignment_ind</mat-icon>　{{signinCaption}}</button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
     </mat-list>
 
   </mat-sidenav>
@@ -21,35 +28,48 @@
 
   <mat-sidenav-content>
 
+    <div class="layout-container">
+      <div class="layout-header">
+        <mat-toolbar class="portal_toolbar">
 
-    <mat-toolbar class="portal_toolbar">
+          <mat-toolbar-row>
 
-      <mat-toolbar-row>
+            <img src="assets/logo.png" width="50" class="logo_img">
 
-        <img src="assets/logo.png" width="50" class="logo_img">
+            <span class="portal_toolbar_title">AI変状抽出システム</span>
 
-        <span class="portal_toolbar_title">AI変状抽出システム</span>
+            <span class="portal_toolbar-spacer"></span>
 
-        <span class="portal_toolbar-spacer"></span>
+            <div fxShow="true" fxHide.lt-md="true">
 
-        <div fxShow="true" fxHide.lt-md="true">
+              <button mat-button class="portal_toolbar_menu" (click)="gyoumuJump()">ポータル</button>
 
-          <button mat-button class="portal_toolbar_menu" (click)="gyoumuJump()">ポータル</button>
-
-          <button mat-button class="portal_toolbar_menu" (click)="openSignin()">{{signinCaption}}</button>
+              <button mat-button class="portal_toolbar_menu" (click)="openSignin()">{{signinCaption}}</button>
 
 
-        </div>
+            </div>
 
-        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm="true">
+            <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm="true">
 
-          <mat-icon class="menu_icon">menu</mat-icon>
+              <mat-icon class="menu_icon">menu</mat-icon>
 
-        </button>
+            </button>
 
-      </mat-toolbar-row>
+          </mat-toolbar-row>
 
-    </mat-toolbar>
+        </mat-toolbar>
+
+      </div>
+
+      <div class="layout-body">
+        <router-outlet></router-outlet>
+      </div>
+
+      <div class="layout-footer">
+        <app-base-footer></app-base-footer>
+      </div>
+
+    </div>
 
   </mat-sidenav-content>
 

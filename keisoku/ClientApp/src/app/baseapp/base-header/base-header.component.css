@@ -22,3 +22,25 @@
 .menu_icon{
   color:white;
 }
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout-header {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  z-index:1;
+}
+
+.layout-body {
+  padding-top:64px;
+}
+
+.layout-footer {
+  margin-top: auto;
+}

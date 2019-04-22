@@ -65,34 +65,34 @@
 
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル名 </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" data-label="トンネル名">
             <a routerLink="../tunnel" (click)="setSelectedTunnel(element)" mat-button class="name-mat-button" color="primary"><mat-icon color="primary">launch</mat-icon>{{element.tunnelName}}</a>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="enchou">
           <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル延長 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.tunnelEnchou}}ｍ </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="トンネル延長"> {{element.tunnelEnchou}}ｍ </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="yoteiImageNum">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 予定画像数 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.yoteiImageNumber}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="予定画像数"> {{element.yoteiImageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 画像 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.imageNumber}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="画像"> {{element.imageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="ai">
           <mat-header-cell *matHeaderCellDef mat-sort-header> AI済 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.aiNumber}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="AI済"> {{element.aiNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 作成日 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.createdAt | date:"yyyy/MM/dd"}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="作成日"> {{element.createdAt | date:"yyyy/MM/dd"}} </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

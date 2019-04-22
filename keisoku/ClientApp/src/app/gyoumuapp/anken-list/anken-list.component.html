@@ -2,28 +2,32 @@
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="anken_sidenav">
 
-    <div class="mat-headline">案件管理</div>
+    <div class="sidenav_container">
 
-    <mat-divider></mat-divider>
+      <div class="mat-headline">案件管理</div>
 
-    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+      <mat-divider></mat-divider>
 
-    <button *ngIf="isAdd" mat-button (click)="saveAnkenInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
-    <button *ngIf="isEdit" mat-button (click)="updateAnkenInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <mat-divider></mat-divider>
+      <button *ngIf="isAdd" mat-button (click)="saveAnkenInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isEdit" mat-button (click)="updateAnkenInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
-    <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+      <mat-divider></mat-divider>
 
-    <div fxLayout="column">
+      <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
 
-      <mat-form-field>
-        <input matInput placeholder="案件名" [formControl]="ankenFormControl" required>
+      <div fxLayout="column">
 
-        <mat-error *ngIf="ankenFormControl.hasError('required')">
-          {{hissuAnkenMessage}}
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="案件名" [formControl]="ankenFormControl" required>
+
+          <mat-error *ngIf="ankenFormControl.hasError('required')">
+            {{hissuAnkenMessage}}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
 
     </div>
 
@@ -67,34 +71,34 @@
 
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 案件名 </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" data-label="案件名">
             <a routerLink="./tunnellist" (click)="setSelectedAnken(element)" mat-button class="name-mat-button" color="primary"><mat-icon color="primary">launch</mat-icon>{{element.ankenName}}</a>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="tunnel">
           <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル数 </mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.tunnelNumber}}</mat-cell>
+          <mat-cell *matCellDef="let element" data-label="トンネル数">{{element.tunnelNumber}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 画像済 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.imageNumber}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="画像済"> {{element.imageNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="cad">
           <mat-header-cell *matHeaderCellDef mat-sort-header> CAD </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.cadNumber}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="CAD"> {{element.cadNumber}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 作成日 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.createdAt | date:"yyyy/MM/dd"}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="作成日"> {{element.createdAt | date:"yyyy/MM/dd"}}</mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"
-                 (click)="selectToggle(row)">
+                  (click)="selectToggle(row)">
         </mat-row>
       </mat-table>
 
@@ -103,3 +107,4 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
+

@@ -13,32 +13,32 @@
 
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> 案件名 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.ankenName}} </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="案件名"> {{element.ankenName}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="month">
       <mat-header-cell *matHeaderCellDef mat-sort-header> 月 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.month}}月分 </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="月"> {{element.month}}月分 </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="tunnel">
       <mat-header-cell *matHeaderCellDef mat-sort-header> トンネル数 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.tunnelNumber}} </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="トンネル数"> {{element.tunnelNumber}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="enchou">
       <mat-header-cell *matHeaderCellDef mat-sort-header> 総延長(ｍ) </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.souEnchou}} </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="総延長(ｍ)"> {{element.souEnchou}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="tanka">
       <mat-header-cell *matHeaderCellDef mat-sort-header> ｍ単価 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> \{{element.tanka}} </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="ｍ単価"> \{{element.tanka}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="kei">
       <mat-header-cell *matHeaderCellDef mat-sort-header> 計 </mat-header-cell>
-      <mat-cell *matCellDef="let element"> \{{element.kei}} </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="計"> \{{element.kei}} </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

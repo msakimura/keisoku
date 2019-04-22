@@ -11,19 +11,19 @@
       <mat-divider></mat-divider>
 
       <mat-list-item>
-        <button mat-button (click)="showHome()"><mat-icon>home</mat-icon>　ホーム</button>
+        <button mat-button (click)="showHomeFromSidenav()"><mat-icon>home</mat-icon>　ホーム</button>
       </mat-list-item>
 
       <mat-divider></mat-divider>
 
       <mat-list-item *ngIf="isKanriDisplay">
-        <button mat-menu-item (click)="showCustomerKanri()"><mat-icon>business</mat-icon>顧客管理</button>
+        <button mat-menu-item (click)="showCustomerKanriFromSidenav()"><mat-icon>business</mat-icon>顧客管理</button>
       </mat-list-item>
 
       <mat-divider *ngIf="isKanriDisplay"></mat-divider>
 
       <mat-list-item *ngIf="isKanriDisplay">
-        <button mat-menu-item (click)="showUserKanri()"><mat-icon>group</mat-icon>ユーザ管理</button>
+        <button mat-menu-item (click)="showUserKanriFromSidenav()"><mat-icon>group</mat-icon>ユーザ管理</button>
       </mat-list-item>
 
       <mat-divider *ngIf="isKanriDisplay"></mat-divider>
@@ -46,48 +46,61 @@
 
   <mat-sidenav-content>
 
-    <div class="layout-header">
+      <div class="layout-header">
+        <mat-toolbar color="primary" class="header-tool-bar">
 
-      <mat-toolbar color="primary">
-        <mat-toolbar-row>
+          <mat-toolbar-row>
 
-          <span>{{customerName}}</span>
+            <div fxShow="true" fxHide.xs="true">
+              <img src="assets/tunnel.png" width="30" class="tunnel_img" />
+            </div>
 
-          <span class="portal_toolbar-spacer"></span>
+            <div fxLayout="row wrap">
 
-          <div fxShow="true" fxHide.lt-md="true">
+              <div *ngFor="let customerName of customerNames">
+                {{customerName}}
+              </div>
 
-            <button mat-button (click)="showHome()">ホーム</button>
+            </div>
 
-            <button *ngIf="isKanriDisplay" mat-button [matMenuTriggerFor]="kanri">管理</button>
-            <mat-menu #kanri="matMenu">
-              <button mat-menu-item (click)="showCustomerKanri()">顧客管理</button>
-              <button mat-menu-item (click)="showUserKanri()">ユーザ管理</button>
-            </mat-menu>
+            <span class="portal_toolbar-spacer"></span>
 
-            <button mat-button>{{userName}}</button>
+            <div fxShow="true" fxHide.lt-md="true">
 
-            <button mat-button (click)="baseJump()">ログアウト</button>
+              <button mat-button (click)="showHome()">ホーム</button>
 
-          </div>
+              <button *ngIf="isKanriDisplay" mat-button [matMenuTriggerFor]="kanri">管理</button>
+              <mat-menu #kanri="matMenu">
+                <button mat-menu-item (click)="showCustomerKanri()">顧客管理</button>
+                <button mat-menu-item (click)="showUserKanri()">ユーザ管理</button>
+              </mat-menu>
 
-          <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm="true">
+              <button mat-button>{{userName}}</button>
 
-            <mat-icon class="menu_icon">menu</mat-icon>
+              <button mat-button (click)="baseJump()">ログアウト</button>
 
-          </button>
+            </div>
 
-        </mat-toolbar-row>
+            <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm="true">
 
-      </mat-toolbar>
+              <mat-icon class="menu_icon">menu</mat-icon>
 
-    </div>
+            </button>
 
-    <div class="layout-body">
-      <router-outlet></router-outlet>
-    </div>
+          </mat-toolbar-row>
+
+        </mat-toolbar>
+
+      </div>
+
+      <div class="layout-body">
+
+        <router-outlet></router-outlet>
+
+      </div>
 
   </mat-sidenav-content>
+
 
 </mat-sidenav-container>
 

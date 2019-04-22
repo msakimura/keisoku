@@ -59,12 +59,12 @@
 
         <ng-container matColumnDef="customerName">
           <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="顧客名"> {{element.customerName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="otameshi">
           <mat-header-cell *matHeaderCellDef> お試し機能 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> ✕ </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="お試し機能"> ✕ </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

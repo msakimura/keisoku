@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog, MatSidenav } from "@angular/material";
 import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -13,7 +13,7 @@ export class BaseHeaderComponent implements OnInit {
   
 
   signinCaption: string;
-  
+
   constructor(
     public matDialog: MatDialog,
     private router: Router,
@@ -53,6 +53,7 @@ export class BaseHeaderComponent implements OnInit {
     }
     
   }
+  
 
   /**
    *  showLoginDialog

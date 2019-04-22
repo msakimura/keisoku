@@ -1,5 +1,6 @@
 .portal_toolbar {
   background-color: black;
+  height: 64px;
 }
 
 .portal_toolbar_title {
@@ -44,3 +45,4 @@
 .layout-footer {
   margin-top: auto;
 }
+

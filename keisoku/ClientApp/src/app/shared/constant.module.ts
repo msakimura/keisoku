@@ -52,3 +52,8 @@ export class ProgressMessage {
   public static readonly UPLOAD_ERROR = 'アップロードに失敗しました';
 
 }
+
+export class Responsive {
+  public static readonly TITLE_TEXT_SIZE = 18;
+
+}

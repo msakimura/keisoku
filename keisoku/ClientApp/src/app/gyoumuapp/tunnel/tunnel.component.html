@@ -84,34 +84,34 @@
 
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 画像名 </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <mat-cell *matCellDef="let element" data-label="画像名">
             <button mat-button class="name-mat-button" (click)="displaySideNavPreview(element)" color="primary"><mat-icon color="primary">visibility</mat-icon>{{element.seikahinImage.imageName}}</button>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="width">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 横幅 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.seikahinImage.width}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="横幅"> {{element.seikahinImage.width}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="height">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 縦幅 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.seikahinImage.height}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="縦幅"> {{element.seikahinImage.height}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="hibiChushutsu">
           <mat-header-cell *matHeaderCellDef mat-sort-header> ひび抽出 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.seikahinImage.hibiChushutsu}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="ひび抽出"> {{element.seikahinImage.hibiChushutsu}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="sonshou">
           <mat-header-cell *matHeaderCellDef mat-sort-header> 損傷 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.seikahinImage.sonshou}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="損傷"> {{element.seikahinImage.sonshou}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="hibiBunrui">
           <mat-header-cell *matHeaderCellDef mat-sort-header> ひび分類 </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.seikahinImage.hibiBunrui}} </mat-cell>
+          <mat-cell *matCellDef="let element" data-label="ひび分類"> {{element.seikahinImage.hibiBunrui}} </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

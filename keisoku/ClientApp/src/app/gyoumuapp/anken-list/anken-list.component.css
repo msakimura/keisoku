@@ -1,3 +1,7 @@
+.sidenav_container{
+  padding-top:64px;
+}
+
 .mat-form-field {
   width: 100%;
 }
@@ -9,4 +13,5 @@
 .name-mat-button {
   padding:0 0;
 }
+
 

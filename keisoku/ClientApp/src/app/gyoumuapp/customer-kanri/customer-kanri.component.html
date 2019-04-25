@@ -6,18 +6,25 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="sidenav.close()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button mat-button (click)="saveCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+    <button *ngIf="isAdd" mat-button (click)="saveCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+    <button *ngIf="isEdit" mat-button (click)="updateCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
     <mat-divider></mat-divider>
 
     <div fxLayout="column">
+
       <mat-form-field>
-        <input matInput placeholder="顧客名" [(ngModel)]="customerName">
+        <input matInput placeholder="顧客名" [formControl]="customerFormControl" required>
+
+        <mat-error *ngIf="customerFormControl.hasError('required')">
+          {{hissuAnkenMessage}}
+        </mat-error>
       </mat-form-field>
 
       <mat-checkbox [(ngModel)]="otameshi">お試し機能</mat-checkbox>
+
     </div>
 
   </mat-sidenav>
@@ -27,16 +34,16 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-button (click)="sidenav.toggle()"><mat-icon color="primary">add</mat-icon>追加</button>
+    <button mat-button (click)="displayAddSideNav()"><mat-icon color="primary">add</mat-icon>追加</button>
 
-    <button mat-button><mat-icon color="primary">create</mat-icon>編集</button>
+    <button mat-button (click)="displayEditSideNav()" [disabled]="isEditDisabled"><mat-icon color="{{editIconColor}}">create</mat-icon>編集</button>
 
-    <button mat-button (click)="deleteCustomerInfo()"><mat-icon color="primary">delete_forever</mat-icon>削除</button>
+    <button mat-button (click)="deleteCustomerInfo()" [disabled]="isDeleteDisabled"><mat-icon color="{{deleteIconColor}}">delete_forever</mat-icon>削除</button>
 
     <mat-divider></mat-divider>
     
     <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="顧客名でフィルタ">
+      <input matInput (keyup)="applyFilterCustomerName($event.target.value)" placeholder="顧客名でフィルタ">
     </mat-form-field>
 
     <div>

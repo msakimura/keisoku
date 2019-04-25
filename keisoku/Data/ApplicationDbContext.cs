@@ -55,6 +55,10 @@ namespace keisoku.Data
 
         public DbSet<CsvModel> Csvs { get; set; }
 
+        public DbSet<OptionFuyoModel> OptionFuyos { get; set; }
+
+        public DbSet<OptionModel> Options { get; set; }
+
         /// <summary>
         /// OnModelCreating
         /// </summary>
@@ -74,7 +78,8 @@ namespace keisoku.Data
                 i.HasMany(j => j.Users).WithOne(k => k.Customer).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l=>l.CustomerId);
 
                 i.HasMany(j => j.Ankens).WithOne(k => k.Customer).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CustomerId);
-                
+
+                i.HasMany(j => j.OptionFuyos).WithOne(k => k.Customer).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CustomerId);
             });
 
             builder.Entity<UserModel>(i =>
@@ -311,6 +316,24 @@ namespace keisoku.Data
                 i.Property(j => j.CsvId).ValueGeneratedOnAdd();
 
                 i.HasMany(j => j.Summaries).WithOne(k => k.Csv).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CsvId);
+            });
+
+            builder.Entity<OptionFuyoModel>(i =>
+            {
+                i.HasKey(j => new { j.CustomerId, j.OptionId });
+
+                i.HasOne(j => j.Customer).WithMany(k => k.OptionFuyos).OnDelete(DeleteBehavior.Cascade);
+
+                i.HasOne(j => j.Option).WithMany(k => k.OptionFuyos).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<OptionModel>(i =>
+            {
+                i.HasKey(j => new { j.OptionId });
+
+                i.Property(j => j.OptionId).ValueGeneratedOnAdd();
+
+                i.HasMany(j => j.OptionFuyos).WithOne(k => k.Option).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CustomerId);
             });
 
             base.OnModelCreating(builder);

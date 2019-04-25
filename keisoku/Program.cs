@@ -29,6 +29,7 @@ namespace keisoku
                     // Initializing the database
                     KengenModel.Initialize(services);
                     TankaModel.Initialize(services);
+                    OptionModel.Initialize(services);
                 }
                 catch (Exception ex)
                 {

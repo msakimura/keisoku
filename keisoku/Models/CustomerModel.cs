@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace keisoku.Models
 {
@@ -22,5 +19,7 @@ namespace keisoku.Models
         public ICollection<UserModel> Users { get; set; }
 
         public ICollection<AnkenModel> Ankens { get; set; }
+
+        public ICollection<OptionFuyoModel> OptionFuyos { get; set; }
     }
 }

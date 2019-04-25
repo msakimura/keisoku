@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using keisoku.Data;
 
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190422042733_Fifth")]
+    partial class Fifth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -448,36 +450,21 @@ namespace keisoku.Migrations
                     b.ToTable("KinsetsuTenkenPhotos");
                 });
 
-            modelBuilder.Entity("keisoku.Models.OptionFuyoModel", b =>
+            modelBuilder.Entity("keisoku.Models.OptionModel", b =>
                 {
                     b.Property<int>("CustomerId");
 
-                    b.Property<int>("OptionId");
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<DateTime>("UpdatedAt");
-
-                    b.HasKey("CustomerId", "OptionId");
-
-                    b.ToTable("OptionFuyos");
-                });
-
-            modelBuilder.Entity("keisoku.Models.OptionModel", b =>
-                {
                     b.Property<int>("OptionId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int>("OptionKubun");
-
-                    b.Property<string>("OptionName");
+                    b.Property<string>("CustomerName");
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("OptionId");
+                    b.HasKey("CustomerId", "OptionId");
 
                     b.ToTable("Options");
                 });
@@ -842,15 +829,10 @@ namespace keisoku.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("keisoku.Models.OptionFuyoModel", b =>
+            modelBuilder.Entity("keisoku.Models.OptionModel", b =>
                 {
                     b.HasOne("keisoku.Models.CustomerModel", "Customer")
-                        .WithMany("OptionFuyos")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("keisoku.Models.OptionModel", "Option")
-                        .WithMany("OptionFuyos")
+                        .WithMany("Options")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

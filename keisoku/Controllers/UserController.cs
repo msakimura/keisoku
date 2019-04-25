@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,18 +32,13 @@ namespace keisoku.Controllers
         /// <returns>ユーザ情報リスト</returns>
         /// 
         [HttpGet]
-        public async Task<IEnumerable<UserModel>> GetAll()
+        public IActionResult GetAll()
         {
-            var users = await _context.CustomersUsers.ToArrayAsync();
+            
+            var query = GetAllJoin(0, 0, "");
 
-            foreach(var user in users)
-            {
-                await SetCustomer(user);
-
-                await SetKengenFuyos(user);
-            }
-
-            return users;
+            return Ok(query);
+            
         }
 
         /// <summary>
@@ -57,25 +51,16 @@ namespace keisoku.Controllers
         /// <returns>ユーザ情報</returns>
         /// 
         [HttpGet("{customerId}/{userId}")]
-        public async Task<IActionResult> Get([FromRoute] int customerId, int userId)
+        public IActionResult Get([FromRoute] int customerId, int userId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.CustomersUsers.SingleOrDefaultAsync(x => x.CustomerId == customerId && x.UserId == userId);
+            var query = GetAllJoin(customerId, userId, "");
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            await SetCustomer(user);
-
-            await SetKengenFuyos(user);
-
-            return Ok(user);
+            return Ok(query);
         }
 
         /// <summary>
@@ -87,21 +72,17 @@ namespace keisoku.Controllers
         /// <returns>ユーザ情報</returns>
         /// 
         [HttpGet("{loginId}")]
-        public async Task<IActionResult> Get([FromRoute] string loginId)
+        public IActionResult Get([FromRoute] string loginId)
         {
-
-            var user = await _context.CustomersUsers.SingleOrDefaultAsync(x => x.LoginId == loginId);
-
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
-            await SetCustomer(user);
+            var query = GetAllJoin(0, 0, loginId);
 
-            await SetKengenFuyos(user);
-
-            return Ok(user);
+            return Ok(query);
+            
         }
 
         /// <summary>
@@ -266,7 +247,7 @@ namespace keisoku.Controllers
                     }
                 }
 
-                var putData = await Get(deserialized.CustomerId, deserialized.UserId);
+                var putData = Get(deserialized.CustomerId, deserialized.UserId);
 
                 return new ObjectResult(putData);
             }
@@ -334,5 +315,48 @@ namespace keisoku.Controllers
                 }
             }
         }
+
+
+        /// <summary>
+        /// users、customers、kengenFuyos、kengensのJOIN結果を取得する
+        /// </summary>
+        /// 
+        /// <param name="customerId">顧客ID</param>
+        /// <param name="userId">ユーザID</param>
+        /// <param name="loginId">ログインID</param>
+        /// 
+        /// <returns>結果リスト</returns>
+        /// 
+        private IQueryable GetAllJoin(int customerId, int userId, string loginId)
+        {
+
+            DbSet<UserModel> users = _context.CustomersUsers;
+            DbSet<CustomerModel> customers = _context.Customers;
+            DbSet<KengenFuyoModel> kengenFuyos = _context.KengenFuyos;
+            DbSet<KengenModel> kengens = _context.Kengens;
+
+
+            var query = from user in users
+                        join customer in customers
+                        on user.CustomerId equals customer.CustomerId
+                        join fuyo in kengenFuyos
+                        on new { user.CustomerId, user.UserId } equals new { fuyo.CustomerId, fuyo.UserId } into fuyoJoin
+                        from fuyoJ in fuyoJoin.DefaultIfEmpty()
+                        join k in kengens
+                        on fuyoJ.KengenId equals k.KengenId into kengenJoin
+                        from kengen in kengenJoin.DefaultIfEmpty()
+                        where customerId == 0 && userId == 0 && String.IsNullOrEmpty(loginId) ? true :
+                                customerId != 0 && userId != 0 ? user.CustomerId == customerId && user.UserId == userId :
+                                !String.IsNullOrEmpty(loginId) ? user.LoginId == loginId : false
+                        group new { user, customer, kengen } by new { user.CustomerId, user.UserId } into uGroup
+                        select new
+                        {
+                            uGroup
+                        };
+
+            return query;
+        }
+        
     }
+
 }

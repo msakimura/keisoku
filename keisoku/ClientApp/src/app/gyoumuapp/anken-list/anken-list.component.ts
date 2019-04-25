@@ -203,7 +203,7 @@ export class AnkenListComponent implements OnInit {
       if (this.authenticationService.hasTokenInfo()) {
         this.userService.getUserFromLoginId(this.authenticationService.getTokenLoginId())
           .subscribe((response: any) => {
-            this.userService.loginUserModel = this.userService.convertUserModel(response);
+            this.userService.loginUserModel = this.userService.convertOneUserModels(response);
 
             this.bindAllAnkenInfoCustomer(this.userService.loginUserModel.customerId);
 

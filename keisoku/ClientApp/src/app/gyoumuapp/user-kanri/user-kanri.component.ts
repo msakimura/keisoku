@@ -342,7 +342,7 @@ export class UserKanriComponent implements OnInit  {
 
           const data = this.dataSource.data;
 
-          data.push(this.userService.convertUserModel(response['Data']));
+          data.push(this.userService.convertOneUserModels(response['Data']));
 
           this.dataSource.data = data;
 
@@ -386,7 +386,7 @@ export class UserKanriComponent implements OnInit  {
     this.userService.updateUser(userInfo)
       .subscribe((response: any) => {
 
-        var row = this.updateSelectedRowUserInfo(this.userService.convertUserModel(response.value));
+        var row = this.updateSelectedRowUserInfo(this.userService.convertOneUserModels(response.value));
         
         this.sideNav.close();
 
@@ -397,8 +397,8 @@ export class UserKanriComponent implements OnInit  {
         }
         
       },
-        error => {
-        });
+      error => {
+      });
   }
 
   /**

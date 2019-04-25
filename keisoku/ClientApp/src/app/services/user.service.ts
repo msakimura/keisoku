@@ -129,6 +129,29 @@ export class UserService {
     return userModels;
   }
 
+
+  /**
+   *  convertOneUserModels
+   *
+   *  DBから取得したoneUserをユーザモデル配列に変換する
+   *  
+   *
+   *  @param  {object}    oneUser
+   *
+   *  @return {UserModel} ユーザモデル
+   */
+  convertOneUserModels(oneUser): UserModel {
+
+    var userModel: UserModel;
+
+    oneUser.forEach(user => {
+
+      userModel = this.convertUserModel(user);
+    });
+
+    return userModel;
+  }
+
   /**
    *  convertUserModel
    *
@@ -149,45 +172,52 @@ export class UserService {
 
     var kengenFuyos: KengenFuyoModel[] = new Array();
 
-    if (user.kengenFuyos != null) {
-      user.kengenFuyos.forEach(kengenFuyo => {
+    var firstUserInfo = user.uGroup[0];
+    
+    user.uGroup.forEach(u => {
 
-        if (kengenFuyo.kengen.kengenName == Kengen.KANRI) {
+      if (u.kengen) {
+
+        if (u.kengen.kengenName == Kengen.KANRI) {
           kanri = '〇';
         }
-        else if (kengenFuyo.kengen.kengenName == Kengen.ANKEN) {
+        else if (u.kengen.kengenName == Kengen.ANKEN) {
           anken = '〇';
         }
-        else if (kengenFuyo.kengen.kengenName == Kengen.TUNNEL) {
+        else if (u.kengen.kengenName == Kengen.TUNNEL) {
           tunnel = '〇';
         }
-        else if (kengenFuyo.kengen.kengenName == Kengen.UPLOAD) {
+        else if (u.kengen.kengenName == Kengen.UPLOAD) {
           upload = '〇';
         }
-        else if (kengenFuyo.kengen.kengenName == Kengen.DOWNLOAD) {
+        else if (u.kengen.kengenName == Kengen.DOWNLOAD) {
           download = '〇';
         }
 
+        if (u.kengen.kengenName) {
 
-        var kengenFuyoModel: KengenFuyoModel = {
-          customerId: kengenFuyo.customerId,
-          userId: kengenFuyo.userId,
-          kengenId: kengenFuyo.kengenId
-        };
+          var kengenFuyoModel: KengenFuyoModel = {
+            customerId: firstUserInfo.user.customerId,
+            userId: firstUserInfo.user.userId,
+            kengenId: u.kengen.kengenId
+          };
 
-        kengenFuyos.push(kengenFuyoModel);
-      });
-    }
+          kengenFuyos.push(kengenFuyoModel);
+
+        }
+
+      }
+    });
 
     var userModel: UserModel = {
-      customerId: user.customerId,
-      userId: user.userId,
-      loginId: user.loginId,
-      password: user.password,
-      userName: user.userName,
-      email: user.email,
+      customerId: firstUserInfo.user.customerId,
+      userId: firstUserInfo.user.userId,
+      loginId: firstUserInfo.user.loginId,
+      password: firstUserInfo.user.password,
+      userName: firstUserInfo.user.userName,
+      email: firstUserInfo.user.email,
       kengenFuyos: kengenFuyos,
-      customerName: user.customer.customerName,
+      customerName: firstUserInfo.customer.customerName,
       kanri: kanri,
       anken: anken,
       tunnel: tunnel,

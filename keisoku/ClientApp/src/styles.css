@@ -1,16 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
 
-
 .myapp-spinner-dialog .mat-dialog-container {
-  background-color:transparent;
-  box-shadow:none;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 @media screen and (max-width: 960px) {
   .mat-table {
     border: 0;
-    vertical-align: middle
+    vertical-align: middle;
   }
 
   .mat-table caption {

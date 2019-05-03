@@ -14,8 +14,9 @@ namespace keisoku.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : BaseController
+    public class CustomerController : ControllerBase
     {
+        private ApplicationDbContext _context;
 
         public CustomerController(ApplicationDbContext context)
         {
@@ -28,43 +29,10 @@ namespace keisoku.Controllers
         /// 
         /// <returns>顧客情報リスト</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<ActionResult<IEnumerable<CustomerModel>>> GetAllAsync()
         {
 
-            DbSet<CustomerModel> customers = _context.Customers;
-            DbSet<OptionFuyoModel> optionFuyos = _context.OptionFuyos;
-            DbSet<OptionModel> options = _context.Options;
-
-
-            var query =
-                customers.Join(
-                    optionFuyos,
-                    customer => customer.CustomerId,
-                    optionFuyo => optionFuyo.CustomerId,
-                    (customer, optionFuyo) => new
-                    {
-                        customer.CustomerId,
-                        customer.CustomerName,
-                        optionFuyo.OptionId,
-                    })
-                    .Join(
-                        options,
-                        optionFuyo => optionFuyo.OptionId,
-                        option => option.OptionId,
-                        (optionFuyo, option) => new
-                        {
-                            option.OptionKubun,
-                            option.OptionName
-                        })
-                        .OrderBy(x => x.OptionName);
-
-            if (!query.Any())
-            {
-                return NotFound();
-            }
-
-
-            return Ok(query);
+            return await _context.Customers.ToListAsync();
             
         }
 

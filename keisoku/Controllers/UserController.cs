@@ -14,8 +14,10 @@ namespace keisoku.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : BaseController
+    public class UserController : ControllerBase
     {
+        private ApplicationDbContext _context;
+
         private readonly UserManager<IdentityUser> _userManager;
 
         public UserController(UserManager<IdentityUser> userManager,
@@ -135,12 +137,10 @@ namespace keisoku.Controllers
 
                 var user = ((ApplicationDbContext)model.Context).CustomersUsers.Last();
 
-                await SetCustomer(user);
-
-                await SetKengenFuyos(user);
+                var insertData = Get(user.CustomerId, user.UserId);
 
                 value["Succeeded"] = true;
-                value["Data"] = user;
+                value["Data"] = insertData;
 
                 return new ObjectResult(value);
             }

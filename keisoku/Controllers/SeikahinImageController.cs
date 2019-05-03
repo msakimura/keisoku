@@ -17,8 +17,10 @@ namespace keisoku.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SeikahinImageController : BaseController
+    public class SeikahinImageController : ControllerBase
     {
+        private ApplicationDbContext _context;
+
         public SeikahinImageController(ApplicationDbContext context)
         {
             _context = context;

@@ -15,7 +15,7 @@ export class BaseHeaderComponent implements OnInit {
   signinCaption: string;
 
   constructor(
-    public matDialog: MatDialog,
+    private matDialog: MatDialog,
     private router: Router,
     private authenticationService: AuthenticationService) { }
 
@@ -65,7 +65,6 @@ export class BaseHeaderComponent implements OnInit {
    */
   showLoginDialog() {
     const dialogRef = this.matDialog.open(LoginDialogComponent, {
-      'data': { 'title': 'ログイン' },
       'disableClose': false
     });
 

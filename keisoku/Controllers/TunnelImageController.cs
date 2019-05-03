@@ -20,8 +20,10 @@ namespace keisoku.Controllers
     
     [Route("api/[controller]")]
     [ApiController]
-    public class TunnelImageController : BaseController
+    public class TunnelImageController : ControllerBase
     {
+        private ApplicationDbContext _context;
+
         public TunnelImageController(ApplicationDbContext context)
         {
             _context = context;

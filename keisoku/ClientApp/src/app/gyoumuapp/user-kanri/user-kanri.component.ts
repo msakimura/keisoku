@@ -42,7 +42,13 @@ export class UserKanriComponent implements OnInit  {
 
   loginIdFormControl = new FormControl('', [Validators.required]);
   
-  passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6), ValidationModule.isAlphaNumeric, ValidationModule.isLowerCase, ValidationModule.isUpperCase, ValidationModule.isDigit, ValidationModule.isSymbol]);
+  passwordFormControl = new FormControl('', [Validators.required,
+    Validators.minLength(6),
+    ValidationModule.isAlphaNumeric,
+    ValidationModule.isLowerCase,
+    ValidationModule.isUpperCase,
+    ValidationModule.isDigit,
+    ValidationModule.isSymbol]);
 
   kengenFormControl = new FormControl();
 
@@ -342,7 +348,7 @@ export class UserKanriComponent implements OnInit  {
 
           const data = this.dataSource.data;
 
-          data.push(this.userService.convertOneUserModels(response['Data']));
+          data.push(this.userService.convertOneUserModels(response['Data'].value));
 
           this.dataSource.data = data;
 

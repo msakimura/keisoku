@@ -1,5 +1,5 @@
 
-<mat-sidenav-container fxFlexFill>
+<mat-sidenav-container fxFlexFill class="mat-elevation-z8">
 
   <mat-sidenav #sidenav position="end" fixedInViewport="true">
 
@@ -29,7 +29,7 @@
       <mat-divider *ngIf="isKanriDisplay"></mat-divider>
 
       <mat-list-item>
-        <button mat-button><mat-icon>face</mat-icon>　{{userName}}</button>
+        <button mat-button (click)="showPasswordDialog()"><mat-icon>face</mat-icon>　{{userName}}</button>
       </mat-list-item>
 
       <mat-divider></mat-divider>
@@ -75,7 +75,7 @@
                 <button mat-menu-item (click)="showUserKanri()">ユーザ管理</button>
               </mat-menu>
 
-              <button mat-button>{{userName}}</button>
+              <button mat-button (click)="showPasswordDialog()">{{userName}}</button>
 
               <button mat-button (click)="baseJump()">ログアウト</button>
 

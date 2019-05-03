@@ -12,8 +12,10 @@ namespace keisoku.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AiRiyouJoukyouController : BaseController
+    public class AiRiyouJoukyouController : ControllerBase
     {
+        private ApplicationDbContext _context;
+
         public AiRiyouJoukyouController(ApplicationDbContext context)
         {
             _context = context;
@@ -50,26 +52,17 @@ namespace keisoku.Controllers
             DbSet<TankaModel> tankas = _context.Tankas;
 
 
-            var query =
-                aiRiyouJoukyous.Join(
-                    tankas,
-                    aiRiyouJoukyou => aiRiyouJoukyou.TankaId,
-                    tanka => tanka.TankaId,
-                    (aiRiyouJoukyou, tanka) => new
-                    {
-                        aiRiyouJoukyou.CustomerId,
-                        aiRiyouJoukyou.AnkenId,
-                        aiRiyouJoukyou.Year,
-                        aiRiyouJoukyou.Month,
-                        aiRiyouJoukyou.TunnelNumber,
-                        aiRiyouJoukyou.SouEnchou,
-                        aiRiyouJoukyou.TankaId,
-                        tanka.Tanka
-                    }
-                    )
-                    .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId)
-                    .OrderByDescending(x => x.Year).ThenByDescending(x => x.Month);
-
+            var query = from aiRiyouJoukyou in aiRiyouJoukyous
+                        join tanka in tankas
+                        on aiRiyouJoukyou.TankaId equals tanka.TankaId
+                        where aiRiyouJoukyou.CustomerId == customerId && aiRiyouJoukyou.AnkenId == ankenId
+                        orderby aiRiyouJoukyou.Year descending, aiRiyouJoukyou.Month descending
+                        select new
+                        {
+                            aiRiyouJoukyou,
+                            tanka
+                        };
+            
             return Ok(query);
         }
 
@@ -88,22 +81,16 @@ namespace keisoku.Controllers
             DbSet<AnkenModel> ankens = _context.Ankens;
             DbSet<TunnelModel> tunnels = _context.Tunnels;
 
-            var query =
-                ankens.Join(
-                    tunnels,
-                    anken => new { anken.CustomerId, anken.AnkenId },
-                    tunnel => new { tunnel.CustomerId, tunnel.AnkenId },
-                    (anken, tunnel) => new
-                    {
-                        anken.CustomerId,
-                        anken.AnkenId,
-                        tunnel.CreatedAt,
-                        tunnel.TunnelEnchou
-                    }
-                    )
-                    .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId)
-                    .GroupBy(x => x.CreatedAt.ToString("yyyyMM"));
-
+            var query = from anken in ankens
+                        join tunnel in tunnels
+                        on new { anken.CustomerId, anken.AnkenId } equals new { tunnel.CustomerId, tunnel.AnkenId }
+                        where anken.CustomerId == customerId && anken.AnkenId == ankenId
+                        group new { anken, tunnel } by anken.CreatedAt.ToString("yyyyMM") into ankenGroup
+                        select new
+                        {
+                            ankenGroup
+                        };
+            
             if (!query.Any())
             {
                 return;
@@ -113,23 +100,23 @@ namespace keisoku.Controllers
             // 取得した情報について、顧客ID、案件ID、年、月をキーにAI利用状況を検索し
             // 該当するAI利用状況が存在する場合、AI利用状況を取得した情報で更新
             // 該当するAI利用状況が存在しない場合、取得した情報をAI利用状況テーブルに追加
-            foreach (var data in query)
+            foreach (var group in query)
             {
-                var first = data.Select(x => x).First();
+                var first = group.ankenGroup.Select(x => x).First();
 
-                int.TryParse(data.Key.Substring(0, 4), out int year);
+                int.TryParse(group.ankenGroup.Key.Substring(0, 4), out int year);
 
-                int.TryParse(data.Key.Substring(4, 2), out int month);
+                int.TryParse(group.ankenGroup.Key.Substring(4, 2), out int month);
 
-                bool hasAiRiyouJoukyou = await IsAiRiyouJoukyouExistsAsync(first.CustomerId, first.AnkenId, year, month);
+                bool hasAiRiyouJoukyou = await IsAiRiyouJoukyouExistsAsync(first.anken.CustomerId, first.anken.AnkenId, year, month);
 
                 if (hasAiRiyouJoukyou)
                 {
-                    await UpdateAsync(data);
+                    await UpdateAsync(group.ankenGroup);
                 }
                 else
                 {
-                    await InsertAsync(data);
+                    await InsertAsync(group.ankenGroup);
                 }
 
             }
@@ -161,11 +148,11 @@ namespace keisoku.Controllers
 
             var tunnelNumber = aiRiyouJoukyou.Count();
 
-            var souEnchou = aiRiyouJoukyou.Sum(x => x.TunnelEnchou);
+            var souEnchou = aiRiyouJoukyou.Sum(x => x.tunnel.TunnelEnchou);
 
             await _context.AiRiyouJoukyous.AddAsync(new AiRiyouJoukyouModel {
-                CustomerId = first.CustomerId,
-                AnkenId = first.AnkenId,
+                CustomerId = first.anken.CustomerId,
+                AnkenId = first.anken.AnkenId,
                 Year = year,
                 Month = month,
                 TunnelNumber = tunnelNumber,
@@ -199,9 +186,9 @@ namespace keisoku.Controllers
 
             var tunnelNumber = aiRiyouJoukyou.Count();
 
-            var souEnchou = aiRiyouJoukyou.Sum(x => x.TunnelEnchou);
+            var souEnchou = aiRiyouJoukyou.Sum(x => x.tunnel.TunnelEnchou);
 
-            AiRiyouJoukyouModel model = await GetAiRiyouJoukyouAsync(first.CustomerId, first.AnkenId, year, month);
+            AiRiyouJoukyouModel model = await GetAiRiyouJoukyouAsync(first.anken.CustomerId, first.anken.AnkenId, year, month);
 
             if(model.TunnelNumber != tunnelNumber || model.SouEnchou != souEnchou)
             {

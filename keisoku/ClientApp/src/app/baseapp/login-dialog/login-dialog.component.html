@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
+<h1 mat-dialog-title>ログイン</h1>
 
 <mat-divider></mat-divider>
 
@@ -8,11 +8,11 @@
 
     <mat-form-field>
 
-      <input matInput placeholder="ユーザID" [(ngModel)]="userid" name="userid" [formControl]="useridFormControl" required>
+      <input matInput placeholder="ユーザID" [formControl]="useridFormControl" required>
 
       <mat-error *ngIf="useridFormControl.hasError('required')">
 
-        ユーザIDは必須です
+        {{hissuUserIdMessage}}
 
       </mat-error>
 
@@ -20,11 +20,11 @@
 
     <mat-form-field>
 
-      <input matInput placeholder="パスワード" [(ngModel)]="password" type="password" name="password" [formControl]="passwordFormControl" required>
+      <input matInput placeholder="パスワード" type="password" [formControl]="passwordFormControl" required>
 
       <mat-error *ngIf="passwordFormControl.hasError('required')">
 
-        パスワードは必須です
+        {{hissuPasswordMessage}}
 
       </mat-error>
 

@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Responsive } from 'src/app/shared/constant.module';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav, MatDialog } from '@angular/material';
+import { PasswordDialogComponent } from '../password-dialog/password-dialog.component';
 
 @Component({
   selector: 'app-gyoumu-header',
@@ -21,7 +22,10 @@ export class GyoumuHeaderComponent implements OnInit {
 
   @ViewChild('sidenav') public sideNav: MatSidenav;
 
-  constructor(private router: Router, private userService:UserService, private authenticationService:AuthenticationService) {}
+  constructor(private router: Router,
+    private userService: UserService,
+    private authenticationService: AuthenticationService,
+    private matDialog: MatDialog) { }
 
   ngOnInit() {
 
@@ -137,6 +141,27 @@ export class GyoumuHeaderComponent implements OnInit {
     this.sideNav.close();
 
   }
+
+
+  /**
+   *  showPasswordDialog
+   *
+   *  パスワード変更ダイアログを起動する
+   *  
+   *
+   *  @return {void}
+   */
+  showPasswordDialog() {
+    const dialogRef = this.matDialog.open(PasswordDialogComponent, {
+      'disableClose': false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      
+    });
+  }
+
 
   /**
    *  isKanriKengen

@@ -16,6 +16,9 @@ export class InputMessage {
   public static readonly HISSU_PASSWORD = 'パスワードは必須です';
   public static readonly HISSU_ANKEN = '案件名は必須です';
   public static readonly HISSU_TUNNEL = 'トンネル名は必須です';
+  public static readonly HISSU_CURRENT_PASS = '現在のパスワードは必須です';
+  public static readonly HISSU_NEW_PASS = '新パスワードは必須です';
+  public static readonly HISSU_USERID = 'ユーザIDは必須です';
 }
 
 export class PasswordMessage {
@@ -25,6 +28,9 @@ export class PasswordMessage {
   public static readonly UPPERCASE = '大文字を1文字以上含めてください';
   public static readonly DIGIT = '数字を1文字以上含めてください';
   public static readonly SYMBOL = '記号を1文字以上含めてください';
+  public static readonly CONFIRM = '新パスワードとパスワードの確認が違います';
+  public static readonly CURRENT = '現在のパスワードが違います';
+
 }
 
 export class Kengen {

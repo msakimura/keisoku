@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ValidationErrors } from '@angular/forms';
+import { FormControl, ValidationErrors, FormGroup } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -103,5 +103,23 @@ export class ValidationModule {
     });
 
     return target ? true : false;
+  }
+
+
+  /**
+   *  isPasswordMatch
+   *
+   *  formGroupのnewPasswordとconfirmPasswordが一致するか判定する
+   *  
+   *  @param  {FormGroup}    formGroup
+   *
+   *  @return {ValidationErrors | null} 判定結果
+   */
+  static isPasswordMatch(formGroup: FormGroup): ValidationErrors | null {
+
+    let pass = formGroup.controls.newPassword.value;
+    let confirmPass = formGroup.controls.confirmPassword.value;
+    
+    return pass === confirmPass ? null : { 'isPasswordMatch': true };
   }
 }

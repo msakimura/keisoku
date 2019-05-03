@@ -1,97 +1,99 @@
-<mat-sidenav-container class="mat-elevation-z8">
+<mat-sidenav-container>
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="user_sidenav">
 
-    <div class="mat-headline">ユーザ管理</div>
+    <div class="sidenav_container">
+      <div class="mat-headline">ユーザ管理</div>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button *ngIf="isAdd" mat-button (click)="saveUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isAdd" mat-button (click)="saveUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
-    <button *ngIf="isEdit" mat-button (click)="updateUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isEdit" mat-button (click)="updateUserInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+      <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
 
-    <div *ngIf="isDuplicateUserName" class="alert alert-danger">{{usedLoginIdMessage}}</div>
+      <div *ngIf="isDuplicateUserName" class="alert alert-danger">{{usedLoginIdMessage}}</div>
 
 
-    <div fxLayout="column">
+      <div fxLayout="column">
 
-      <mat-form-field>
-        <mat-select placeholder="顧客名" [formControl]="customerFormControl" required>
-          <mat-option *ngFor="let customer of customers" [value]="customer.customerId">
-            {{customer.customerName}}
-          </mat-option>
-        </mat-select>
+        <mat-form-field>
+          <mat-select placeholder="顧客名" [formControl]="customerFormControl" required>
+            <mat-option *ngFor="let customer of customers" [value]="customer.customerId">
+              {{customer.customerName}}
+            </mat-option>
+          </mat-select>
 
-        <mat-error *ngIf="customerFormControl.hasError('required')">
-          {{hissuCustomerMessage}}
-        </mat-error>
-      </mat-form-field>
+          <mat-error *ngIf="customerFormControl.hasError('required')">
+            {{hissuCustomerMessage}}
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput placeholder="ユーザ名" [formControl]="userNameFormControl" required>
+        <mat-form-field>
+          <input matInput placeholder="ユーザ名" [formControl]="userNameFormControl" required>
 
-        <mat-error *ngIf="userNameFormControl.hasError('required')">
-          {{hissuUserNameMessage}}
-        </mat-error>
-      </mat-form-field>
+          <mat-error *ngIf="userNameFormControl.hasError('required')">
+            {{hissuUserNameMessage}}
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput placeholder="Email" [(ngModel)]="email">
-      </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Email" [(ngModel)]="email">
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput placeholder="ログインID" [formControl]="loginIdFormControl" [disabled]="true" required>
+        <mat-form-field>
+          <input matInput placeholder="ログインID" [formControl]="loginIdFormControl" [disabled]="true" required>
 
-        <mat-error *ngIf="loginIdFormControl.hasError('required')">
-          {{hissuLoginIdMessage}}
-        </mat-error>
-      </mat-form-field>
+          <mat-error *ngIf="loginIdFormControl.hasError('required')">
+            {{hissuLoginIdMessage}}
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput type="password" placeholder="パスワード" [formControl]="passwordFormControl" required>
+        <mat-form-field>
+          <input matInput type="password" placeholder="パスワード" [formControl]="passwordFormControl" required>
 
-        <mat-error *ngIf="passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          {{minlengthMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+            {{minlengthMessage}}
+          </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('isAlphaNumeric') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          {{alphabetMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('isAlphaNumeric') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+            {{alphabetMessage}}
+          </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('isLowerCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          {{lowcaseMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('isLowerCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+            {{lowcaseMessage}}
+          </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('isUpperCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          {{uppercaseMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('isUpperCase') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+            {{uppercaseMessage}}
+          </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('isDigit') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          {{digitMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('isDigit') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+            {{digitMessage}}
+          </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('isSymbol') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
-          {{symbolMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('isSymbol') && !passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+            {{symbolMessage}}
+          </mat-error>
 
-        <mat-error *ngIf="passwordFormControl.hasError('required')">
-          {{hissuPasswordMessage}}
-        </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('required')">
+            {{hissuPasswordMessage}}
+          </mat-error>
 
-      </mat-form-field>
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-select placeholder="権限" [formControl]="kengenFormControl" multiple>
-          <mat-option *ngFor="let kengen of kengens" [value]="kengen.kengenId">{{kengen.kengenName}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="権限" [formControl]="kengenFormControl" multiple>
+            <mat-option *ngFor="let kengen of kengens" [value]="kengen.kengenId">{{kengen.kengenName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
+      </div>
     </div>
   </mat-sidenav>
 

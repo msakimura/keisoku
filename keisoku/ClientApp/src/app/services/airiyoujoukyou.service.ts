@@ -80,15 +80,15 @@ export class AiriyoujoukyouService {
   convertAiRiyouJoukyouModel(aiRiyouJoukyou): AiRiyouJoukyouModel {
 
     var aiRiyouJoukyouModel: AiRiyouJoukyouModel = {
-      customerId: aiRiyouJoukyou.customerId,
-      ankenId: aiRiyouJoukyou.ankenId,
-      year: aiRiyouJoukyou.year,
-      month: aiRiyouJoukyou.month,
-      tunnelNumber: aiRiyouJoukyou.tunnelNumber,
-      souEnchou: aiRiyouJoukyou.souEnchou,
-      tankaId: aiRiyouJoukyou.tankaId,
-      tanka: aiRiyouJoukyou.tanka,
-      kei: aiRiyouJoukyou.souEnchou * aiRiyouJoukyou.tanka,
+      customerId: aiRiyouJoukyou.aiRiyouJoukyou.customerId,
+      ankenId: aiRiyouJoukyou.aiRiyouJoukyou.ankenId,
+      year: aiRiyouJoukyou.aiRiyouJoukyou.year,
+      month: aiRiyouJoukyou.aiRiyouJoukyou.month,
+      tunnelNumber: aiRiyouJoukyou.aiRiyouJoukyou.tunnelNumber,
+      souEnchou: aiRiyouJoukyou.aiRiyouJoukyou.souEnchou,
+      tankaId: aiRiyouJoukyou.aiRiyouJoukyou.tankaId,
+      tanka: aiRiyouJoukyou.tanka.tanka,
+      kei: aiRiyouJoukyou.aiRiyouJoukyou.souEnchou * aiRiyouJoukyou.tanka.tanka,
       ankenName: this.ankenService.selectedAnken ? this.ankenService.selectedAnken.ankenName : ''
     };
 

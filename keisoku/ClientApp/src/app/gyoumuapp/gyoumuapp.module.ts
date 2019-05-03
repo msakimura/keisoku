@@ -16,6 +16,7 @@ import { AiriyoujoukyouComponent } from './airiyoujoukyou/airiyoujoukyou.compone
 import { AddimageComponent } from './addimage/addimage.component';
 import { PreviewComponent } from './preview/preview.component';
 import { OsiraseComponent } from './osirase/osirase.component';
+import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { OsiraseComponent } from './osirase/osirase.component';
     AiriyoujoukyouComponent,
     AddimageComponent,
     PreviewComponent,
-    OsiraseComponent
+    OsiraseComponent,
+    PasswordDialogComponent
   ],
 
   imports: [
@@ -55,7 +57,8 @@ import { OsiraseComponent } from './osirase/osirase.component';
 
   providers: [],
 
-  exports: [RouterModule]
-  
+  exports: [RouterModule],
+
+  entryComponents: [PasswordDialogComponent]
 })
 export class GyoumuappModule { }

@@ -48,14 +48,50 @@ export class CustomerService {
   /**
    *  deleteCustomer
    *
-   *  customerIdをDBから削除する
+   *  customerをDBから削除する
    *  
    *
-   *  @param  {number}    customerId
+   *  @param  {CustomerModel}    customer
    *
    *  @return {Observable<Object>} フェッチ
    */
-  deleteCustomer(customerId: number) {
-    return this.http.delete(this.routeUrl + '/' + customerId);
+  deleteCustomer(customer: CustomerModel) {
+    return this.http.delete(this.routeUrl + '/' + customer.customerId);
+  }
+
+  /**
+   *  updateCustomer
+   *
+   *  customerのDBを更新する
+   *  
+   *
+   *  @param  {CustomerModel}    customer
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  updateCustomer(customer: CustomerModel) {
+
+    return this.http.put(this.routeUrl, customer);
+  }
+
+  /**
+   *  convertCustomerModel
+   *
+   *  DBから取得したcustomerを顧客モデルに変換する
+   *  
+   *
+   *  @param  {object}    customer
+   *
+   *  @return {CustomerModel} 顧客モデル
+   */
+  convertCustomerModel(customer): CustomerModel {
+
+    var customerModel: CustomerModel = {
+      customerId: customer.customerId,
+      customerName: customer.customerName
+    };
+
+
+    return customerModel;
   }
 }

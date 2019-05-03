@@ -120,4 +120,31 @@ export class AuthenticationService {
 
     return '';
   }
+
+  /**
+   *  getTokenPassword
+   *
+   *  アクセストークンのパスワードを取得する
+   *
+   *
+   *  @return {string} パスワード
+   */
+  getTokenPassword(): string {
+    var tokenInfo = this.hasTokenInfo();
+
+    if (tokenInfo) {
+      const helper = new JwtHelperService();
+
+      var deserialized = JSON.parse(tokenInfo);
+
+      var password = deserialized.token;
+
+      const decodedToken = helper.decodeToken(password);
+
+      return decodedToken.Password;
+
+    }
+
+    return '';
+  }
 }

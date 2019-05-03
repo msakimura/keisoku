@@ -1,36 +1,37 @@
-<mat-sidenav-container class="mat-elevation-z8">
+<mat-sidenav-container>
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" (opened)="initSidenav()" (closed)="destroySideNav()" (closedStart)="closeSideNavAction()">
 
-    <div *ngIf="isSideNavPreview">
+    <div class="sidenav_container">
+      <div *ngIf="isSideNavPreview">
 
-      <app-preview [childToPreview]="previewImageName" [childToSidenav]="sideNav"></app-preview>
+        <app-preview [childToPreview]="previewImageName" [childToSidenav]="sideNav"></app-preview>
 
+      </div>
+
+      <div *ngIf="isSideNavImage" class="image_sidenav">
+
+        <app-addimage [childToSidenav]="sideNav"></app-addimage>
+
+      </div>
+
+
+      <div *ngIf="isSideNavAiRiyoujoukyou">
+
+        <app-airiyoujoukyou [childToSidenav]="sideNav"></app-airiyoujoukyou>
+
+
+      </div>
+
+
+      <div *ngIf="isSideNavOsirase">
+
+        <app-osirase [childToSidenav]="sideNav"></app-osirase>
+
+
+      </div>
     </div>
-
-    <div *ngIf="isSideNavImage" class="image_sidenav">
-
-      <app-addimage [childToSidenav]="sideNav"></app-addimage>
-
-    </div>
-
-
-    <div *ngIf="isSideNavAiRiyoujoukyou">
-
-      <app-airiyoujoukyou [childToSidenav]="sideNav"></app-airiyoujoukyou>
-
-
-    </div>
-
-
-    <div *ngIf="isSideNavOsirase">
-
-      <app-osirase [childToSidenav]="sideNav"></app-osirase>
-
-
-    </div>
-
-  </mat-sidenav>
+</mat-sidenav>
 
 
   <mat-sidenav-content>

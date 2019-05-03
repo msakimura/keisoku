@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
 
 import { SpinnerdialogComponent } from '../../components/spinnerdialog/spinnerdialog.component';
+import { InputMessage } from 'src/app/shared/constant.module';
 
 @Component({
   selector: 'app-login-dialog',
@@ -17,13 +18,14 @@ import { SpinnerdialogComponent } from '../../components/spinnerdialog/spinnerdi
 export class LoginDialogComponent implements OnInit {
 
   error = '';
-
-  userid: string;
-  password: string;
   
   useridFormControl = new FormControl('', [Validators.required]);
 
   passwordFormControl = new FormControl('', [Validators.required]);
+
+  hissuUserIdMessage: string = InputMessage.HISSU_USERID;
+
+  hissuPasswordMessage: string = InputMessage.HISSU_PASSWORD;
 
 
   dialogRef: MatDialogRef<SpinnerdialogComponent>;
@@ -31,7 +33,6 @@ export class LoginDialogComponent implements OnInit {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
     public matDialogRef: MatDialogRef<LoginDialogComponent>,
     private dialog: MatDialog) { }
 
@@ -64,7 +65,7 @@ export class LoginDialogComponent implements OnInit {
     });
     
     // oauth認証
-    this.authenticationService.login(this.userid, this.password)
+    this.authenticationService.login(this.useridFormControl.value, this.passwordFormControl.value)
       .pipe(first())
       .subscribe(
       data => {

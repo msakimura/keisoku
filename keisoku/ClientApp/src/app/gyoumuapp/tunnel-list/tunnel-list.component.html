@@ -1,28 +1,29 @@
-<mat-sidenav-container class="mat-elevation-z8">
+<mat-sidenav-container>
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="tunnel_sidenav">
 
-    <div class="mat-headline">トンネル管理</div>
+    <div class="sidenav_container">
+      <div class="mat-headline">トンネル管理</div>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button *ngIf="isAdd" mat-button (click)="saveTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
-    <button *ngIf="isEdit" mat-button (click)="updateTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isAdd" mat-button (click)="saveTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isEdit" mat-button (click)="updateTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+      <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
 
-    <mat-form-field>
-      <input matInput placeholder="トンネル名" [formControl]="tunnelNameFormControl" required>
+      <mat-form-field>
+        <input matInput placeholder="トンネル名" [formControl]="tunnelNameFormControl" required>
 
-      <mat-error *ngIf="tunnelNameFormControl.hasError('required')">
-        {{hissuTunnelMessage}}
-      </mat-error>
-    </mat-form-field>
-
+        <mat-error *ngIf="tunnelNameFormControl.hasError('required')">
+          {{hissuTunnelMessage}}
+        </mat-error>
+      </mat-form-field>
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>

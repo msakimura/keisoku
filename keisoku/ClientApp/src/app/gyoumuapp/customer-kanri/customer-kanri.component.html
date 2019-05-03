@@ -1,30 +1,32 @@
-<mat-sidenav-container class="mat-elevation-z8">
+<mat-sidenav-container>
 
   <mat-sidenav #sidenav mode="over" position="end" fixedInViewport="true" class="customer_sidenav">
 
-    <div class="mat-headline">顧客管理</div>
+    <div class="sidenav_container">
+      <div class="mat-headline">顧客管理</div>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+      <button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
 
-    <button *ngIf="isAdd" mat-button (click)="saveCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
-    <button *ngIf="isEdit" mat-button (click)="updateCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isAdd" mat-button (click)="saveCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+      <button *ngIf="isEdit" mat-button (click)="updateCustomerInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <div fxLayout="column">
+      <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
 
-      <mat-form-field>
-        <input matInput placeholder="顧客名" [formControl]="customerFormControl" required>
+      <div fxLayout="column">
 
-        <mat-error *ngIf="customerFormControl.hasError('required')">
-          {{hissuAnkenMessage}}
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="顧客名" [formControl]="customerFormControl" required>
 
-      <mat-checkbox [(ngModel)]="otameshi">お試し機能</mat-checkbox>
+          <mat-error *ngIf="customerFormControl.hasError('required')">
+            {{hissuCustomerMessage}}
+          </mat-error>
+        </mat-form-field>
 
+      </div>
     </div>
 
   </mat-sidenav>
@@ -58,7 +60,7 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let row">
             <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(row) : null"
+                          (change)="$event ? selectToggle(row) : null"
                           [checked]="selection.isSelected(row)">
             </mat-checkbox>
           </mat-cell>
@@ -67,11 +69,6 @@
         <ng-container matColumnDef="customerName">
           <mat-header-cell *matHeaderCellDef> 顧客名 </mat-header-cell>
           <mat-cell *matCellDef="let element" data-label="顧客名"> {{element.customerName}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="otameshi">
-          <mat-header-cell *matHeaderCellDef> お試し機能 </mat-header-cell>
-          <mat-cell *matCellDef="let element" data-label="お試し機能"> ✕ </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

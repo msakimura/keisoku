@@ -12,8 +12,10 @@ namespace keisoku.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TunnelController : BaseController
+    public class TunnelController : ControllerBase
     {
+        private ApplicationDbContext _context;
+
         public TunnelController(ApplicationDbContext context)
         {
             _context = context;

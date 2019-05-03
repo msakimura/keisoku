@@ -11,6 +11,8 @@ import { InputMessage } from 'src/app/shared/constant.module';
   styleUrls: ['./customer-kanri.component.css']
 })
 export class CustomerKanriComponent implements OnInit {
+  isInput: boolean = false;
+
   isAdd: boolean = false;
 
   isEdit: boolean = false;
@@ -27,12 +29,14 @@ export class CustomerKanriComponent implements OnInit {
 
   customerFormControl = new FormControl('', [Validators.required]);
 
+  hissuMessage: string = InputMessage.HISUU;
+
   hissuCustomerMessage: string = InputMessage.HISSU_CUSTOMER;
 
 
   otameshi = false;
 
-  displayedColumns: string[] = ['select', 'customerName', 'otameshi'];
+  displayedColumns: string[] = ['select', 'customerName'];
 
 
   dataSource = new MatTableDataSource <CustomerModel>();
@@ -177,13 +181,14 @@ export class CustomerKanriComponent implements OnInit {
    *  @return {void}
    */
   saveCustomerInfo() {
+    // 必須入力チェック
+    if (this.customerFormControl.invalid) {
+      this.isInput = true;
 
-    var info: CustomerModel = {
-      customerId: 0,
-      customerName: this.customerFormControl.value
-    };
+      return;
+    }
 
-    this.customerService.insertCustomer(info)
+    this.customerService.insertCustomer(this.getInputCustomerModel(0))
       .subscribe((newdata:any) => {
         const data = this.dataSource.data;
         data.push(newdata);
@@ -204,15 +209,64 @@ export class CustomerKanriComponent implements OnInit {
    *  @return {void}
    */
   deleteCustomerInfo() {
-    this.customerService.deleteCustomer(this.selection.selected[0].customerId).subscribe();
+    
+    this.selection.selected.forEach(customer => {
+      this.customerService.deleteCustomer(customer).subscribe(
+        data => { },
+        error => {
+        });
+    });
 
-    const data = this.dataSource.data;
-    data.splice(0, 1);
+    var data = this.dataSource.data;
+
+    this.selection.selected.forEach(customer => {
+
+      data = data.filter(function (element) { return (element.customerId != customer.customerId); });
+    });
 
     this.dataSource.data = data;
 
     this.selection.clear();
+
+    this.changeDisabled();
     
+  }
+
+
+  /**
+   *  updateCustomerInfo
+   *
+   *  選択した顧客情報についてDB、datasourceを更新する
+   *  
+   *
+   *  @return {void}
+   */
+  updateCustomerInfo() {
+
+    // 必須入力チェック
+    if (this.customerFormControl.invalid) {
+      this.isInput = true;
+
+      return;
+    }
+
+    // 編集した顧客情報でDBを更新
+    this.customerService.updateCustomer(this.getInputCustomerModel(this.selection.selected[0].customerId))
+      .subscribe((response: any) => {
+
+        var row = this.updateSelectedRowCustomerInfo(this.customerService.convertCustomerModel(response.value));
+
+        this.sideNav.close();
+
+        this.clearSideNavFormData();
+
+        if (row != null) {
+          this.selectToggle(row);
+        }
+
+      },
+        error => {
+        });
   }
 
 
@@ -276,6 +330,8 @@ export class CustomerKanriComponent implements OnInit {
    */
   displayAddSideNav() {
 
+    this.clearSideNavFormData();
+
     this.isAdd = true;
 
     this.sideNav.open();
@@ -292,6 +348,8 @@ export class CustomerKanriComponent implements OnInit {
    */
   displayEditSideNav() {
 
+    this.clearSideNavFormData();
+
     var customer = this.selection.selected[0];
 
     this.customerFormControl.setValue(customer.customerName);
@@ -300,4 +358,71 @@ export class CustomerKanriComponent implements OnInit {
 
     this.sideNav.open();
   }
+
+
+  /**
+   *  clearSideNavFormData
+   *
+   *  sideNavのフォームデータをクリアする
+   *  
+   *
+   *  @return {void}
+   */
+  clearSideNavFormData() {
+    this.customerFormControl.reset();
+
+    this.isAdd = false;
+
+    this.isEdit = false;
+
+    this.isInput = false;
+  }
+
+
+  /**
+   *  getInputCustomerModel
+   *
+   *  入力項目の顧客情報を取得する
+   *  顧客IDはcustomerIdを設定する
+   *  
+   *  @param  {number}    customerId
+   *
+   *  @return {CustomerModel} 顧客情報
+   */
+  getInputCustomerModel(customerId): CustomerModel {
+
+    var customerInfo: CustomerModel = {
+      customerId: customerId,
+      customerName: this.customerFormControl.value
+    };
+
+
+    return customerInfo;
+  }
+
+
+  /**
+   *  updateSelectedRowCustomerInfo
+   *
+   *  選択したレコードのeditCustomerを編集した内容で更新する
+   *  
+   *  @param  {CustomerModel}    editCustomer
+   *
+   *  @return {CustomerModel} 編集した内容
+   */
+  updateSelectedRowCustomerInfo(editCustomer: CustomerModel): CustomerModel {
+    var data = this.dataSource.data;
+
+    var target = data.find(customer => {
+      return (customer.customerId === editCustomer.customerId);
+    });
+
+    if (target == null) return null;
+
+
+    target.customerName = editCustomer.customerName;
+
+    return target;
+  }
+
 }

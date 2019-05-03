@@ -12,8 +12,10 @@ namespace keisoku.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AnkenController : BaseController
+    public class AnkenController : ControllerBase
     {
+        private ApplicationDbContext _context;
+
         public AnkenController(ApplicationDbContext context)
         {
             _context = context;

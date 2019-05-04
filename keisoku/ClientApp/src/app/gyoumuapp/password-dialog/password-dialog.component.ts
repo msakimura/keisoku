@@ -3,6 +3,8 @@ import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms'
 import { InputMessage, PasswordMessage } from 'src/app/shared/constant.module';
 import { ValidationModule } from 'src/app/shared/validation.module';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { MatDialogRef, MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-password-dialog',
@@ -33,11 +35,33 @@ export class PasswordDialogComponent implements OnInit {
   currentPassMessage: string = PasswordMessage.CURRENT;
 
 
-  constructor(fb: FormBuilder, private authenticationService: AuthenticationService) {
+  minlengthMessage: string = PasswordMessage.MINLENGTH;
+
+  alphabetMessage: string = PasswordMessage.ALPHABET;
+
+  lowcaseMessage: string = PasswordMessage.LOWCASE;
+
+  uppercaseMessage: string = PasswordMessage.UPPERCASE;
+
+  digitMessage: string = PasswordMessage.DIGIT;
+
+  symbolMessage: string = PasswordMessage.SYMBOL;
+
+  constructor(fb: FormBuilder,
+    private authenticationService: AuthenticationService,
+    public matDialogRef: MatDialogRef<PasswordDialogComponent>,
+    private router: Router,
+    private snackBar: MatSnackBar) {
 
     this.myForm = fb.group({
 
-      newPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required,
+        Validators.minLength(6),
+        ValidationModule.isAlphaNumeric,
+        ValidationModule.isLowerCase,
+        ValidationModule.isUpperCase,
+        ValidationModule.isDigit,
+        ValidationModule.isSymbol]],
       confirmPassword: ['']
 
     }, { validator: ValidationModule.isPasswordMatch });
@@ -89,10 +113,43 @@ export class PasswordDialogComponent implements OnInit {
         return;
       }
 
+      
+
+      // アクセストークンを削除して、トップ画面に遷移する
+      // パスワード変更後は再度サインインする
+      this.snackBar.open('再度サインインしてください', '閉じる')
+        .afterDismissed().subscribe(() => {
+
+          this.authenticationService.logout();
+
+          this.baseJump();
+
+        });
+
+      this.matDialogRef.close();
+      
+      //this.authenticationService.logout();
+
+      //this.baseJump();
+
     }
+    // アクセストークンがキャッシュされていない場合、トップ画面に戻って、サインアウト
     else {
+
+
 
     }
   }
-  
+
+  /**
+   *  baseJump
+   *
+   *  ベースアプリを起動する
+   *  
+   *
+   *  @return {void}
+   */
+  baseJump() {
+    this.router.navigate(["/"]);
+  }
 }

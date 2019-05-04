@@ -19,11 +19,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SpinnerdialogComponent } from './components/spinnerdialog/spinnerdialog.component';
+import { MessageSnackbarComponent } from './components/message-snackbar/message-snackbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SpinnerdialogComponent
+    SpinnerdialogComponent,
+    MessageSnackbarComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

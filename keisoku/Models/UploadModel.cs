@@ -10,9 +10,8 @@ namespace keisoku.Models
 {
     public class UploadModel
     {
-        [JsonProperty("fileName")]
         public string FileName { get; set; }
-        [JsonProperty("fileData")]
+
         public string FileData { get; set; }
     }
 }

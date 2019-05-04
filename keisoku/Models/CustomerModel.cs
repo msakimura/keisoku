@@ -6,10 +6,8 @@ namespace keisoku.Models
 {
     public class CustomerModel
     {
-        [JsonProperty("customerId")]
         public int CustomerId { get; set; }
 
-        [JsonProperty("customerName")]
         public string CustomerName { get; set; }
 
         public DateTime CreatedAt { get; set; }

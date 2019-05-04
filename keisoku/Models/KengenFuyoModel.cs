@@ -8,13 +8,10 @@ namespace keisoku.Models
 {
     public class KengenFuyoModel
     {
-        [JsonProperty("customerId")]
         public int CustomerId { get; set; }
 
-        [JsonProperty("userId")]
         public int UserId { get; set; }
 
-        [JsonProperty("kengenId")]
         public int KengenId {get; set;}
 
         public DateTime CreatedAt { get; set; }

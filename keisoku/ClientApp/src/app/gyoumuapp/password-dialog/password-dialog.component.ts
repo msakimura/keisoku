@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { SessionService } from 'src/app/services/session.service';
+import { PasswordModel, PasswordService } from 'src/app/services/password.service';
 
 @Component({
   selector: 'app-password-dialog',
@@ -51,8 +52,7 @@ export class PasswordDialogComponent implements OnInit {
   constructor(fb: FormBuilder,
     private authenticationService: AuthenticationService,
     public matDialogRef: MatDialogRef<PasswordDialogComponent>,
-    private router: Router,
-    private snackBar: MatSnackBar,
+    private passwordService: PasswordService,
     private sessionService: SessionService) {
 
     this.myForm = fb.group({
@@ -100,7 +100,7 @@ export class PasswordDialogComponent implements OnInit {
 
 
       // 必須入力チェック
-      if (this.currentPasswordFormControl.invalid || !this.myForm.controls['newPassword'].value) {
+      if (this.currentPasswordFormControl.invalid || this.myForm.controls['newPassword'].invalid) {
         this.isInput = true;
         return;
       }
@@ -120,6 +120,20 @@ export class PasswordDialogComponent implements OnInit {
         this.isConfirmPass = true;
         return;
       }
+
+
+      var passwordModel: PasswordModel = {
+        loginId: this.authenticationService.getTokenLoginId(),
+        password: this.myForm.controls['newPassword'].value
+      };
+
+
+      this.passwordService.updatePassword(passwordModel)
+        .subscribe((response: any) => {
+          
+        },
+        error => {
+        });
 
       message = PasswordChangeMessage.SUCCESS;
       

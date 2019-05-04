@@ -6,7 +6,8 @@ import { CustomerService, CustomerModel } from 'src/app/services/customer.servic
 import { FormControl, Validators } from '@angular/forms';
 import { KengenService, KengenModel } from 'src/app/services/kengen.service';
 import { ValidationModule } from 'src/app/shared/validation.module';
-import { InputMessage, PasswordMessage, Kengen } from '../../shared/constant.module';
+import { InputMessage, PasswordMessage, Kengen, SessionMessage } from '../../shared/constant.module';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-user-kanri',
@@ -94,10 +95,17 @@ export class UserKanriComponent implements OnInit  {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private userService: UserService, private customerService: CustomerService, private kengenService: KengenService) { }
+  constructor(private userService: UserService,
+    private customerService: CustomerService,
+    private kengenService: KengenService,
+    private sessionService: SessionService) { }
 
 
   ngOnInit() {
+
+    if (this.sessionService.signout(SessionMessage.TIMEOUT)) {
+      return;
+    }
 
     const sortingDataAccessor = (data: UserModel, sortHeaderId: string): string | number => {
       if (sortHeaderId === this.displayedColumns[1]) {

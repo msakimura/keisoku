@@ -4,9 +4,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { TunnelService, TunnelModel } from 'src/app/services/tunnel.service';
 import { AnkenService } from 'src/app/services/anken.service';
 import { FormControl, Validators } from '@angular/forms';
-import { InputMessage } from 'src/app/shared/constant.module';
+import { InputMessage, SessionMessage } from 'src/app/shared/constant.module';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-tunnel-list',
@@ -57,9 +58,17 @@ export class TunnelListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private router: Router, private tunnelService: TunnelService, private ankenService: AnkenService, private userService: UserService) { }
+  constructor(private router: Router,
+    private tunnelService: TunnelService,
+    private ankenService: AnkenService,
+    private userService: UserService,
+    private sessionService: SessionService) { }
 
   ngOnInit() {
+
+    if (this.sessionService.signout(SessionMessage.TIMEOUT)) {
+      return;
+    }
 
     const sortingDataAccessor = (data: TunnelModel, sortHeaderId: string): string | number => {
       if (sortHeaderId === this.displayedColumns[1]) {

@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Responsive } from 'src/app/shared/constant.module';
+import { Responsive, SessionMessage } from 'src/app/shared/constant.module';
 import { MatSidenav, MatDialog } from '@angular/material';
 import { PasswordDialogComponent } from '../password-dialog/password-dialog.component';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-gyoumu-header',
@@ -25,28 +26,30 @@ export class GyoumuHeaderComponent implements OnInit {
   constructor(private router: Router,
     private userService: UserService,
     private authenticationService: AuthenticationService,
-    private matDialog: MatDialog) { }
+    private matDialog: MatDialog,
+    private sessionService: SessionService) { }
 
   ngOnInit() {
 
-    if (this.authenticationService.hasTokenInfo()) {
-
-      this.userService.getUserFromLoginId(this.authenticationService.getTokenLoginId())
-        .subscribe((response: any) => {
-          this.userService.loginUserModel = this.userService.convertOneUserModels(response);
-
-          var customerName = this.userService.loginUserModel.customerName;
-
-          this.customerNames = this.getResponsiveCustomerName(customerName + '　様');
-          
-          this.userName = this.userService.loginUserModel.userName;
-          
-          if (this.isKanriKengen()) {
-            this.isKanriDisplay = true;
-          }
-
-        });
+    if (this.sessionService.signout(SessionMessage.TIMEOUT)) {
+      return;
     }
+
+    this.userService.getUserFromLoginId(this.authenticationService.getTokenLoginId())
+      .subscribe((response: any) => {
+        this.userService.loginUserModel = this.userService.convertOneUserModels(response);
+
+        var customerName = this.userService.loginUserModel.customerName;
+
+        this.customerNames = this.getResponsiveCustomerName(customerName + '　様');
+          
+        this.userName = this.userService.loginUserModel.userName;
+          
+        if (this.isKanriKengen()) {
+          this.isKanriDisplay = true;
+        }
+
+      });
     
   }
 

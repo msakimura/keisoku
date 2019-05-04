@@ -3,7 +3,8 @@ import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/
 import { SelectionModel } from '@angular/cdk/collections';
 import { CustomerService, CustomerModel } from 'src/app/services/customer.service';
 import { FormControl, Validators } from '@angular/forms';
-import { InputMessage } from 'src/app/shared/constant.module';
+import { InputMessage, SessionMessage } from 'src/app/shared/constant.module';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-customer-kanri',
@@ -51,9 +52,13 @@ export class CustomerKanriComponent implements OnInit {
 
   
 
-  constructor(private customerService: CustomerService) { }
+  constructor(private customerService: CustomerService, private sessionService: SessionService) { }
 
   ngOnInit() {
+
+    if (this.sessionService.signout(SessionMessage.TIMEOUT)){
+      return;
+    }
 
     this.bindAllCustomerInfo();
     

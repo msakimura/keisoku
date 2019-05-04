@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { InputMessage, PasswordMessage } from 'src/app/shared/constant.module';
+import { InputMessage, PasswordMessage, PasswordChangeMessage, SnackbarAction, SessionMessage } from 'src/app/shared/constant.module';
 import { ValidationModule } from 'src/app/shared/validation.module';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-password-dialog',
@@ -51,7 +52,8 @@ export class PasswordDialogComponent implements OnInit {
     private authenticationService: AuthenticationService,
     public matDialogRef: MatDialogRef<PasswordDialogComponent>,
     private router: Router,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private sessionService: SessionService) {
 
     this.myForm = fb.group({
 
@@ -82,12 +84,18 @@ export class PasswordDialogComponent implements OnInit {
    *  @return {void}
    */
   onChange() {
+
     this.isInput = false;
 
     this.isCurrentPass = false;
 
     this.isConfirmPass = false;
 
+    var message = '';
+
+    // アクセストークンがキャッシュされている場合
+    // アクセストークンを削除して、トップ画面に遷移する
+    // パスワード変更後は再度サインインする
     if (this.authenticationService.hasTokenInfo()) {
 
 
@@ -113,43 +121,21 @@ export class PasswordDialogComponent implements OnInit {
         return;
       }
 
+      message = PasswordChangeMessage.SUCCESS;
       
-
-      // アクセストークンを削除して、トップ画面に遷移する
-      // パスワード変更後は再度サインインする
-      this.snackBar.open('再度サインインしてください', '閉じる')
-        .afterDismissed().subscribe(() => {
-
-          this.authenticationService.logout();
-
-          this.baseJump();
-
-        });
-
-      this.matDialogRef.close();
-      
-      //this.authenticationService.logout();
-
-      //this.baseJump();
+      this.authenticationService.logout();
 
     }
-    // アクセストークンがキャッシュされていない場合、トップ画面に戻って、サインアウト
+    // アクセストークンがキャッシュされていない場合、トップ画面に戻って再度サインインする
     else {
 
-
-
+      message = SessionMessage.TIMEOUT;
+      
     }
-  }
 
-  /**
-   *  baseJump
-   *
-   *  ベースアプリを起動する
-   *  
-   *
-   *  @return {void}
-   */
-  baseJump() {
-    this.router.navigate(["/"]);
+    this.sessionService.signout(message);
+
+    this.matDialogRef.close();
   }
+  
 }

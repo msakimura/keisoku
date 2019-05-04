@@ -3,9 +3,10 @@ import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, Validators } from '@angular/forms';
 import { AnkenModel, AnkenService } from 'src/app/services/anken.service';
-import { InputMessage } from 'src/app/shared/constant.module';
+import { InputMessage, SessionMessage } from 'src/app/shared/constant.module';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-anken-list',
@@ -56,9 +57,15 @@ export class AnkenListComponent implements OnInit {
 
   constructor(private ankenService: AnkenService,
     private userService: UserService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService,
+    private sessionService: SessionService) { }
 
   ngOnInit() {
+
+    if (this.sessionService.signout(SessionMessage.TIMEOUT)){
+      return;
+    }
+
     const sortingDataAccessor = (data: AnkenModel, sortHeaderId: string): string | number => {
       if (sortHeaderId === this.displayedColumns[1]) {
         return data.ankenName;

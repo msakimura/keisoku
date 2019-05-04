@@ -11,10 +11,10 @@ import { AiriyoujoukyouComponent } from '../airiyoujoukyou/airiyoujoukyou.compon
 import { AddimageComponent } from '../addimage/addimage.component';
 import { PreviewComponent } from '../preview/preview.component';
 import { UserService } from 'src/app/services/user.service';
-import { ProgressMessage } from 'src/app/shared/constant.module';
+import { ProgressMessage, SessionMessage } from 'src/app/shared/constant.module';
 import { OsiraseComponent } from '../osirase/osirase.component';
 import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinnerdialog.component';
-import { AiriyoujoukyouService } from 'src/app/services/airiyoujoukyou.service';
+import { SessionService } from 'src/app/services/session.service';
 
 
 @Component({
@@ -106,10 +106,14 @@ export class TunnelComponent implements OnInit {
     private seikahinImageService: SeikahinImageService,
     private userService: UserService,
     private dialog: MatDialog,
-    private airiyoujoukyouService: AiriyoujoukyouService) { }
+    private sessionService: SessionService) { }
 
 
   ngOnInit() {
+
+    if (this.sessionService.signout(SessionMessage.TIMEOUT)) {
+      return;
+    }
 
     const sortingDataAccessor = (data: TunnelImageModel, sortHeaderId: string): string | number => {
       if (sortHeaderId === this.displayedColumns[1]) {

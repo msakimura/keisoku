@@ -63,3 +63,15 @@ export class Responsive {
   public static readonly TITLE_TEXT_SIZE = 18;
 
 }
+
+export class PasswordChangeMessage {
+  public static readonly SUCCESS = 'パスワードを変更しました。再度サインインしてください';
+}
+
+export class SnackbarAction {
+  public static readonly CLOSE = '閉じる';
+}
+
+export class SessionMessage {
+  public static readonly TIMEOUT = 'セッションが切れています。再度サインインしてください。';
+}

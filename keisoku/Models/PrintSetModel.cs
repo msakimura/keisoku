@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace keisoku.Models
 {
-    public class PrintModel
+    public class PrintSetModel
     {
         public int CustomerId { get; set; }
 
@@ -13,20 +13,20 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public int PrintId { get; set; }
+        public string CadVersion { get; set; }
 
-        public int YoushiSize { get; set; }
+        public string CadPdfPrintPaperSize { get; set; }
 
-        public int SpanNumber { get; set; }
+        public int PrintLayoutTopMargin { get; set; }
 
-        public int ShukushakuRitsu { get; set; }
-
-        public int PrintDataKubun { get; set; }
-
+        public int PrintLayoutBottomMargin { get; set; }
+        
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
         public TunnelModel Tunnel { get; set; }
+
+        public ICollection<PrintDetailModel> PrintDetails { get; set; }
     }
 }

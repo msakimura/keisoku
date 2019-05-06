@@ -18,6 +18,5 @@ namespace keisoku.Models
 
         public ICollection<AnkenModel> Ankens { get; set; }
 
-        public ICollection<OptionFuyoModel> OptionFuyos { get; set; }
     }
 }

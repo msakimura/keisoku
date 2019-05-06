@@ -39,9 +39,15 @@ namespace keisoku.Models
 
         public ICollection<WebInputInfoModel> WebInputInfos { get; set; }
 
-        public ICollection<PrintModel> Prints { get; set; }
+        public ICollection<PrintSetModel> PrintSets { get; set; }
 
         public ICollection<SummaryModel> Summaries { get; set; }
+
+        public ICollection<OptionFuyoModel> OptionFuyos { get; set; }
+
+        public ICollection<HibiwareShoriSetModel> HibiwareShoriSets { get; set; }
+
+        public ICollection<ImageOrderSetModel> ImageOrderSets { get; set; }
 
     }
 }

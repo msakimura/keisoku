@@ -27,8 +27,10 @@ namespace keisoku.Models
         public CustomerModel Customer { get; set; }
 
         public ICollection<TunnelModel> Tunnels { get; set; }
+
         public ICollection<AiRiyouJoukyouModel> AiRiyouJoukyous { get; set; }
 
+        public ICollection<KoukaisakiCustomerModel> KoukaisakiCustomers { get; set; }
 
     }
 }

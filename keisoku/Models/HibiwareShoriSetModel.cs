@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace keisoku.Models
 {
-    public class OptionFuyoModel
+    public class HibiwareShoriSetModel
     {
         public int CustomerId { get; set; }
 
@@ -10,15 +13,15 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public int OptionId { get; set; }
+        public int TanshukuRemove { get; set; }
+
+        public int KaikouhabaMojiSize { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
         public virtual TunnelModel Tunnel { get; set; }
-
-        public OptionModel Option { get; set; }
 
     }
 }

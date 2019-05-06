@@ -9,15 +9,17 @@ namespace keisoku.Models
     {
         public int SeikahinImageId { get; set; }
 
-        public int PreviewImageId { get; set; }
+        public string PreviewImageName { get; set; }
+
+        public string PreviewImageData { get; set; }
+
+        public string BlobContainerName { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
         public SeikahinImageModel SeikahinImage { get; set; }
-
-        public PreviewImageModel PreviewImage { get; set; }
 
     }
 }

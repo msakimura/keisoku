@@ -7,15 +7,19 @@ namespace keisoku.Models
 {
     public class AiKaisekiCadModel
     {
-        public int AiKaisekiCadId { get; set; }
+        public int SeikahinImageId { get; set; }
+
+        public string CadName { get; set; }
 
         public string CadData { get; set; }
+
+        public string BlobContainerName { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
-        public ICollection<ImageAiKaisekiModel> ImageAiKaisekis { get; set; }
+        public SeikahinImageModel SeikahinImage { get; set; }
 
     }
 }

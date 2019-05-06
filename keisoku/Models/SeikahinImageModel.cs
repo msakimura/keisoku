@@ -32,7 +32,13 @@ namespace keisoku.Models
 
         public ICollection<PreviewModel> Previews { get; set; }
 
-        public ICollection<ImageAiKaisekiModel> ImageAiKaisekis { get; set; }
+        public ICollection<AiKaisekiCadModel> AiKaisekiCads { get; set; }
+
+        public ICollection<AiKaisekiPdfModel> AiKaisekiPdfs { get; set; }
+
+        public ICollection<ImageOrderSetModel> ImageOrderSets { get; set; }
+
+        public ICollection<ImageOrderDetailModel> ImageOrderDetails { get; set; }
 
     }
 }

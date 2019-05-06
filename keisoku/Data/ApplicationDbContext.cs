@@ -358,17 +358,23 @@ namespace keisoku.Data
 
             builder.Entity<ImageOrderSetModel>(i =>
             {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.ImageOrderSetId });
+
+                i.Property(j => j.ImageOrderSetId).ValueGeneratedOnAdd();
 
                 i.HasOne(j => j.Tunnel).WithMany(k => k.ImageOrderSets).OnDelete(DeleteBehavior.Cascade);
 
                 i.HasOne(j => j.SeikahinImage).WithMany(k => k.ImageOrderSets).OnDelete(DeleteBehavior.Cascade);
 
+                i.HasMany(j => j.ImageOrderDetails).WithOne(k => k.ImageOrderSet).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId, l.ImageOrderSetId });
+
             });
 
             builder.Entity<ImageOrderDetailModel>(i =>
             {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.ImageOrderDetailId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.ImageOrderSetId, j.ImageOrderDetailId });
+
+                i.Property(j => j.ImageOrderDetailId).ValueGeneratedOnAdd();
 
                 i.HasOne(j => j.ImageOrderSet).WithMany(k => k.ImageOrderDetails).OnDelete(DeleteBehavior.Cascade);
 

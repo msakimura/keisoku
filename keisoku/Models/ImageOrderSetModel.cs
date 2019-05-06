@@ -13,6 +13,8 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
+        public int ImageOrderSetId { get; set; }
+
         public int SeikahinImageId { get; set; }
 
         public int WidthOrHeight { get; set; }

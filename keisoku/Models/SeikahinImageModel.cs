@@ -37,8 +37,7 @@ namespace keisoku.Models
         public ICollection<AiKaisekiPdfModel> AiKaisekiPdfs { get; set; }
 
         public ICollection<ImageOrderSetModel> ImageOrderSets { get; set; }
-
-        public ICollection<ImageOrderDetailModel> ImageOrderDetails { get; set; }
+        
 
     }
 }

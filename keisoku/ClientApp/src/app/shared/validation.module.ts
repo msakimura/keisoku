@@ -122,4 +122,24 @@ export class ValidationModule {
     
     return pass === confirmPass ? null : { 'isPasswordMatch': true };
   }
+
+  /**
+   *  isNumeric
+   *
+   *  formControlのvalueにおいて、数値か判定する
+   *  
+   *  @param  {FormControl}    formControl
+   *
+   *  @return {ValidationErrors | null} 判定結果
+   */
+  static isNumeric(formControl: FormControl): ValidationErrors | null {
+
+    if (formControl.value === null) {
+      return null;
+    }
+
+    var str = formControl.value.toString();
+
+    return str.match(/[.]/) === null ? null : { 'isNumeric': true };
+  }
 }

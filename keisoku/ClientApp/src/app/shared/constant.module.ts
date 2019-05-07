@@ -19,6 +19,10 @@ export class InputMessage {
   public static readonly HISSU_CURRENT_PASS = '現在のパスワードは必須です';
   public static readonly HISSU_NEW_PASS = '新パスワードは必須です';
   public static readonly HISSU_USERID = 'ユーザIDは必須です';
+  public static readonly HISSU_TANSHUKU_REMOVE = '短縮削除は必須です';
+  public static readonly HISSU_KAIKOUHABA_MOJI_SIZE = '開口幅文字サイズは必須です';
+  public static readonly NUMERIC = '数値を入力してください';
+  public static readonly MAXLENGTH4 = '9999以下の数値を入力してください';
 }
 
 export class PasswordMessage {

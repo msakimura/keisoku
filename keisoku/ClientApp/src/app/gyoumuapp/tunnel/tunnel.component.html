@@ -30,6 +30,14 @@
 
 
       </div>
+
+
+      <div *ngIf="isSideNavHibiwareShoriSet" class="hibiware_sidenav">
+
+        <app-hibiwareshori-setting [childToSidenav]="sideNav"></app-hibiwareshori-setting>
+
+
+      </div>
     </div>
 </mat-sidenav>
 
@@ -52,9 +60,13 @@
 
     <button mat-button [disabled]="isDaichouDisabled"><mat-icon color="{{daichouIconColor}}">receipt</mat-icon>台帳</button>
 
-    <button mat-button [disabled]="isPrintDisabled"><mat-icon color="{{printIconColor}}">print</mat-icon>印刷</button>
-
     <button mat-button [disabled]="isSummaryDisabled"><mat-icon color="{{summaryIconColor}}">view_list</mat-icon>サマリー</button>
+
+    <button mat-button (click)="displaySideNavHibiwareShoriSet()"><mat-icon color="primary">flash_on</mat-icon>ひび割れ処理設定</button>
+
+    <button mat-button><mat-icon color="primary">photo_library</mat-icon>画像並び設定</button>
+
+    <button mat-button><mat-icon color="primary">get_app</mat-icon>出力設定</button>
 
     <button mat-button (click)="displaySideNavOshirase()" *ngIf="isOsirase"><mat-icon color="primary">notifications_active</mat-icon>お知らせ</button>
 

@@ -21,6 +21,10 @@ namespace keisoku.Models
 
         public int Length { get; set; }
 
+        public string SpanMoji { get; set; }
+
+        public int ImageAlignPosition { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
@@ -28,8 +32,6 @@ namespace keisoku.Models
         public virtual TunnelModel Tunnel { get; set; }
 
         public virtual SeikahinImageModel SeikahinImage { get; set; }
-
-        public ICollection<ImageOrderDetailModel> ImageOrderDetails { get; set; }
-
+        
     }
 }

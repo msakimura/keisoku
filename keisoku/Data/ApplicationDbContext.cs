@@ -60,8 +60,7 @@ namespace keisoku.Data
         public DbSet<HibiwareShoriSetModel> HibiwareShoriSets { get; set; }
 
         public DbSet<ImageOrderSetModel> ImageOrderSets { get; set; }
-
-        public DbSet<ImageOrderDetailModel> ImageOrderDetails { get; set; }
+        
 
         public DbSet<KoukaisakiCustomerModel> KoukaisakiCustomers { get; set; }
 
@@ -204,9 +203,7 @@ namespace keisoku.Data
                 i.HasMany(j => j.Previews).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
 
                 i.HasMany(j => j.ImageOrderSets).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
-
-                i.HasMany(j => j.ImageOrderDetails).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
-
+                
                 i.HasMany(j => j.AiKaisekiCads).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
 
                 i.HasMany(j => j.AiKaisekiPdfs).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
@@ -365,22 +362,9 @@ namespace keisoku.Data
                 i.HasOne(j => j.Tunnel).WithMany(k => k.ImageOrderSets).OnDelete(DeleteBehavior.Cascade);
 
                 i.HasOne(j => j.SeikahinImage).WithMany(k => k.ImageOrderSets).OnDelete(DeleteBehavior.Cascade);
-
-                i.HasMany(j => j.ImageOrderDetails).WithOne(k => k.ImageOrderSet).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId, l.ImageOrderSetId });
-
+                
             });
-
-            builder.Entity<ImageOrderDetailModel>(i =>
-            {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.ImageOrderSetId, j.ImageOrderDetailId });
-
-                i.Property(j => j.ImageOrderDetailId).ValueGeneratedOnAdd();
-
-                i.HasOne(j => j.ImageOrderSet).WithMany(k => k.ImageOrderDetails).OnDelete(DeleteBehavior.Cascade);
-
-                i.HasOne(j => j.SeikahinImage).WithMany(k => k.ImageOrderDetails).OnDelete(DeleteBehavior.Cascade);
-
-            });
+            
 
             builder.Entity<KoukaisakiCustomerModel>(i =>
             {

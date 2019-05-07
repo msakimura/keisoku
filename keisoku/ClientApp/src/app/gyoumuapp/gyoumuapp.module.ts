@@ -17,6 +17,7 @@ import { AddimageComponent } from './addimage/addimage.component';
 import { PreviewComponent } from './preview/preview.component';
 import { OsiraseComponent } from './osirase/osirase.component';
 import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
+import { HibiwareshoriSettingComponent } from './hibiwareshori-setting/hibiwareshori-setting.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { PasswordDialogComponent } from './password-dialog/password-dialog.compo
     AddimageComponent,
     PreviewComponent,
     OsiraseComponent,
-    PasswordDialogComponent
+    PasswordDialogComponent,
+    HibiwareshoriSettingComponent
   ],
 
   imports: [

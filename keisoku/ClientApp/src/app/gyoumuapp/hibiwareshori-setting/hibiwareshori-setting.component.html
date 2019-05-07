@@ -1,0 +1,49 @@
+<div class="mat-headline">ひび割れ処理設定</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button mat-button (click)="saveHibiwareShoriSet()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+
+<div fxLayout="column">
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="短縮削除" [formControl]="tanshukuRemoveFormControl" required>
+
+    <mat-hint>m未満のひび割れ削除</mat-hint>
+
+    <mat-error *ngIf="tanshukuRemoveFormControl.hasError('required')">
+      {{hissuTanshukuRemoveMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="tanshukuRemoveFormControl.hasError('max')">
+      {{maxLengthMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="tanshukuRemoveFormControl.hasError('isNumeric')">
+      {{numericMessage}}
+    </mat-error>
+
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="開口幅文字サイズ" [formControl]="kaikouhabaMojiSizeFormControl" required>
+
+    <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('required')">
+      {{hissuKaikouhabaMojiSizeMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('max')">
+      {{maxLengthMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('isNumeric')">
+      {{numericMessage}}
+    </mat-error>
+  </mat-form-field>
+</div>

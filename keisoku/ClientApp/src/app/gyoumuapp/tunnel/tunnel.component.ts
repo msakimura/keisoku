@@ -32,6 +32,8 @@ export class TunnelComponent implements OnInit {
 
   isSideNavOsirase: boolean = false;
 
+  isSideNavHibiwareShoriSet: boolean = false;
+
 
   isDeleteDisabled: boolean = true;
 
@@ -59,7 +61,7 @@ export class TunnelComponent implements OnInit {
   printIconColor = 'disabled';
 
   summaryIconColor = 'disabled';
-
+  
 
   ankenName: string;
 
@@ -450,13 +452,9 @@ export class TunnelComponent implements OnInit {
    */
   displaySideNavImage() {
 
+    this.clearSidenavFlag();
+
     this.isSideNavImage = true;
-
-    this.isSideNavPreview = false;
-
-    this.isSideNavAiRiyoujoukyou = false;
-
-    this.isSideNavOsirase = false;
 
 
     this.clearSideNavFormData();
@@ -478,14 +476,10 @@ export class TunnelComponent implements OnInit {
    *  @return {void}
    */
   displaySideNavPreview(row) {
-    this.isSideNavImage = false;
+    this.clearSidenavFlag();
 
     this.isSideNavPreview = true;
-
-    this.isSideNavAiRiyoujoukyou = false;
-
-    this.isSideNavOsirase = false;
-
+    
 
     this.previewImageName = row.seikahinImage.imageName;
 
@@ -508,14 +502,9 @@ export class TunnelComponent implements OnInit {
    */
   displaySideNavAiRiyoujoukyou() {
 
-    this.isSideNavImage = false;
-
-    this.isSideNavPreview = false;
+    this.clearSidenavFlag();
 
     this.isSideNavAiRiyoujoukyou = true;
-
-    this.isSideNavOsirase = false;
-
     
     this.sideNav.open();
   }
@@ -531,13 +520,28 @@ export class TunnelComponent implements OnInit {
    */
   displaySideNavOshirase() {
 
-    this.isSideNavImage = false;
-
-    this.isSideNavPreview = false;
-
-    this.isSideNavAiRiyoujoukyou = false;
+    this.clearSidenavFlag();
 
     this.isSideNavOsirase = true;
+
+    this.sideNav.open();
+  }
+
+
+
+  /**
+   *  displaySideNavHibiwareShoriSet
+   *
+   *  ひび割れ処理設定のサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displaySideNavHibiwareShoriSet() {
+
+    this.clearSidenavFlag();
+
+    this.isSideNavHibiwareShoriSet = true;
 
     this.sideNav.open();
   }
@@ -1007,5 +1011,26 @@ export class TunnelComponent implements OnInit {
       });
       
     }
+  }
+
+
+  /**
+  *  clearSidenavFlag
+  *
+  *  サイドナビに表示する画面のフラグをクリアする
+  *
+  *
+  *  @return {void}
+  */
+  clearSidenavFlag() {
+    this.isSideNavImage = false;
+
+    this.isSideNavPreview = false;
+
+    this.isSideNavAiRiyoujoukyou = false;
+
+    this.isSideNavOsirase = false;
+
+    this.isSideNavHibiwareShoriSet = false;
   }
 }

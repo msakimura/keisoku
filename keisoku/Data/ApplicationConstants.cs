@@ -13,15 +13,33 @@ namespace keisoku.Data
 
         public static readonly string AZURE_BLOB_STORAGE_CONTAINER = "tunnel";
 
-        
+
         public static readonly string SELECT_ID_CAD_VERSION = "CadVersion";
 
         public static readonly string SELECT_ID_CAD_PDF_PAPER_SIZE = "CadPdfPaperSize";
 
 
-        public static readonly string[] SELECT_CAD_VERSIONS = new string[9] { "2018", "2013", "2010", "2007", "2004", "2000", "R14", "R13", "R12" };
+        public static readonly string[] SELECT_VALUE_CAD_VERSIONS = new string[9] { "2018", "2013", "2010", "2007", "2004", "2000", "R14", "R13", "R12" };
 
-        public static readonly string[] SELECT_CAD_PDF_PAPER_SIZES = new string[2] { "A4", "A3" };
+        public static readonly string[] SELECT_VALUE_CAD_PDF_PAPER_SIZES = new string[2] { "A4", "A3" };
+
+
+        public static readonly string[,] INITIAL_SETTINGS = new string[14, 2] {
+            { "TashukuRemove", "0.4" },
+            { "KaikouhabaMojiSize", "" },
+            { "WidthOrHeight", "1" },
+            { "LengthM", "" },
+            { "ImageAlignPosition", "2" },
+            { "PrintLayoutTop"," 0.3" },
+            { "PrintLayoutBottom", "1.7" },
+            { "SpanMojiSize", "1.0" },
+            { "SpanMojiPosition", "2" },
+            { "SpanMojiDirection", "1" },
+            { "CadUnit", "1" },
+            { "KitenKirotei", "0" },
+            { "ImageCreateOrder", "1" },
+            { "ImageCompressionRatio","100" }
+        };
 
     }
 }

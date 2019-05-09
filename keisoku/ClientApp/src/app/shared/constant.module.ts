@@ -89,3 +89,21 @@ export class MaxValue {
   public static readonly DECIMAL = 79228000000000000000000000000;
   public static readonly DOUBLE = Number.MAX_VALUE;
 }
+
+
+export class InitialSetBunruiId {
+  public static readonly TANSHUKU_REMOVE = "TashukuRemove";
+  public static readonly KAIKOUHABA_MOJI_SIZE = "KaikouhabaMojiSize";
+  public static readonly WIDTH_OR_HEIGHT = "WidthOrHeight";
+  public static readonly LENGTH_M = "LengthM";
+  public static readonly IMAGE_ALIGN_POSITION = "ImageAlignPosition";
+  public static readonly PRINT_LAYOUT_TOP = "PrintLayoutTop";
+  public static readonly PRINT_LAYOUT_BOTTOM = "PrintLayoutBottom";
+  public static readonly SPAN_MOJI_SIZE = "SpanMojiSize";
+  public static readonly SPAN_MOJI_POSITION = "SpanMojiPosition";
+  public static readonly CAD_UNIT = "CadUnit";
+  public static readonly KITEN_KIROTEI = "KitenKirotei";
+  public static readonly IMAGE_CREATE_ORDER = "ImageCreateOrder";
+  public static readonly IMAGE_COMPRESSION_RATIO = "ImageCompressionRatio";
+}
+

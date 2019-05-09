@@ -15,6 +15,7 @@ import { ProgressMessage, SessionMessage } from 'src/app/shared/constant.module'
 import { OsiraseComponent } from '../osirase/osirase.component';
 import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinnerdialog.component';
 import { SessionService } from 'src/app/services/session.service';
+import { ImageorderSettingComponent } from '../imageorder-setting/imageorder-setting.component';
 
 
 @Component({
@@ -100,6 +101,8 @@ export class TunnelComponent implements OnInit {
   @ViewChild(PreviewComponent) previewComponent: PreviewComponent;
 
   @ViewChild(OsiraseComponent) osiraseComponent: OsiraseComponent;
+
+  @ViewChild(ImageorderSettingComponent) imageorderSettingComponent: ImageorderSettingComponent;
 
 
   constructor(private router: Router,
@@ -726,6 +729,11 @@ export class TunnelComponent implements OnInit {
       this.initOsiraseComponent();
 
     }
+    else if (this.isSideNavImageOrderSet) {
+
+      this.initImageOrderSettingComponent();
+
+    }
   }
 
 
@@ -821,6 +829,22 @@ export class TunnelComponent implements OnInit {
     
   }
 
+
+  /**
+   *  initImageOrderSettingComponent
+   *
+   *  サイドナビに表示するImageorderSettingComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initImageOrderSettingComponent() {
+
+    if (this.imageorderSettingComponent) {
+      this.imageorderSettingComponent.tunnelImages = this.dataSource.data;
+    }
+
+  }
 
   /**
    *  destroySideNav

@@ -6,6 +6,7 @@ import { Responsive, SessionMessage } from 'src/app/shared/constant.module';
 import { MatSidenav, MatDialog } from '@angular/material';
 import { PasswordDialogComponent } from '../password-dialog/password-dialog.component';
 import { SessionService } from 'src/app/services/session.service';
+import { InitialSettingService } from 'src/app/services/initial-setting.service';
 
 @Component({
   selector: 'app-gyoumu-header',
@@ -27,7 +28,8 @@ export class GyoumuHeaderComponent implements OnInit {
     private userService: UserService,
     private authenticationService: AuthenticationService,
     private matDialog: MatDialog,
-    private sessionService: SessionService) { }
+    private sessionService: SessionService,
+    private initialSettingService: InitialSettingService) { }
 
   ngOnInit() {
 
@@ -50,7 +52,32 @@ export class GyoumuHeaderComponent implements OnInit {
         }
 
       });
-    
+
+
+    this.cacheInitialSetting();
+  }
+
+
+  /**
+   *  cacheInitialSetting
+   *
+   *  DB上の初期設定データをキャッシュする
+   *  
+   *
+   *  @return {void}
+   */
+  cacheInitialSetting() {
+
+    this.initialSettingService.getAllInitialSetting()
+      .subscribe((response: any) => {
+
+        this.initialSettingService.initialSettings = this.initialSettingService.convertInitialSettingModels(response);
+
+      },
+      error => {
+
+      });
+
   }
 
   /**

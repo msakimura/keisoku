@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using keisoku.Data;
 
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190509001359_Ten")]
+    partial class Ten
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -430,22 +432,6 @@ namespace keisoku.Migrations
                     b.HasIndex("SeikahinImageId");
 
                     b.ToTable("ImageOrderSets");
-                });
-
-            modelBuilder.Entity("keisoku.Models.InitialSettingModel", b =>
-                {
-                    b.Property<string>("InitialSetBunruiId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("InitailValue");
-
-                    b.Property<DateTime>("UpdatedAt");
-
-                    b.HasKey("InitialSetBunruiId");
-
-                    b.ToTable("InitialSettings");
                 });
 
             modelBuilder.Entity("keisoku.Models.KanseiCadModel", b =>

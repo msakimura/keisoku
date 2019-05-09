@@ -2,10 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { InputMessage } from 'src/app/shared/constant.module';
 import { TunnelImageModel } from 'src/app/services/tunnel-image.service';
 import { FormControl, Validators } from '@angular/forms';
-import { ValidationModule } from 'src/app/shared/validation.module';
 import { MatSidenav, MatTableDataSource } from '@angular/material';
 import { ImageOrderSetModel, ImageorderSettingService } from 'src/app/services/imageorder-setting.service';
 import { TunnelService } from 'src/app/services/tunnel.service';
+import { InitialSettingService } from 'src/app/services/initial-setting.service';
 
 @Component({
   selector: 'app-imageorder-setting',
@@ -15,6 +15,9 @@ import { TunnelService } from 'src/app/services/tunnel.service';
 export class ImageorderSettingComponent implements OnInit {
 
   isInput: boolean = false;
+
+  widthOrHeightSelected: string;
+
 
   hissuMessage: string = InputMessage.HISUU;
 
@@ -48,9 +51,33 @@ export class ImageorderSettingComponent implements OnInit {
 
 
   constructor(private imageorderSettingService: ImageorderSettingService,
-    private tunnelService: TunnelService) { }
+    private tunnelService: TunnelService,
+    private initialSettingService: InitialSettingService) { }
 
   ngOnInit() {
+
+    this.initializeWidthOrHeight();
+
+  }
+
+  /**
+   *  initialWidthOrHeight
+   *
+   *  横or縦を初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initializeWidthOrHeight() {
+
+    var model = this.initialSettingService.getWidthOrHeightInitialSetting();
+
+    if (model.length == 1) {
+
+      this.widthOrHeightSelected = model[0].initialValue;
+
+    }
+
   }
 
 
@@ -64,7 +91,6 @@ export class ImageorderSettingComponent implements OnInit {
    */
   bindImageAlignPosition() {
     
-
   }
 
   /**

@@ -72,6 +72,8 @@ namespace keisoku.Data
 
         public DbSet<SelectItemModel> SelectItems { get; set; }
 
+        public DbSet<InitialSettingModel> InitialSettings { get; set; }
+
         /// <summary>
         /// OnModelCreating
         /// </summary>
@@ -410,6 +412,12 @@ namespace keisoku.Data
             {
                 i.HasKey(j => new { j.SelectItemBunruiId, j.SelectItemId });
                 
+            });
+
+            builder.Entity<InitialSettingModel>(i =>
+            {
+                i.HasKey(j => new { j.InitialSetBunruiId });
+
             });
 
             base.OnModelCreating(builder);

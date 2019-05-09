@@ -1,10 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { InputMessage } from 'src/app/shared/constant.module';
+import { InputMessage, MaxValue } from 'src/app/shared/constant.module';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSidenav } from '@angular/material';
 import { HibiwareshoriSettingService, HibiwareShoriSetModel } from 'src/app/services/hibiwareshori-setting.service';
 import { TunnelService } from 'src/app/services/tunnel.service';
-import { ValidationModule } from 'src/app/shared/validation.module';
 
 @Component({
   selector: 'app-hibiwareshori-setting',
@@ -14,9 +13,9 @@ import { ValidationModule } from 'src/app/shared/validation.module';
 export class HibiwareshoriSettingComponent implements OnInit {
   isInput: boolean = false;
 
-  tanshukuRemoveFormControl = new FormControl('', [Validators.required, Validators.max(9999), ValidationModule.isNumeric]);
+  tanshukuRemoveFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DOUBLE)]);
 
-  kaikouhabaMojiSizeFormControl = new FormControl('', [Validators.required, Validators.max(9999), ValidationModule.isNumeric]);
+  kaikouhabaMojiSizeFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL)]);
 
 
   hissuMessage: string = InputMessage.HISUU;
@@ -27,8 +26,9 @@ export class HibiwareshoriSettingComponent implements OnInit {
 
   numericMessage: string = InputMessage.NUMERIC;
 
-  maxLengthMessage: string = InputMessage.MAXLENGTH4;
+  maxTanshukuRemoveMessage: string = InputMessage.MAXLENGTH_DOUBLE;
 
+  maxKaikouhabaMojiSizeMessage: string = InputMessage.MAXLENGTH_DECIMAL;
 
 
   @Input('childToSidenav') sideNav: MatSidenav;
@@ -38,7 +38,6 @@ export class HibiwareshoriSettingComponent implements OnInit {
     private tunnelService: TunnelService) { }
 
   ngOnInit() {
-
     this.bindHibiwareshoriSetting();
 
   }

@@ -22,11 +22,7 @@
     </mat-error>
 
     <mat-error *ngIf="tanshukuRemoveFormControl.hasError('max')">
-      {{maxLengthMessage}}
-    </mat-error>
-
-    <mat-error *ngIf="tanshukuRemoveFormControl.hasError('isNumeric')">
-      {{numericMessage}}
+      {{maxTanshukuRemoveMessage}}
     </mat-error>
 
   </mat-form-field>
@@ -39,11 +35,8 @@
     </mat-error>
 
     <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('max')">
-      {{maxLengthMessage}}
+      {{maxKaikouhabaMojiSizeMessage}}
     </mat-error>
 
-    <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('isNumeric')">
-      {{numericMessage}}
-    </mat-error>
   </mat-form-field>
 </div>

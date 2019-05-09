@@ -13,9 +13,9 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public int TanshukuRemove { get; set; }
+        public double TanshukuRemove { get; set; }
 
-        public int KaikouhabaMojiSize { get; set; }
+        public decimal KaikouhabaMojiSize { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

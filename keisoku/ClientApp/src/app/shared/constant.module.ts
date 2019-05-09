@@ -21,8 +21,12 @@ export class InputMessage {
   public static readonly HISSU_USERID = 'ユーザIDは必須です';
   public static readonly HISSU_TANSHUKU_REMOVE = '短縮削除は必須です';
   public static readonly HISSU_KAIKOUHABA_MOJI_SIZE = '開口幅文字サイズは必須です';
+  public static readonly HISSU_IMAGE_SELECT = '画像選択は必須です';
+  public static readonly HISSU_LENGTH = '長さ(m)は必須です';
   public static readonly NUMERIC = '数値を入力してください';
-  public static readonly MAXLENGTH4 = '9999以下の数値を入力してください';
+  public static readonly MAXLENGTH_DECIMAL = '7.9228 x 10^28以下の数値を入力してください';
+  public static readonly MAXLENGTH_DOUBLE = '1.7 x 10^308以下の数値を入力してください';
+
 }
 
 export class PasswordMessage {
@@ -78,4 +82,10 @@ export class SnackbarAction {
 
 export class SessionMessage {
   public static readonly TIMEOUT = 'セッションが切れています。再度サインインしてください。';
+}
+
+
+export class MaxValue {
+  public static readonly DECIMAL = 79228000000000000000000000000;
+  public static readonly DOUBLE = Number.MAX_VALUE;
 }

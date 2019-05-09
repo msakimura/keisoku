@@ -70,6 +70,8 @@ namespace keisoku.Data
 
         public DbSet<PrintFormatModel> PrintFormats { get; set; }
 
+        public DbSet<SelectItemModel> SelectItems { get; set; }
+
         /// <summary>
         /// OnModelCreating
         /// </summary>
@@ -402,6 +404,12 @@ namespace keisoku.Data
 
                 i.HasMany(j => j.PrintDetails).WithOne(k => k.PrintFormat).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.PrintFormatId);
 
+            });
+
+            builder.Entity<SelectItemModel>(i =>
+            {
+                i.HasKey(j => new { j.SelectItemBunruiId, j.SelectItemId });
+                
             });
 
             base.OnModelCreating(builder);

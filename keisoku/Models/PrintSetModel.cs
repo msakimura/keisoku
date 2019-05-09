@@ -13,13 +13,7 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public string CadVersion { get; set; }
-
-        public string CadPdfPrintPaperSize { get; set; }
-
-        public int PrintLayoutTopMargin { get; set; }
-
-        public int PrintLayoutBottomMargin { get; set; }
+        public decimal ImageCompressionRatio { get; set; }
         
         public DateTime CreatedAt { get; set; }
 

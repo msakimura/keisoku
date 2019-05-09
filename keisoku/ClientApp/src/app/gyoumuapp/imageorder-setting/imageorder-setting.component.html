@@ -1,0 +1,109 @@
+<div class="mat-headline">画像並び設定</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button mat-button (click)="saveImageOrderSet()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+
+<div fxLayout="column">
+
+  <mat-form-field>
+    <mat-select placeholder="画像選択" [formControl]="imageSelectFormControl" required>
+      <mat-option *ngFor="let tunnelImage of tunnelImages" [value]="tunnelImage.seikahinImageId">
+        {{tunnelImage.seikahinImage.imageName}}
+      </mat-option>
+    </mat-select>
+
+    <mat-error *ngIf="imageSelectFormControl.hasError('required')">
+      {{hissuImageSelectMessage}}
+    </mat-error>
+  </mat-form-field>
+
+  <div>
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+      <mat-button-toggle value="1">横</mat-button-toggle>
+      <mat-button-toggle value="2">縦</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="長さ(m)" [formControl]="lengthFormControl" required>
+
+    <mat-error *ngIf="lengthFormControl.hasError('required')">
+      {{hissuLengthMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="lengthFormControl.hasError('max')">
+      {{maxLengthMessage}}
+    </mat-error>
+
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="起点の距離程" [formControl]="kitenKiroteiFormControl" required>
+
+    <mat-error *ngIf="kitenKiroteiFormControl.hasError('required')">
+      {{hissuLengthMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="kitenKiroteiFormControl.hasError('max')">
+      {{maxLengthMessage}}
+    </mat-error>
+
+  </mat-form-field>
+
+</div>
+
+<div class="mat-elevation-z8">
+  <mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> 画像名 </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="画像名"> {{element.imageName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="span">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> スパン文字 </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="スパン文字">
+        <mat-form-field>
+          <input matInput value="{{element.spanMoji}}">
+        </mat-form-field>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="align">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> 画像揃え位置 </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="画像揃え位置">
+        <mat-form-field>
+
+          <mat-button-toggle-group>
+            <mat-button-toggle value="left">
+              <mat-icon>format_align_left</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="center">
+              <mat-icon>format_align_center</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="right">
+              <mat-icon>format_align_right</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="manual">
+              <mat-icon>mood</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+
+        </mat-form-field>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;">
+    </mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

@@ -19,8 +19,10 @@ namespace keisoku.Models
 
         public int WidthOrHeight { get; set; }
 
-        public int Length { get; set; }
+        public decimal Length { get; set; }
 
+        public decimal KitenKirotei { get; set; }
+        
         public string SpanMoji { get; set; }
 
         public int ImageAlignPosition { get; set; }

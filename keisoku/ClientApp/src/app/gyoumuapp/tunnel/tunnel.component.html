@@ -32,12 +32,21 @@
       </div>
 
 
-      <div *ngIf="isSideNavHibiwareShoriSet" class="hibiware_sidenav">
+      <div *ngIf="isSideNavHibiwareShoriSet">
 
         <app-hibiwareshori-setting [childToSidenav]="sideNav"></app-hibiwareshori-setting>
 
 
       </div>
+
+
+      <div *ngIf="isSideNavImageOrderSet" class="hibiware_sidenav">
+
+        <app-imageorder-setting [childToSidenav]="sideNav"></app-imageorder-setting>
+
+
+      </div>
+
     </div>
 </mat-sidenav>
 
@@ -62,11 +71,12 @@
 
     <button mat-button [disabled]="isSummaryDisabled"><mat-icon color="{{summaryIconColor}}">view_list</mat-icon>サマリー</button>
 
-    <button mat-button (click)="displaySideNavHibiwareShoriSet()"><mat-icon color="primary">flash_on</mat-icon>ひび割れ処理設定</button>
-
-    <button mat-button><mat-icon color="primary">photo_library</mat-icon>画像並び設定</button>
-
-    <button mat-button><mat-icon color="primary">get_app</mat-icon>出力設定</button>
+    <button mat-button [matMenuTriggerFor]="setting"><mat-icon color="primary">settings</mat-icon>設定</button>
+    <mat-menu #setting="matMenu">
+      <button mat-menu-item (click)="displaySideNavHibiwareShoriSet()">ひび割れ処理設定</button>
+      <button mat-menu-item (click)="displaySideNavImageOrderSet()">画像並び設定</button>
+      <button mat-menu-item>出力設定</button>
+    </mat-menu>
 
     <button mat-button (click)="displaySideNavOshirase()" *ngIf="isOsirase"><mat-icon color="primary">notifications_active</mat-icon>お知らせ</button>
 

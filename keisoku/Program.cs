@@ -30,6 +30,7 @@ namespace keisoku
                     KengenModel.Initialize(services);
                     TankaModel.Initialize(services);
                     OptionModel.Initialize(services);
+                    SelectItemModel.Initialize(services);
                 }
                 catch (Exception ex)
                 {

@@ -18,6 +18,7 @@ import { PreviewComponent } from './preview/preview.component';
 import { OsiraseComponent } from './osirase/osirase.component';
 import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
 import { HibiwareshoriSettingComponent } from './hibiwareshori-setting/hibiwareshori-setting.component';
+import { ImageorderSettingComponent } from './imageorder-setting/imageorder-setting.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { HibiwareshoriSettingComponent } from './hibiwareshori-setting/hibiwares
     PreviewComponent,
     OsiraseComponent,
     PasswordDialogComponent,
-    HibiwareshoriSettingComponent
+    HibiwareshoriSettingComponent,
+    ImageorderSettingComponent
   ],
 
   imports: [

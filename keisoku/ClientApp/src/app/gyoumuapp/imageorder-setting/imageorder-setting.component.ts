@@ -250,20 +250,51 @@ export class ImageorderSettingComponent implements OnInit {
     this.sideNav.close();
   }
 
-  saveImageOrderSet() { }
+
+  /**
+   *  saveImageOrderSet
+   *
+   *  入力した画像並び設定情報をDBに保存する
+   *  
+   *
+   *  @return {void}
+   */
+  saveImageOrderSet() {
+
+    // 必須入力チェック
+    if (this.imageSelectFormControl.invalid || this.lengthFormControl.invalid || this.kitenKiroteiFormControl.invalid) {
+      this.isInput = true;
+
+      return;
+    }
+
+    // ひび割れ処理設定情報をDBに追加
+    //var hibiwareShoriSetInfo = this.getInputHibiwareShoriSetModel();
+
+    //this.hibiwareshoriSettingService.insertHibiwareShoriSet(hibiwareShoriSetInfo)
+    //  .subscribe((response: any) => {
+
+    //    this.sideNav.close();
+
+    //  },
+    //  error => {
+    //  });
+
+  }
 
 
   /**
    *  showEditDialog
    *
    *  選択したレコードに対する画像並びダイアログを表示する
-   *  
+   *
+   *  @param  {any}    row
    *
    *  @return {void}
    */
   showEditDialog(row) {
 
-    const dialogRef = this.matDialog.open(ImageorderDialogComponent, {
+    this.matDialog.open(ImageorderDialogComponent, {
       'disableClose': false,
       data: row
     });

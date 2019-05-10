@@ -5,7 +5,7 @@ export interface HibiwareShoriSetModel {
   customerId: number;
   ankenId: number;
   tunnelId: number;
-  tanshukuRemove: number;
+  shortLineRemove: number;
   kaikouhabaMojiSize: number;
 }
 

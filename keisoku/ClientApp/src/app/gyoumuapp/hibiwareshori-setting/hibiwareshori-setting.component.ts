@@ -13,20 +13,20 @@ import { TunnelService } from 'src/app/services/tunnel.service';
 export class HibiwareshoriSettingComponent implements OnInit {
   isInput: boolean = false;
 
-  tanshukuRemoveFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DOUBLE)]);
+  shortLineRemoveFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DOUBLE), Validators.max(MaxValue.DOUBLE)]);
 
   kaikouhabaMojiSizeFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL)]);
 
 
   hissuMessage: string = InputMessage.HISUU;
 
-  hissuTanshukuRemoveMessage: string = InputMessage.HISSU_TANSHUKU_REMOVE;
+  hissuShortLineRemoveMessage: string = InputMessage.HISSU_TANSHUKU_REMOVE;
 
   hissuKaikouhabaMojiSizeMessage: string = InputMessage.HISSU_KAIKOUHABA_MOJI_SIZE;
 
   numericMessage: string = InputMessage.NUMERIC;
 
-  maxTanshukuRemoveMessage: string = InputMessage.MAXLENGTH_DOUBLE;
+  maxShortLineRemoveMessage: string = InputMessage.MAXLENGTH_DOUBLE;
 
   maxKaikouhabaMojiSizeMessage: string = InputMessage.MAXLENGTH_DECIMAL;
 
@@ -56,7 +56,7 @@ export class HibiwareshoriSettingComponent implements OnInit {
     this.hibiwareshoriSettingService.getHibiwareShoriSet(selectedTunnel.customerId, selectedTunnel.ankenId, selectedTunnel.tunnelId)
       .subscribe((response: any) => {
 
-        this.tanshukuRemoveFormControl.setValue(response.tanshukuRemove);
+        this.shortLineRemoveFormControl.setValue(response.tanshukuRemove);
 
         this.kaikouhabaMojiSizeFormControl.setValue(response.kaikouhabaMojiSize);
 
@@ -90,7 +90,7 @@ export class HibiwareshoriSettingComponent implements OnInit {
   saveHibiwareShoriSet() {
 
     // 必須入力チェック
-    if (this.tanshukuRemoveFormControl.invalid || this.kaikouhabaMojiSizeFormControl.invalid) {
+    if (this.shortLineRemoveFormControl.invalid || this.kaikouhabaMojiSizeFormControl.invalid) {
       this.isInput = true;
 
       return;
@@ -125,7 +125,7 @@ export class HibiwareshoriSettingComponent implements OnInit {
       customerId: selectedTunnel.customerId,
       ankenId: selectedTunnel.ankenId,
       tunnelId: selectedTunnel.tunnelId,
-      tanshukuRemove: this.tanshukuRemoveFormControl.value,
+      shortLineRemove: this.shortLineRemoveFormControl.value,
       kaikouhabaMojiSize: this.kaikouhabaMojiSizeFormControl.value
     };
 

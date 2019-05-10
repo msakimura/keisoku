@@ -13,7 +13,7 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public double TanshukuRemove { get; set; }
+        public double ShortLineRemove { get; set; }
 
         public decimal KaikouhabaMojiSize { get; set; }
 

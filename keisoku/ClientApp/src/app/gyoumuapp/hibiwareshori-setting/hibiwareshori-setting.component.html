@@ -13,16 +13,16 @@
 <div fxLayout="column">
 
   <mat-form-field>
-    <input matInput type="number" placeholder="短縮削除" [formControl]="tanshukuRemoveFormControl" required>
+    <input matInput type="number" placeholder="短縮削除" [formControl]="shortLineRemoveFormControl" required>
 
     <mat-hint>m未満のひび割れ削除</mat-hint>
 
-    <mat-error *ngIf="tanshukuRemoveFormControl.hasError('required')">
-      {{hissuTanshukuRemoveMessage}}
+    <mat-error *ngIf="shortLineRemoveFormControl.hasError('required')">
+      {{hissuShortLineRemoveMessage}}
     </mat-error>
 
-    <mat-error *ngIf="tanshukuRemoveFormControl.hasError('max')">
-      {{maxTanshukuRemoveMessage}}
+    <mat-error *ngIf="shortLineRemoveFormControl.hasError('max')">
+      {{maxShortLineRemoveMessage}}
     </mat-error>
 
   </mat-form-field>

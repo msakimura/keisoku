@@ -11,9 +11,11 @@ export interface ImageOrderSetModel {
   length: number;
   kitenKirotei: number;
   spanMoji: string;
-  imageAlignPosition: number;
+  imageAlignPosition: string;
 
   imageName: string;
+  imageAlignPositionName: string;
+
 }
 
 @Injectable({

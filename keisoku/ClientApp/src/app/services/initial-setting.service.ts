@@ -91,4 +91,52 @@ export class InitialSettingService {
     });
 
   }
+
+  /**
+   *  getLengthMInitialSetting
+   *
+   *  長さ(m)の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getLengthMInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.LENGTH_M;
+    });
+
+  }
+
+  /**
+   *  getKitenKiroteiInitialSetting
+   *
+   *  起点の距離程の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getKitenKiroteiInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.KITEN_KIROTEI;
+    });
+
+  }
+
+  /**
+   *  getImageAlignPositionInitialSetting
+   *
+   *  画像揃え位置の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getImageAlignPositionInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.IMAGE_ALIGN_POSITION;
+    });
+
+  }
 }

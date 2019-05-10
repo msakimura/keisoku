@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>画像並び編集</h1>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+
+  <div fxLayout="column">
+
+    <mat-form-field>
+
+      <input matInput placeholder="スパン文字" [formControl]="spanMojiFormControl" required>
+
+      <mat-error *ngIf="spanMojiFormControl.hasError('required')">
+
+        {{hissuSpanMojiMessage}}
+
+      </mat-error>
+
+    </mat-form-field>
+
+    <p class="custom_label">画像揃え位置</p>
+
+    <div>
+      <mat-button-toggle-group [value]="imageAlignSelected" #group="matButtonToggleGroup" (change)="onChangeImageAlignPos(group.value)">
+        <mat-button-toggle value="1"><mat-icon>vertical_align_top</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="2"><mat-icon>vertical_align_center</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="3"><mat-icon>vertical_align_bottom</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="4">マニュアル</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+  </div>
+
+  <div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+  <button mat-raised-button color="primary" mat-dialog-close>キャンセル</button>
+
+  <button mat-raised-button color="primary" (click)="onChange()">変更</button>
+
+</mat-dialog-actions>

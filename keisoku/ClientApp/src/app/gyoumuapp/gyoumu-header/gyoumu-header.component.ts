@@ -7,6 +7,7 @@ import { MatSidenav, MatDialog } from '@angular/material';
 import { PasswordDialogComponent } from '../password-dialog/password-dialog.component';
 import { SessionService } from 'src/app/services/session.service';
 import { InitialSettingService } from 'src/app/services/initial-setting.service';
+import { SelectitemService } from 'src/app/services/selectitem.service';
 
 @Component({
   selector: 'app-gyoumu-header',
@@ -29,7 +30,8 @@ export class GyoumuHeaderComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private matDialog: MatDialog,
     private sessionService: SessionService,
-    private initialSettingService: InitialSettingService) { }
+    private initialSettingService: InitialSettingService,
+    private selectitemService: SelectitemService) { }
 
   ngOnInit() {
 
@@ -55,6 +57,8 @@ export class GyoumuHeaderComponent implements OnInit {
 
 
     this.cacheInitialSetting();
+
+    this.cacheSelectItem();
   }
 
 
@@ -74,9 +78,32 @@ export class GyoumuHeaderComponent implements OnInit {
         this.initialSettingService.initialSettings = this.initialSettingService.convertInitialSettingModels(response);
 
       },
-      error => {
+        error => {
 
-      });
+        });
+
+  }
+
+
+  /**
+   *  cacheSelectItem
+   *
+   *  DB上の選択項目データをキャッシュする
+   *  
+   *
+   *  @return {void}
+   */
+  cacheSelectItem() {
+
+    this.selectitemService.getAllSelectItem()
+      .subscribe((response: any) => {
+
+        this.selectitemService.selectItems = this.selectitemService.convertSelectItemModels(response);
+
+      },
+        error => {
+
+        });
 
   }
 

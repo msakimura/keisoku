@@ -23,6 +23,8 @@ export class InputMessage {
   public static readonly HISSU_KAIKOUHABA_MOJI_SIZE = '開口幅文字サイズは必須です';
   public static readonly HISSU_IMAGE_SELECT = '画像選択は必須です';
   public static readonly HISSU_LENGTH = '長さ(m)は必須です';
+  public static readonly HISSU_KITEN_KIROTEI = '起点の距離程は必須です';
+  public static readonly HISSU_SPAN_MOJI = 'スパン文字は必須です';
   public static readonly NUMERIC = '数値を入力してください';
   public static readonly MAXLENGTH_DECIMAL = '7.9228 x 10^28以下の数値を入力してください';
   public static readonly MAXLENGTH_DOUBLE = '1.7 x 10^308以下の数値を入力してください';
@@ -88,6 +90,13 @@ export class SessionMessage {
 export class MaxValue {
   public static readonly DECIMAL = 79228000000000000000000000000;
   public static readonly DOUBLE = Number.MAX_VALUE;
+}
+
+
+export class SelectItemBunruiId {
+  public static readonly CAD_VERSION = "CadVersion";
+  public static readonly CAD_PDF_PAPER_SIZE = "CadPdfPaperSize";
+  public static readonly VERTICAL_ALIGN = "VerticalAlign";
 }
 
 

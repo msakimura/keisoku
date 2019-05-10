@@ -64,3 +64,14 @@
 .sidenav_container {
   padding-top: 64px;
 }
+
+
+.mat-dialog-actions {
+  justify-content: center;
+}
+
+
+.custom_label{
+  color:gray;
+}
+

@@ -19,6 +19,7 @@ import { OsiraseComponent } from './osirase/osirase.component';
 import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
 import { HibiwareshoriSettingComponent } from './hibiwareshori-setting/hibiwareshori-setting.component';
 import { ImageorderSettingComponent } from './imageorder-setting/imageorder-setting.component';
+import { ImageorderDialogComponent } from './imageorder-dialog/imageorder-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ImageorderSettingComponent } from './imageorder-setting/imageorder-sett
     OsiraseComponent,
     PasswordDialogComponent,
     HibiwareshoriSettingComponent,
-    ImageorderSettingComponent
+    ImageorderSettingComponent,
+    ImageorderDialogComponent
   ],
 
   imports: [
@@ -63,6 +65,6 @@ import { ImageorderSettingComponent } from './imageorder-setting/imageorder-sett
 
   exports: [RouterModule],
 
-  entryComponents: [PasswordDialogComponent]
+  entryComponents: [PasswordDialogComponent, ImageorderDialogComponent]
 })
 export class GyoumuappModule { }

@@ -842,6 +842,8 @@ export class TunnelComponent implements OnInit {
 
     if (this.imageorderSettingComponent) {
       this.imageorderSettingComponent.tunnelImages = this.dataSource.data;
+
+      this.imageorderSettingComponent.initialize();
     }
 
   }

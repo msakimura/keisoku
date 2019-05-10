@@ -65,6 +65,20 @@ namespace keisoku.Models
                     );
                 }
 
+                for (int i = 0; i < ApplicationConstants.SELECT_VALUE_VERTICAL_ALIGN.Length; i++)
+                {
+                    context.SelectItems.AddRange(
+                        new SelectItemModel
+                        {
+                            SelectItemBunruiId = ApplicationConstants.SELECT_ID_VERTICAL_ALIGN,
+                            SelectItemId = i + 1,
+                            SelectItemName = ApplicationConstants.SELECT_VALUE_VERTICAL_ALIGN[i],
+                            CreatedAt = DateTime.Now,
+                            UpdatedAt = DateTime.Now
+                        }
+                    );
+                }
+
                 context.SaveChanges();
             }
         }

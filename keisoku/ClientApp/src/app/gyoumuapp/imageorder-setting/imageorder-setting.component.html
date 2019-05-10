@@ -48,7 +48,7 @@
     <input matInput type="number" placeholder="起点の距離程" [formControl]="kitenKiroteiFormControl" required>
 
     <mat-error *ngIf="kitenKiroteiFormControl.hasError('required')">
-      {{hissuLengthMessage}}
+      {{hissuKitenKiroteiMessage}}
     </mat-error>
 
     <mat-error *ngIf="kitenKiroteiFormControl.hasError('max')">
@@ -69,34 +69,18 @@
 
     <ng-container matColumnDef="span">
       <mat-header-cell *matHeaderCellDef mat-sort-header> スパン文字 </mat-header-cell>
-      <mat-cell *matCellDef="let element" data-label="スパン文字">
-        <mat-form-field>
-          <input matInput value="{{element.spanMoji}}">
-        </mat-form-field>
-      </mat-cell>
+      <mat-cell *matCellDef="let element" data-label="スパン文字"> {{element.spanMoji}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="align">
       <mat-header-cell *matHeaderCellDef mat-sort-header> 画像揃え位置 </mat-header-cell>
-      <mat-cell *matCellDef="let element" data-label="画像揃え位置">
-        <mat-form-field>
+      <mat-cell *matCellDef="let element" data-label="画像揃え位置"> {{element.imageAlignPositionName}} </mat-cell>
+    </ng-container>
 
-          <mat-button-toggle-group>
-            <mat-button-toggle value="left">
-              <mat-icon>format_align_left</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle value="center">
-              <mat-icon>format_align_center</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle value="right">
-              <mat-icon>format_align_right</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle value="manual">
-              <mat-icon>mood</mat-icon>
-            </mat-button-toggle>
-          </mat-button-toggle-group>
-
-        </mat-form-field>
+    <ng-container matColumnDef="edit">
+      <mat-header-cell *matHeaderCellDef> 編集 </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="編集">
+        <button mat-icon-button (click)="showEditDialog(element)"><mat-icon color="primary">edit</mat-icon></button>
       </mat-cell>
     </ng-container>
 

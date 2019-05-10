@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort, MatSidenav, MatDialogRef, MatDialog } from '@angular/material';
 import { AiRiyouJoukyouModel, AiriyoujoukyouService } from 'src/app/services/airiyoujoukyou.service';
 import { AnkenService } from 'src/app/services/anken.service';
-import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinnerdialog.component';
 
 @Component({
   selector: 'app-airiyoujoukyou',

@@ -142,4 +142,23 @@ export class ValidationModule {
 
     return str.match(/[.]/) === null ? null : { 'isNumeric': true };
   }
+
+
+  /**
+   *  isOverZero
+   *
+   *  formControlのvalueにおいて、0より大きいか判定する
+   *  
+   *  @param  {FormControl}    formControl
+   *
+   *  @return {ValidationErrors | null} 判定結果
+   */
+  static isOverZero(formControl: FormControl): ValidationErrors | null {
+
+    if (formControl.value === null) {
+      return null;
+    }
+
+    return Number(formControl.value) > 0 ? null : { 'isOverZero': true };
+  }
 }

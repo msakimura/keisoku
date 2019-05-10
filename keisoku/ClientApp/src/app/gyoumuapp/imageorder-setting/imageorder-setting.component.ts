@@ -8,6 +8,7 @@ import { TunnelService } from 'src/app/services/tunnel.service';
 import { InitialSettingService } from 'src/app/services/initial-setting.service';
 import { SelectitemService } from 'src/app/services/selectitem.service';
 import { ImageorderDialogComponent } from '../imageorder-dialog/imageorder-dialog.component';
+import { ValidationModule } from 'src/app/shared/validation.module';
 
 @Component({
   selector: 'app-imageorder-setting',
@@ -27,7 +28,13 @@ export class ImageorderSettingComponent implements OnInit {
 
   hissuKitenKiroteiMessage: string = InputMessage.HISSU_KITEN_KIROTEI;
 
-  maxLengthMessage: string = InputMessage.MAXLENGTH_DECIMAL;
+  maxLengthMessage: string = InputMessage.MAX_DECIMAL;
+
+  minLengthMessage: string = InputMessage.MIN_OVER_ZERO;
+
+  maxKitenKiroteiMessage: string = InputMessage.MAX_DECIMAL;
+
+  minKitenKiroteiMessage: string = InputMessage.MIN_ZERO;
 
 
   tunnelImages: TunnelImageModel[];
@@ -35,9 +42,9 @@ export class ImageorderSettingComponent implements OnInit {
 
   imageSelectFormControl = new FormControl('', [Validators.required]);
   
-  lengthFormControl = new FormControl('', [Validators.required, Validators.max(8144.6384)]);
+  lengthFormControl = new FormControl('', [Validators.required, Validators.max(8144.6384), ValidationModule.isOverZero]);
 
-  kitenKiroteiFormControl = new FormControl('', [Validators.required, Validators.max(8144.6384)]);
+  kitenKiroteiFormControl = new FormControl('', [Validators.required, Validators.max(8144.6384), Validators.min(0)]);
 
   widthOrHeightSelected: string;
 
@@ -83,8 +90,6 @@ export class ImageorderSettingComponent implements OnInit {
       return '';
     };
 
-    this.dataSource.data = [];
-
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.sortingDataAccessor = sortingDataAccessor;
@@ -112,6 +117,29 @@ export class ImageorderSettingComponent implements OnInit {
     this.initImageAlignPosition();
 
     this.initImageOrder();
+
+    this.bindImageorderSetting();
+  }
+
+
+  /**
+   *  destroy
+   *
+   *  入力項目を破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroy() {
+    this.imageSelectFormControl.reset();
+
+    this.lengthFormControl.reset();
+
+    this.kitenKiroteiFormControl.reset();
+
+    this.widthOrHeightSelected = '';
+
+    this.dataSource.data = [];
   }
 
 
@@ -221,16 +249,33 @@ export class ImageorderSettingComponent implements OnInit {
    *  
    *  @return {void}
    */
-  bindHibiwareshoriSetting() {
+  bindImageorderSetting() {
     const selectedTunnel = this.tunnelService.selectedTunnel;
 
     this.imageorderSettingService.getImageOrderSets(selectedTunnel.customerId, selectedTunnel.ankenId, selectedTunnel.tunnelId)
       .subscribe((response: any) => {
 
-        this.imageSelectFormControl.setValue(response.seikahinImageId);
-        
-        this.lengthFormControl.setValue(response.length);
+        var imageOrderSetModels = this.imageorderSettingService.convertImageOrderSetModels(response);
 
+        this.dataSource.data = imageOrderSetModels;
+
+        // 横or縦が設定されているデータをバインド
+        var target = imageOrderSetModels.filter(function (element) {
+          return element.widthOrHeight !== 0;
+        });
+
+        if (target.length === 1) {
+
+          this.imageSelectFormControl.setValue(target[0].seikahinImageId);
+
+          this.lengthFormControl.reset(target[0].length);
+
+          this.kitenKiroteiFormControl.reset(target[0].kitenKirotei);
+
+          this.widthOrHeightSelected = target[0].widthOrHeight.toString();
+          
+        }
+        
       },
       error => {
 
@@ -269,16 +314,16 @@ export class ImageorderSettingComponent implements OnInit {
     }
 
     // ひび割れ処理設定情報をDBに追加
-    //var hibiwareShoriSetInfo = this.getInputHibiwareShoriSetModel();
+    var imageOrderSetInfos = this.getInputImageOrderSetModels();
 
-    //this.hibiwareshoriSettingService.insertHibiwareShoriSet(hibiwareShoriSetInfo)
-    //  .subscribe((response: any) => {
+    this.imageorderSettingService.insertImageOrderSets(imageOrderSetInfos)
+      .subscribe((response: any) => {
 
-    //    this.sideNav.close();
+        this.sideNav.close();
 
-    //  },
-    //  error => {
-    //  });
+      },
+      error => {
+      });
 
   }
 
@@ -357,7 +402,73 @@ export class ImageorderSettingComponent implements OnInit {
     var replaceImageName = imageName.replace('.jpg', '');
     
 
-    return 'S' + replaceImageName.substring(replaceImageName.length - 4);
+    return 'S' + replaceImageName.substring(replaceImageName.length - 3);
 
+  }
+
+
+  /**
+   *  getInputImageOrderSetModels
+   *
+   *  入力項目の画像並び設定情報を取得する
+   *  
+   *
+   *  @return {ImageOrderSetModel} 画像並び設定情報配列
+   */
+  getInputImageOrderSetModels(): ImageOrderSetModel[] {
+
+    const selectedTunnel = this.tunnelService.selectedTunnel;
+
+    var imageOrderSetInfos: ImageOrderSetModel[] = new Array();
+
+    this.dataSource.data.forEach(data => {
+
+      var imageOrderSetInfo: ImageOrderSetModel = {
+        customerId: selectedTunnel.customerId,
+        ankenId: selectedTunnel.ankenId,
+        tunnelId: selectedTunnel.tunnelId,
+        imageOrderSetId: 0,
+        seikahinImageId: data.seikahinImageId,
+        widthOrHeight: 0,
+        length: 0,
+        kitenKirotei: this.kitenKiroteiFormControl.value,
+        spanMoji: data.spanMoji,
+        imageAlignPosition: data.imageAlignPosition,
+        imageName: data.imageName,
+        imageAlignPositionName: data.imageAlignPositionName
+      };
+
+      imageOrderSetInfos.push(imageOrderSetInfo);
+
+    });
+
+    var imageSelect = this.imageSelectFormControl.value;
+
+    // 画像選択したレコードは、横or縦、長さを設定する
+    var target = imageOrderSetInfos.filter(function (element) {
+      return element.seikahinImageId === imageSelect;
+    });
+
+    if (target.length === 1) {
+      target[0].widthOrHeight = Number(this.widthOrHeightSelected);
+
+      target[0].length = this.lengthFormControl.value;
+    }
+    
+    return imageOrderSetInfos;
+  }
+
+
+  /**
+   *  onChangeWidthOrHeight
+   *
+   *  横or縦を変更した場合、widthOrHeightSelectedをvalueで更新する
+   *  
+   *
+   *  @return {void}
+   */
+  onChangeWidthOrHeight(value) {
+
+    this.widthOrHeightSelected = value;
   }
 }

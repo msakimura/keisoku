@@ -13,7 +13,7 @@
 <div fxLayout="column">
 
   <mat-form-field>
-    <input matInput type="number" placeholder="短縮削除" [formControl]="shortLineRemoveFormControl" required>
+    <input matInput type="number" placeholder="短線削除" [formControl]="shortLineRemoveFormControl" required>
 
     <mat-hint>m未満のひび割れ削除</mat-hint>
 
@@ -23,6 +23,10 @@
 
     <mat-error *ngIf="shortLineRemoveFormControl.hasError('max')">
       {{maxShortLineRemoveMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="shortLineRemoveFormControl.hasError('min')">
+      {{minShortLineRemoveMessage}}
     </mat-error>
 
   </mat-form-field>
@@ -36,6 +40,10 @@
 
     <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('max')">
       {{maxKaikouhabaMojiSizeMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="kaikouhabaMojiSizeFormControl.hasError('isOverZero')">
+      {{minKaikouhabaMojiSizeMessage}}
     </mat-error>
 
   </mat-form-field>

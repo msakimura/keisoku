@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { SelectitemService } from './selectitem.service';
+
 
 export interface ImageOrderSetModel {
   customerId: number;
@@ -28,7 +30,7 @@ export class ImageorderSettingService {
   private routeUrl: string = 'api/imageorderset';
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private selectitemService: SelectitemService) { }
 
 
   /**
@@ -48,17 +50,78 @@ export class ImageorderSettingService {
 
 
   /**
-   *  insertImageOrderSet
+   *  insertImageOrderSets
    *
-   *  imageOrderSetをDBに追加する
+   *  imageOrderSetsをDBに追加する
    *  
    *
-   *  @param  {ImageOrderSetModel}    imageOrderSet
+   *  @param  {ImageOrderSetModel[]}    imageOrderSets
    *
    *  @return {Observable<Object>} フェッチ
    */
-  insertImageOrderSet(imageOrderSet: ImageOrderSetModel) {
+  insertImageOrderSets(imageOrderSets: ImageOrderSetModel[]) {
 
-    return this.http.post(this.routeUrl, imageOrderSet);
+    return this.http.post(this.routeUrl, imageOrderSets);
+  }
+
+
+  /**
+   *  convertImageOrderSetModels
+   *
+   *  DBから取得したimageOrderSetsを画像並び設定モデル配列に変換する
+   *  
+   *
+   *  @param  {Array}    imageOrderSets
+   *
+   *  @return {ImageOrderSetModel[]} 画像並び設定モデル配列
+   */
+  convertImageOrderSetModels(imageOrderSets): ImageOrderSetModel[] {
+
+    var imageOrderSetModels: ImageOrderSetModel[] = new Array();
+
+    imageOrderSets.forEach(imageOrderSet => {
+
+      imageOrderSetModels.push(this.convertImageOrderSetModel(imageOrderSet));
+    });
+
+    return imageOrderSetModels;
+  }
+
+  /**
+   *  convertImageOrderSetModel
+   *
+   *  DBから取得したimageOrderSetを案件モデルに変換する
+   *  
+   *
+   *  @param  {object}    imageOrderSet
+   *
+   *  @return {ImageOrderSetModel} 画像並び設定モデル
+   */
+  convertImageOrderSetModel(imageOrderSet): ImageOrderSetModel {
+
+    var imageAlignPositionName = '';
+    var verticalAlignSelectItem = this.selectitemService.getVerticalAlignSelectItem(Number(imageOrderSet.imageOrderSet.imageAlignPosition));
+    if (verticalAlignSelectItem.length === 1) {
+      imageAlignPositionName = verticalAlignSelectItem[0].selectItemName;
+    }
+
+
+    var imageOrderSetModel: ImageOrderSetModel = {
+      customerId: imageOrderSet.imageOrderSet.customerId,
+      ankenId: imageOrderSet.imageOrderSet.ankenId,
+      tunnelId: imageOrderSet.imageOrderSet.tunnelId,
+      imageOrderSetId: imageOrderSet.imageOrderSet.imageOrderSetId,
+      seikahinImageId: imageOrderSet.imageOrderSet.seikahinImageId,
+      widthOrHeight: imageOrderSet.imageOrderSet.widthOrHeight,
+      length: imageOrderSet.imageOrderSet.length,
+      kitenKirotei: imageOrderSet.imageOrderSet.kitenKirotei,
+      spanMoji: imageOrderSet.imageOrderSet.spanMoji,
+      imageAlignPosition: imageOrderSet.imageOrderSet.imageAlignPosition,
+      imageName: imageOrderSet.imageName,
+      imageAlignPositionName: imageAlignPositionName,
+    };
+
+
+    return imageOrderSetModel;
   }
 }

@@ -16,6 +16,7 @@ import { OsiraseComponent } from '../osirase/osirase.component';
 import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinnerdialog.component';
 import { SessionService } from 'src/app/services/session.service';
 import { ImageorderSettingComponent } from '../imageorder-setting/imageorder-setting.component';
+import { HibiwareshoriSettingComponent } from '../hibiwareshori-setting/hibiwareshori-setting.component';
 
 
 @Component({
@@ -103,6 +104,8 @@ export class TunnelComponent implements OnInit {
   @ViewChild(OsiraseComponent) osiraseComponent: OsiraseComponent;
 
   @ViewChild(ImageorderSettingComponent) imageorderSettingComponent: ImageorderSettingComponent;
+
+  @ViewChild(HibiwareshoriSettingComponent) hibiwareshoriSettingComponent: HibiwareshoriSettingComponent;
 
 
   constructor(private router: Router,
@@ -729,6 +732,11 @@ export class TunnelComponent implements OnInit {
       this.initOsiraseComponent();
 
     }
+    else if (this.isSideNavHibiwareShoriSet) {
+
+      this.initHibiwareShoriSettingComponent();
+
+    }
     else if (this.isSideNavImageOrderSet) {
 
       this.initImageOrderSettingComponent();
@@ -831,6 +839,23 @@ export class TunnelComponent implements OnInit {
 
 
   /**
+   *  initHibiwareShoriSettingComponent
+   *
+   *  サイドナビに表示するImageorderSettingComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initHibiwareShoriSettingComponent() {
+
+    if (this.hibiwareshoriSettingComponent) {
+      this.hibiwareshoriSettingComponent.initialize();
+    }
+
+  }
+
+
+  /**
    *  initImageOrderSettingComponent
    *
    *  サイドナビに表示するImageorderSettingComponentを初期化する
@@ -871,6 +896,16 @@ export class TunnelComponent implements OnInit {
     else if (this.isSideNavAiRiyoujoukyou) {
 
       this.destroyAiriyoujoukyouComponent();
+
+    }
+    else if (this.isSideNavHibiwareShoriSet) {
+
+      this.destroyHibiwareShoriSettingComponent();
+
+    }
+    else if (this.isSideNavImageOrderSet) {
+
+      this.destroyImageOrderSettingComponent();
 
     }
   }
@@ -925,11 +960,40 @@ export class TunnelComponent implements OnInit {
     if (this.aiRiyoujoukyouComponent.isKakutei) {
       this.uploadTunnelImageInfo();
     }
-    
+
 
     this.aiRiyoujoukyouComponent.destroy();
 
     this.dialogRef.close();
+  }
+
+
+  /**
+   *  destroyHibiwareShoriSettingComponent
+   *
+   *  サイドナビに表示したHibiwareshortSettingComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyHibiwareShoriSettingComponent() {
+
+    this.hibiwareshoriSettingComponent.destroy();
+
+  }
+
+  /**
+   *  destroyImageOrderSettingComponent
+   *
+   *  サイドナビに表示したImageOrderSettingComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyImageOrderSettingComponent() {
+
+    this.imageorderSettingComponent.destroy();
+
   }
 
 

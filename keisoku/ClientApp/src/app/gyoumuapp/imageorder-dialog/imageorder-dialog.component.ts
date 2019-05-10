@@ -30,7 +30,9 @@ export class ImageorderDialogComponent implements OnInit {
 
   ngOnInit() {
 
-    this.imageAlignSelected = this.data.imageAlignPosition;
+    this.spanMojiFormControl.setValue(this.data.spanMoji);
+
+    this.imageAlignSelected = this.data.imageAlignPosition.toString();
   }
 
   /**

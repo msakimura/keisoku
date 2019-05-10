@@ -4,6 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatSidenav } from '@angular/material';
 import { HibiwareshoriSettingService, HibiwareShoriSetModel } from 'src/app/services/hibiwareshori-setting.service';
 import { TunnelService } from 'src/app/services/tunnel.service';
+import { ValidationModule } from 'src/app/shared/validation.module';
 
 @Component({
   selector: 'app-hibiwareshori-setting',
@@ -13,9 +14,9 @@ import { TunnelService } from 'src/app/services/tunnel.service';
 export class HibiwareshoriSettingComponent implements OnInit {
   isInput: boolean = false;
 
-  shortLineRemoveFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DOUBLE), Validators.max(MaxValue.DOUBLE)]);
+  shortLineRemoveFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DOUBLE), Validators.min(0)]);
 
-  kaikouhabaMojiSizeFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL)]);
+  kaikouhabaMojiSizeFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL), ValidationModule.isOverZero]);
 
 
   hissuMessage: string = InputMessage.HISUU;
@@ -26,9 +27,13 @@ export class HibiwareshoriSettingComponent implements OnInit {
 
   numericMessage: string = InputMessage.NUMERIC;
 
-  maxShortLineRemoveMessage: string = InputMessage.MAXLENGTH_DOUBLE;
+  maxShortLineRemoveMessage: string = InputMessage.MAX_DOUBLE;
 
-  maxKaikouhabaMojiSizeMessage: string = InputMessage.MAXLENGTH_DECIMAL;
+  minShortLineRemoveMessage: string = InputMessage.MIN_ZERO;
+
+  maxKaikouhabaMojiSizeMessage: string = InputMessage.MAX_DECIMAL;
+
+  minKaikouhabaMojiSizeMessage: string = InputMessage.MIN_OVER_ZERO;
 
 
   @Input('childToSidenav') sideNav: MatSidenav;
@@ -38,8 +43,35 @@ export class HibiwareshoriSettingComponent implements OnInit {
     private tunnelService: TunnelService) { }
 
   ngOnInit() {
-    this.bindHibiwareshoriSetting();
 
+  }
+
+
+  /**
+   *  initialize
+   *
+   *  初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initialize() {
+    this.bindHibiwareshoriSetting();
+  }
+
+
+  /**
+   *  destroy
+   *
+   *  入力項目を破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroy() {
+    this.shortLineRemoveFormControl.reset();
+
+    this.kaikouhabaMojiSizeFormControl.reset();
   }
 
   /**
@@ -56,7 +88,7 @@ export class HibiwareshoriSettingComponent implements OnInit {
     this.hibiwareshoriSettingService.getHibiwareShoriSet(selectedTunnel.customerId, selectedTunnel.ankenId, selectedTunnel.tunnelId)
       .subscribe((response: any) => {
 
-        this.shortLineRemoveFormControl.setValue(response.tanshukuRemove);
+        this.shortLineRemoveFormControl.setValue(response.shortLineRemove);
 
         this.kaikouhabaMojiSizeFormControl.setValue(response.kaikouhabaMojiSize);
 

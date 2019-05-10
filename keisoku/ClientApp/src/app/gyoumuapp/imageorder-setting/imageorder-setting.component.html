@@ -25,7 +25,7 @@
   </mat-form-field>
 
   <div>
-    <mat-button-toggle-group value="{{widthOrHeightSelected}}">
+    <mat-button-toggle-group value="{{widthOrHeightSelected}}" #group="matButtonToggleGroup" (change)="onChangeWidthOrHeight(group.value)">
       <mat-button-toggle value="1">横</mat-button-toggle>
       <mat-button-toggle value="2">縦</mat-button-toggle>
     </mat-button-toggle-group>
@@ -42,6 +42,9 @@
       {{maxLengthMessage}}
     </mat-error>
 
+    <mat-error *ngIf="lengthFormControl.hasError('isOverZero')">
+      {{minLengthMessage}}
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
@@ -52,7 +55,11 @@
     </mat-error>
 
     <mat-error *ngIf="kitenKiroteiFormControl.hasError('max')">
-      {{maxLengthMessage}}
+      {{maxKitenKiroteiMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="kitenKiroteiFormControl.hasError('min')">
+      {{minKitenKiroteiMessage}}
     </mat-error>
 
   </mat-form-field>

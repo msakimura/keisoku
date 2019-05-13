@@ -20,6 +20,7 @@ import { PasswordDialogComponent } from './password-dialog/password-dialog.compo
 import { HibiwareshoriSettingComponent } from './hibiwareshori-setting/hibiwareshori-setting.component';
 import { ImageorderSettingComponent } from './imageorder-setting/imageorder-setting.component';
 import { ImageorderDialogComponent } from './imageorder-dialog/imageorder-dialog.component';
+import { PrintSettingComponent } from './print-setting/print-setting.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ImageorderDialogComponent } from './imageorder-dialog/imageorder-dialog
     PasswordDialogComponent,
     HibiwareshoriSettingComponent,
     ImageorderSettingComponent,
-    ImageorderDialogComponent
+    ImageorderDialogComponent,
+    PrintSettingComponent
   ],
 
   imports: [

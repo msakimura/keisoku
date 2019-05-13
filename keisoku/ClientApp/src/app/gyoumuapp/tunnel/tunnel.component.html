@@ -27,24 +27,28 @@
       <div *ngIf="isSideNavOsirase">
 
         <app-osirase [childToSidenav]="sideNav"></app-osirase>
-
-
+        
       </div>
 
 
       <div *ngIf="isSideNavHibiwareShoriSet" class="hibiware_sidenav">
 
         <app-hibiwareshori-setting [childToSidenav]="sideNav"></app-hibiwareshori-setting>
-
-
+        
       </div>
 
 
       <div *ngIf="isSideNavImageOrderSet">
 
         <app-imageorder-setting [childToSidenav]="sideNav"></app-imageorder-setting>
+        
+      </div>
 
 
+      <div *ngIf="isSideNavPrintSet">
+
+        <app-print-setting [childToSidenav]="sideNav"></app-print-setting>
+        
       </div>
 
     </div>
@@ -75,7 +79,7 @@
     <mat-menu #setting="matMenu">
       <button mat-menu-item (click)="displaySideNavHibiwareShoriSet()">ひび割れ処理設定</button>
       <button mat-menu-item (click)="displaySideNavImageOrderSet()">画像並び設定</button>
-      <button mat-menu-item>出力設定</button>
+      <button mat-menu-item (click)="displaySideNavPrintSet()">出力設定</button>
     </mat-menu>
 
     <button mat-button (click)="displaySideNavOshirase()" *ngIf="isOsirase"><mat-icon color="primary">notifications_active</mat-icon>お知らせ</button>

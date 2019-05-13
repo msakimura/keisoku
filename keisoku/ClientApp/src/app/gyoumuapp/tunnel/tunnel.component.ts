@@ -38,6 +38,8 @@ export class TunnelComponent implements OnInit {
 
   isSideNavImageOrderSet: boolean = false;
 
+  isSideNavPrintSet: boolean = false;
+
 
   isDeleteDisabled: boolean = true;
 
@@ -568,6 +570,25 @@ export class TunnelComponent implements OnInit {
     this.clearSidenavFlag();
 
     this.isSideNavImageOrderSet = true;
+
+    this.sideNav.open();
+  }
+
+
+
+  /**
+   *  displaySideNavPrintSet
+   *
+   *  出力設定のサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displaySideNavPrintSet() {
+
+    this.clearSidenavFlag();
+
+    this.isSideNavPrintSet = true;
 
     this.sideNav.open();
   }
@@ -1144,5 +1165,7 @@ export class TunnelComponent implements OnInit {
     this.isSideNavHibiwareShoriSet = false;
 
     this.isSideNavImageOrderSet = false;
+
+    this.isSideNavPrintSet = false;
   }
 }

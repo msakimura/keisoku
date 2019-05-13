@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace keisoku.Models
 {
-    public class KanseiCadModel
+    public class KakinModel
     {
         public int CustomerId { get; set; }
 
@@ -13,14 +13,19 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public int KanseiCadId { get; set; }
+        public int TunnelNumber { get; set; }
 
-        public string CadData { get; set; }
+        public int SouEnchou { get; set; }
+
+        public int TankaId { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
         public TunnelModel Tunnel { get; set; }
+
+        public TankaModel Tanka { get; set; }
+
     }
 }

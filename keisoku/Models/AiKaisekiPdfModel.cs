@@ -7,7 +7,7 @@ namespace keisoku.Models
 {
     public class AiKaisekiPdfModel
     {
-        public int SeikahinImageId { get; set; }
+        public int AiKaisekiPdfId { get; set; }
 
         public string PdfName { get; set; }
 
@@ -19,6 +19,6 @@ namespace keisoku.Models
 
         public DateTime UpdatedAt { get; set; }
 
-        public SeikahinImageModel SeikahinImage { get; set; }
+        public AiKaisekiModel AiKaiseki { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace keisoku.Data
 
         public DbSet<TunnelImageModel> TunnelImages { get; set; }
 
-        public DbSet<KanseiCadModel> KanseiCads { get; set; }
+        public DbSet<EditCadModel> KanseiCads { get; set; }
 
         public DbSet<SeikahinImageModel> SeikahinImages { get; set; }
 
@@ -53,9 +53,9 @@ namespace keisoku.Data
 
         public DbSet<CsvModel> Csvs { get; set; }
 
-        public DbSet<OptionFuyoModel> OptionFuyos { get; set; }
+        public DbSet<OtameshiKinouModel> OtameshiKinous { get; set; }
 
-        public DbSet<OptionModel> Options { get; set; }
+        public DbSet<OtameshiPreviewModel> OtameshiPreviews { get; set; }
 
         public DbSet<HibiwareShoriSetModel> HibiwareShoriSets { get; set; }
 
@@ -73,6 +73,13 @@ namespace keisoku.Data
         public DbSet<SelectItemModel> SelectItems { get; set; }
 
         public DbSet<InitialSettingModel> InitialSettings { get; set; }
+
+        public DbSet<KakinModel> Kakins { get; set; }
+
+        public DbSet<AiKaisekiModel> AiKaisekis { get; set; }
+
+        public DbSet<FileShareModel> FileShares { get; set; }
+
 
         /// <summary>
         /// OnModelCreating
@@ -166,13 +173,19 @@ namespace keisoku.Data
 
                 i.HasMany(j => j.Summaries).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasPrincipalKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
 
-                i.HasMany(j => j.OptionFuyos).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
+                i.HasMany(j => j.OtameshiKinous).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
 
                 i.HasMany(j => j.HibiwareShoriSets).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
 
                 i.HasMany(j => j.ImageOrderSets).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
 
                 i.HasMany(j => j.PrintSets).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
+
+                i.HasMany(j => j.Kakins).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
+
+                i.HasMany(j => j.AiKaisekis).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
+
+                i.HasMany(j => j.FileShares).WithOne(k => k.Tunnel).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
 
             });
 
@@ -185,13 +198,14 @@ namespace keisoku.Data
                 i.HasOne(j => j.Tunnel).WithMany(k => k.TunnelImages).OnDelete(DeleteBehavior.Cascade);
 
                 i.HasOne(j => j.SeikahinImage).WithMany(k => k.TunnelImages).OnDelete(DeleteBehavior.Cascade);
+                
             });
 
-            builder.Entity<KanseiCadModel>(i =>
+            builder.Entity<EditCadModel>(i =>
             {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.KanseiCadId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.EditCadId });
 
-                i.Property(j => j.KanseiCadId).ValueGeneratedOnAdd();
+                i.Property(j => j.EditCadId).ValueGeneratedOnAdd();
 
                 i.HasOne(j => j.Tunnel).WithMany(k => k.KanseiCads).OnDelete(DeleteBehavior.Cascade);
             });
@@ -208,10 +222,6 @@ namespace keisoku.Data
 
                 i.HasMany(j => j.ImageOrderSets).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
                 
-                i.HasMany(j => j.AiKaisekiCads).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
-
-                i.HasMany(j => j.AiKaisekiPdfs).WithOne(k => k.SeikahinImage).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.SeikahinImageId);
-
             });
 
             builder.Entity<PreviewModel>(i =>
@@ -223,16 +233,16 @@ namespace keisoku.Data
             
             builder.Entity<AiKaisekiCadModel>(i =>
             {
-                i.HasKey(j => new { j.SeikahinImageId });
+                i.HasKey(j => new { j.AiKaisekiCadId });
 
-                i.HasOne(j => j.SeikahinImage).WithMany(k => k.AiKaisekiCads).OnDelete(DeleteBehavior.Cascade);
+                i.HasOne(j => j.AiKaiseki).WithMany(k => k.AiKaisekiCads).OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<AiKaisekiPdfModel>(i =>
             {
-                i.HasKey(j => new { j.SeikahinImageId });
+                i.HasKey(j => new { j.AiKaisekiPdfId });
 
-                i.HasOne(j => j.SeikahinImage).WithMany(k => k.AiKaisekiPdfs).OnDelete(DeleteBehavior.Cascade);
+                i.HasOne(j => j.AiKaiseki).WithMany(k => k.AiKaisekiPdfs).OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<AiRiyouJoukyouModel>(i =>
@@ -251,6 +261,9 @@ namespace keisoku.Data
                 i.Property(j => j.TankaId).ValueGeneratedOnAdd();
 
                 i.HasMany(j => j.AiRiyouJoukyous).WithOne(k => k.Tanka).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.TankaId);
+
+                i.HasMany(j => j.Kakins).WithOne(k => k.Tanka).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.TankaId);
+
             });
 
             builder.Entity<DaichouModel>(i =>
@@ -330,22 +343,20 @@ namespace keisoku.Data
                 i.HasMany(j => j.Summaries).WithOne(k => k.Csv).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CsvId);
             });
 
-            builder.Entity<OptionFuyoModel>(i =>
+            builder.Entity<OtameshiKinouModel>(i =>
             {
-                i.HasKey(j => new { j.CustomerId, j.OptionId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId });
 
-                i.HasOne(j => j.Tunnel).WithMany(k => k.OptionFuyos).OnDelete(DeleteBehavior.Cascade);
+                i.HasOne(j => j.Tunnel).WithMany(k => k.OtameshiKinous).OnDelete(DeleteBehavior.Cascade);
 
-                i.HasOne(j => j.Option).WithMany(k => k.OptionFuyos).OnDelete(DeleteBehavior.Cascade);
+                i.HasMany(j => j.OtameshiPreviews).WithOne(k => k.OtameshiKinou).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
             });
 
-            builder.Entity<OptionModel>(i =>
+            builder.Entity<OtameshiPreviewModel>(i =>
             {
-                i.HasKey(j => new { j.OptionId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.SeikahinImageId });
 
-                i.Property(j => j.OptionId).ValueGeneratedOnAdd();
-
-                i.HasMany(j => j.OptionFuyos).WithOne(k => k.Option).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.CustomerId);
+                i.HasOne(j => j.OtameshiKinou).WithMany(k => k.OtameshiPreviews).OnDelete(DeleteBehavior.Cascade);
             });
 
 
@@ -417,6 +428,31 @@ namespace keisoku.Data
             builder.Entity<InitialSettingModel>(i =>
             {
                 i.HasKey(j => new { j.InitialSetBunruiId });
+
+            });
+
+            builder.Entity<KakinModel>(i =>
+            {
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId });
+
+                i.HasOne(j => j.Tunnel).WithMany(k => k.Kakins).OnDelete(DeleteBehavior.Cascade);
+
+                i.HasOne(j => j.Tanka).WithMany(k => k.Kakins).OnDelete(DeleteBehavior.SetNull);
+            });
+
+            builder.Entity<AiKaisekiModel>(i =>
+            {
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId });
+
+                i.HasOne(j => j.Tunnel).WithMany(k => k.AiKaisekis).OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            builder.Entity<FileShareModel>(i =>
+            {
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.FileShareId });
+
+                i.HasOne(j => j.Tunnel).WithMany(k => k.FileShares).OnDelete(DeleteBehavior.Cascade);
 
             });
 

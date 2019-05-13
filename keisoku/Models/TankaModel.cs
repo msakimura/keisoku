@@ -14,11 +14,16 @@ namespace keisoku.Models
 
         public int Tanka { get; set; }
 
+        public decimal MmPix { get; set; }
+
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
         public ICollection<AiRiyouJoukyouModel> AiRiyouJoukyous { get; set; }
+
+        public ICollection<KakinModel> Kakins { get; set; }
 
 
         /// <summary>

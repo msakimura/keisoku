@@ -31,7 +31,7 @@ namespace keisoku.Models
 
         public ICollection<TunnelImageModel> TunnelImages { get; set; }
 
-        public ICollection<KanseiCadModel> KanseiCads { get; set; }
+        public ICollection<EditCadModel> KanseiCads { get; set; }
 
         public ICollection<DaichouModel> Daichous { get; set; }
 
@@ -43,11 +43,17 @@ namespace keisoku.Models
 
         public ICollection<SummaryModel> Summaries { get; set; }
 
-        public ICollection<OptionFuyoModel> OptionFuyos { get; set; }
+        public ICollection<OtameshiKinouModel> OtameshiKinous { get; set; }
 
         public ICollection<HibiwareShoriSetModel> HibiwareShoriSets { get; set; }
 
         public ICollection<ImageOrderSetModel> ImageOrderSets { get; set; }
+
+        public ICollection<KakinModel> Kakins { get; set; }
+
+        public ICollection<AiKaisekiModel> AiKaisekis { get; set; }
+
+        public ICollection<FileShareModel> FileShares { get; set; }
 
     }
 }

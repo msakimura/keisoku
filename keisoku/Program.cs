@@ -29,7 +29,6 @@ namespace keisoku
                     // Initializing the database
                     KengenModel.Initialize(services);
                     TankaModel.Initialize(services);
-                    OptionModel.Initialize(services);
                     SelectItemModel.Initialize(services);
                     InitialSettingModel.Initialize(services);
 

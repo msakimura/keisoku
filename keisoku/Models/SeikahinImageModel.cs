@@ -31,11 +31,7 @@ namespace keisoku.Models
         public ICollection<TunnelImageModel> TunnelImages { get; set; }
 
         public ICollection<PreviewModel> Previews { get; set; }
-
-        public ICollection<AiKaisekiCadModel> AiKaisekiCads { get; set; }
-
-        public ICollection<AiKaisekiPdfModel> AiKaisekiPdfs { get; set; }
-
+        
         public ICollection<ImageOrderSetModel> ImageOrderSets { get; set; }
         
 

@@ -5,9 +5,15 @@ using System.Threading.Tasks;
 
 namespace keisoku.Models
 {
-    public class AiKaisekiCadModel
+    public class EditCadModel
     {
-        public int AiKaisekiCadId { get; set; }
+        public int CustomerId { get; set; }
+
+        public int AnkenId { get; set; }
+
+        public int TunnelId { get; set; }
+
+        public int EditCadId { get; set; }
 
         public string CadName { get; set; }
 
@@ -19,7 +25,6 @@ namespace keisoku.Models
 
         public DateTime UpdatedAt { get; set; }
 
-        public AiKaisekiModel AiKaiseki { get; set; }
-
+        public TunnelModel Tunnel { get; set; }
     }
 }

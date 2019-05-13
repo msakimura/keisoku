@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace keisoku.Models
 {
-    public class OptionFuyoModel
+    public class OtameshiKinouModel
     {
         public int CustomerId { get; set; }
 
@@ -10,15 +11,15 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
-        public int OptionId { get; set; }
-
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
 
         public virtual TunnelModel Tunnel { get; set; }
 
-        public OptionModel Option { get; set; }
+        public ICollection<TunnelImageModel> TunnelImages { get; set; }
+
+        public ICollection<OtameshiPreviewModel> OtameshiPreviews { get; set; }
 
     }
 }

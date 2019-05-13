@@ -437,7 +437,7 @@ namespace keisoku.Data
 
                 i.HasOne(j => j.Tunnel).WithMany(k => k.Kakins).OnDelete(DeleteBehavior.Cascade);
 
-                i.HasOne(j => j.Tanka).WithMany(k => k.Kakins).OnDelete(DeleteBehavior.SetNull);
+                i.HasOne(j => j.Tanka).WithMany(k => k.Kakins).OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<AiKaisekiModel>(i =>

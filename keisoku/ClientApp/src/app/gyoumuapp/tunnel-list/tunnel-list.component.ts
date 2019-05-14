@@ -3,11 +3,12 @@ import { MatTableDataSource, MatPaginator, MatSidenav, MatSort } from '@angular/
 import { SelectionModel } from '@angular/cdk/collections';
 import { TunnelService, TunnelModel } from 'src/app/services/tunnel.service';
 import { AnkenService } from 'src/app/services/anken.service';
-import { FormControl, Validators } from '@angular/forms';
-import { InputMessage, SessionMessage } from 'src/app/shared/constant.module';
+import { SessionMessage } from 'src/app/shared/constant.module';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { SessionService } from 'src/app/services/session.service';
+import { TunnelKanriComponent } from '../tunnel-kanri/tunnel-kanri.component';
+import { CadSettingComponent } from '../cad-setting/cad-setting.component';
 
 @Component({
   selector: 'app-tunnel-list',
@@ -16,11 +17,17 @@ import { SessionService } from 'src/app/services/session.service';
 })
 
 export class TunnelListComponent implements OnInit {
-  isInput: boolean = false;
+
+  isSideNavTunnelKanri: boolean = false;
+
+  isSideNavCadSetting: boolean = false;
+
 
   isAdd: boolean = false;
 
   isEdit: boolean = false;
+
+
 
   isAddDisabled: boolean = true;
 
@@ -35,14 +42,7 @@ export class TunnelListComponent implements OnInit {
   deleteIconColor = 'diabled';
 
 
-  tunnelNameFormControl = new FormControl('', [Validators.required]);
-  
-
   ankenName: string;
-
-  hissuMessage: string = InputMessage.HISUU;
-
-  hissuTunnelMessage: string = InputMessage.HISSU_TUNNEL;
 
   displayedColumns: string[] = ['select', 'name', 'enchou', 'yoteiImageNum', 'image', 'ai', 'date'];
 
@@ -51,11 +51,16 @@ export class TunnelListComponent implements OnInit {
 
   selection = new SelectionModel<TunnelModel>(true, []);
 
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @ViewChild('sidenav') public sideNav: MatSidenav;
 
   @ViewChild(MatSort) sort: MatSort;
+
+  @ViewChild(TunnelKanriComponent) tunnelKanriComponent: TunnelKanriComponent;
+
+  @ViewChild(CadSettingComponent) cadSettingComponent: CadSettingComponent;
 
 
   constructor(private router: Router,
@@ -233,121 +238,6 @@ export class TunnelListComponent implements OnInit {
 
 
   /**
-   *  saveTunnelInfo
-   *
-   *  入力したトンネル情報をDBに保存し、datasourceに追加する
-   *  
-   *
-   *  @return {void}
-   */
-  saveTunnelInfo() {
-
-    // 必須入力チェック
-    if (this.tunnelNameFormControl.invalid) {
-      this.isInput = true;
-
-      return;
-    }
-
-    // トンネル情報をDBに追加
-    var tunnelInfo = this.getInputTunnelModel(0);
-
-    this.tunnelService.insertTunnel(tunnelInfo)
-      .subscribe((response: any) => {
-
-        // 追加成功時、dataSourceに追加
-        const data = this.dataSource.data;
-
-        data.push(this.tunnelService.convertTunnelModel(response));
-
-        this.dataSource.data = data;
-
-        // 選択した案件情報のトンネル数を設定し、DBを更新
-        this.ankenService.selectedAnken.tunnelNumber = this.dataSource.data.length;
-
-        this.ankenService.updateAnken(this.ankenService.selectedAnken)
-          .subscribe((response: any) => {
-            this.clearSideNavFormData();
-
-            this.sideNav.close();
-          });
-        
-      },
-      error => {
-      });
-
-    
-  }
-
-
-  /**
-   *  updateTunnelInfo
-   *
-   *  選択したトンネル情報についてDB、datasourceを更新する
-   *  
-   *
-   *  @return {void}
-   */
-  updateTunnelInfo() {
-
-    // 必須入力チェック
-    if (this.tunnelNameFormControl.invalid) {
-      this.isInput = true;
-
-      return;
-    }
-
-    // 編集したトンネル情報でDBを更新
-    var tunnelInfo = this.getInputTunnelModel(this.selection.selected[0].tunnelId);
-
-    this.tunnelService.updateTunnel(tunnelInfo)
-      .subscribe((response: any) => {
-
-        var row = this.updateSelectedRowTunnelInfo(this.tunnelService.convertTunnelModel(response.value));
-
-        this.sideNav.close();
-
-        this.clearSideNavFormData();
-
-        if (row != null) {
-          this.selectToggle(row);
-        }
-
-      },
-        error => {
-        });
-  }
-
-
-  /**
-   *  getInputTunnelModel
-   *
-   *  入力項目のトンネル情報を取得する
-   *  トンネルIDはtunnelIdを設定する
-   *  
-   *  @param  {number}    tunnelId
-   *
-   *  @return {TunnelModel} トンネル情報
-   */
-  getInputTunnelModel(tunnelId): TunnelModel {
-
-    var tunnelInfo: TunnelModel = {
-      customerId: this.ankenService.selectedAnken.customerId,
-      ankenId: this.ankenService.selectedAnken.ankenId,
-      tunnelId: tunnelId,
-      tunnelName: this.tunnelNameFormControl.value,
-      tunnelEnchou: 200,
-      yoteiImageNumber: 0,
-      imageNumber: 0,
-      aiNumber: 0,
-      createdAt: new Date()
-    };
-
-    return tunnelInfo;
-  }
-
-
-  /**
    *  deleteTunnelInfo
    *
    *  選択したトンネル情報をDBから削除する
@@ -371,9 +261,7 @@ export class TunnelListComponent implements OnInit {
 
           this.ankenService.updateAnken(this.ankenService.selectedAnken)
             .subscribe((response: any) => {
-              this.clearSideNavFormData();
-
-              this.sideNav.close();
+              
             });
         },
         error => {
@@ -387,41 +275,7 @@ export class TunnelListComponent implements OnInit {
 
     this.changeDisabled();
   }
-
-
-  /**
-   *  clearSideNavFormData
-   *
-   *  sideNavのフォームデータをクリアする
-   *  
-   *
-   *  @return {void}
-   */
-  clearSideNavFormData() {
-    this.tunnelNameFormControl.reset();
-
-    this.isAdd = false;
-
-    this.isEdit = false;
-
-    this.isInput = false;
-    
-  }
-
-
-  /**
-   *  closeSideNav
-   *
-   *  サイドナビを閉じる
-   *  
-   *
-   *  @return {void}
-   */
-  closeSideNav() {
-    this.sideNav.close();
-
-  }
-
+  
 
   /**
    *  displayAddSideNav
@@ -432,9 +286,13 @@ export class TunnelListComponent implements OnInit {
    *  @return {void}
    */
   displayAddSideNav() {
-    this.clearSideNavFormData();
+    this.clearSidenavFlag();
+
+    this.isSideNavTunnelKanri = true;
 
     this.isAdd = true;
+
+    this.isEdit = false;
 
     this.sideNav.open();
   }
@@ -449,11 +307,11 @@ export class TunnelListComponent implements OnInit {
    *  @return {void}
    */
   displayEditSideNav() {
-    this.clearSideNavFormData();
+    this.clearSidenavFlag();
 
-    var tunnel = this.selection.selected[0];
+    this.isSideNavTunnelKanri = true;
 
-    this.tunnelNameFormControl.setValue(tunnel.tunnelName);
+    this.isAdd = false;
 
     this.isEdit = true;
 
@@ -462,27 +320,19 @@ export class TunnelListComponent implements OnInit {
 
 
   /**
-   *  updateSelectedRowTunnelInfo
+   *  displayCadSettingSideNav
    *
-   *  選択したレコードのeditTunnelを編集した内容で更新する
+   *  CAD設定のサイドナビを表示する
    *  
-   *  @param  {TunnelModel}    editTunnel
    *
-   *  @return {TunnelModel} 編集した内容
+   *  @return {void}
    */
-  updateSelectedRowTunnelInfo(editTunnel: TunnelModel): TunnelModel {
-    var data = this.dataSource.data;
+  displayCadSettingSideNav() {
+    this.clearSidenavFlag();
 
-    var target = data.find(tunnel => {
-      return (tunnel.customerId == editTunnel.customerId && tunnel.ankenId == editTunnel.ankenId && tunnel.tunnelId == editTunnel.tunnelId);
-    });
-
-    if (target == null) return null;
-
-
-    target.tunnelName = editTunnel.tunnelName;
-
-    return target;
+    this.isSideNavCadSetting = true;
+    
+    this.sideNav.open();
   }
 
   /**
@@ -580,4 +430,144 @@ export class TunnelListComponent implements OnInit {
     return true;
 
   }
+
+
+  /**
+  *  clearSidenavFlag
+  *
+  *  サイドナビに表示する画面のフラグをクリアする
+  *
+  *
+  *  @return {void}
+  */
+  clearSidenavFlag() {
+    this.isSideNavTunnelKanri = false;
+
+    this.isSideNavCadSetting = false;
+  }
+
+
+  /**
+   *  initSidenav
+   *
+   *  サイドナビに表示するコンポーネントを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initSidenav() {
+
+    if (this.isSideNavTunnelKanri) {
+
+      this.initTunnelKanriComponent();
+
+    }
+    else if (this.isSideNavCadSetting) {
+
+      this.initCadSettingComponent();
+
+    }
+  }
+
+
+  /**
+   *  initTunnelKanriComponent
+   *
+   *  サイドナビに表示するTunnelKanriComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initTunnelKanriComponent() {
+
+    if (this.tunnelKanriComponent) {
+
+      this.tunnelKanriComponent.isAdd = this.isAdd;
+
+      this.tunnelKanriComponent.isEdit = this.isEdit;
+
+      this.tunnelKanriComponent.dataSource = this.dataSource;
+
+      this.tunnelKanriComponent.selection = this.selection;
+
+      this.tunnelKanriComponent.initialize();
+    }
+
+  }
+
+
+  /**
+   *  initCadSettingComponent
+   *
+   *  サイドナビに表示するCadSettingComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initCadSettingComponent() {
+
+    if (this.cadSettingComponent) {
+      
+      this.cadSettingComponent.initialize();
+    }
+
+  }
+
+
+  /**
+   *  destroySideNav
+   *
+   *  サイドナビに表示したコンポーネントの内容を破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroySideNav() {
+
+    if (this.isSideNavTunnelKanri) {
+
+      this.destroyTunnelKanriComponent();
+
+    }
+    else if (this.isSideNavCadSetting) {
+
+      this.destroyCadSettingComponent();
+
+    }
+  }
+
+
+  /**
+   *  destroyTunnelKanriComponent
+   *
+   *  サイドナビに表示したTunnelKanriComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyTunnelKanriComponent() {
+
+    if (this.tunnelKanriComponent.updateData) {
+      this.selectToggle(this.tunnelKanriComponent.updateData);
+    }
+
+    this.tunnelKanriComponent.destroy();
+  }
+
+
+
+  /**
+   *  destroyCadSettingComponent
+   *
+   *  サイドナビに表示したCadSettingComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyCadSettingComponent() {
+    
+    this.cadSettingComponent.destroy();
+  }
+
+
 }

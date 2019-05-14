@@ -26,6 +26,8 @@ export class InputMessage {
   public static readonly HISSU_KITEN_KIROTEI = '起点の距離程は必須です';
   public static readonly HISSU_SPAN_MOJI = 'スパン文字は必須です';
   public static readonly HISSU_COMPRESSION_RATE = '画像圧縮率は必須です';
+  public static readonly HISSU_CAD_VERSION = 'CADバージョンは必須です';
+  public static readonly HISSU_CAD_PDF_PAPER_SIZE = 'CAD・PDF印刷用紙サイズは必須です';
   public static readonly NUMERIC = '数値を入力してください';
   public static readonly MAX_DECIMAL = '7.9228 x 10^28以下の数値を入力してください';
   public static readonly MAX_DOUBLE = '1.7 x 10^308以下の数値を入力してください';

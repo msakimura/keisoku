@@ -1,0 +1,20 @@
+<div class="mat-headline">トンネル管理</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button *ngIf="isAdd" mat-button (click)="saveTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+<button *ngIf="isEdit" mat-button (click)="updateTunnelInfo()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+
+<mat-form-field>
+  <input matInput placeholder="トンネル名" [formControl]="tunnelNameFormControl" required>
+
+  <mat-error *ngIf="tunnelNameFormControl.hasError('required')">
+    {{hissuTunnelMessage}}
+  </mat-error>
+</mat-form-field>

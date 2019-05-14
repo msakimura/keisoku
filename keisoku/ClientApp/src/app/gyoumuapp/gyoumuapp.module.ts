@@ -21,6 +21,8 @@ import { HibiwareshoriSettingComponent } from './hibiwareshori-setting/hibiwares
 import { ImageorderSettingComponent } from './imageorder-setting/imageorder-setting.component';
 import { ImageorderDialogComponent } from './imageorder-dialog/imageorder-dialog.component';
 import { PrintSettingComponent } from './print-setting/print-setting.component';
+import { CadSettingComponent } from './cad-setting/cad-setting.component';
+import { TunnelKanriComponent } from './tunnel-kanri/tunnel-kanri.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { PrintSettingComponent } from './print-setting/print-setting.component';
     HibiwareshoriSettingComponent,
     ImageorderSettingComponent,
     ImageorderDialogComponent,
-    PrintSettingComponent
+    PrintSettingComponent,
+    CadSettingComponent,
+    TunnelKanriComponent
   ],
 
   imports: [

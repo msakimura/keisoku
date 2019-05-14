@@ -94,4 +94,37 @@ export class SelectitemService {
 
   }
 
+
+  /**
+   *  getCadVersionSelectItem
+   *
+   *  CADバージョンの選択項目を取得する
+   *
+   *
+   *  @return {SelectItemModel[]} 選択項目
+   */
+  getCadVersionSelectItem(): SelectItemModel[] {
+
+    return this.selectItems.filter(function (element) {
+      return element.selectItemBunruiId === SelectItemBunruiId.CAD_VERSION;
+    });
+
+  }
+
+
+  /**
+   *  getCadPdfPaperSizeSelectItem
+   *
+   *  CAD・PDF印刷用紙サイズの選択項目を取得する
+   *
+   *
+   *  @return {SelectItemModel[]} 選択項目
+   */
+  getCadPdfPaperSizeSelectItem(): SelectItemModel[] {
+
+    return this.selectItems.filter(function (element) {
+      return element.selectItemBunruiId === SelectItemBunruiId.CAD_PDF_PAPER_SIZE;
+    });
+
+  }
 }

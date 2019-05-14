@@ -32,5 +32,7 @@ namespace keisoku.Models
 
         public ICollection<KoukaisakiCustomerModel> KoukaisakiCustomers { get; set; }
 
+        public ICollection<CadSetModel> CadSets { get; set; }
+
     }
 }

@@ -34,11 +34,7 @@ namespace keisoku.Models
         public ICollection<EditCadModel> KanseiCads { get; set; }
 
         public ICollection<DaichouModel> Daichous { get; set; }
-
-        public ICollection<CadInputInfoModel> CadInputInfos { get; set; }
-
-        public ICollection<WebInputInfoModel> WebInputInfos { get; set; }
-
+        
         public ICollection<PrintSetModel> PrintSets { get; set; }
 
         public ICollection<SummaryModel> Summaries { get; set; }
@@ -54,6 +50,6 @@ namespace keisoku.Models
         public ICollection<AiKaisekiModel> AiKaisekis { get; set; }
 
         public ICollection<FileShareModel> FileShares { get; set; }
-
+        
     }
 }

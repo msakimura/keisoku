@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TunnelComponent } from '../tunnel/tunnel.component';
 import { TunnelImage, Chushutsu } from 'src/app/shared/constant.module';
 import { SeikahinImageModel } from 'src/app/services/seikahin-image.service';
 import { ValidationModule } from 'src/app/shared/validation.module';

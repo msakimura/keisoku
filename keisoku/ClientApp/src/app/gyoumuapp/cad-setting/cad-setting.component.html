@@ -1,0 +1,40 @@
+<div class="mat-headline">CAD設定</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button mat-button (click)="saveCadSet()"><mat-icon color="primary">save</mat-icon>保存</button>
+
+<mat-divider></mat-divider>
+
+<div *ngIf="isInput" class="alert alert-danger">{{hissuMessage}}</div>
+
+<div fxLayout="column">
+
+  <mat-form-field>
+    <mat-select placeholder="CADバージョン" [formControl]="cadVersionFormControl" required>
+      <mat-option *ngFor="let cadVersion of cadVersions" [value]="cadVersion.selectItemId">
+        {{cadVersion.selectItemName}}
+      </mat-option>
+    </mat-select>
+
+    <mat-error *ngIf="cadVersionFormControl.hasError('required')">
+      {{hissuCadVersionMessage}}
+    </mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field>
+    <mat-select placeholder="CAD・PDF印刷用紙サイズ" [formControl]="cadPdfPaperSizeFormControl" required>
+      <mat-option *ngFor="let cadPdfPaperSize of cadPdfPaperSizes" [value]="cadPdfPaperSize.selectItemId">
+        {{cadPdfPaperSize.selectItemName}}
+      </mat-option>
+    </mat-select>
+
+    <mat-error *ngIf="cadPdfPaperSizeFormControl.hasError('required')">
+      {{hissuCadPdfPaperSizeMessage}}
+    </mat-error>
+  </mat-form-field>
+
+</div>

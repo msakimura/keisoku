@@ -46,9 +46,7 @@ namespace keisoku.Data
         public DbSet<CadInputInfoModel> CadInputInfos { get; set; }
 
         public DbSet<WebInputInfoModel> WebInputInfos { get; set; }
-
-        public DbSet<PrintSetModel> Prints { get; set; }
-
+        
         public DbSet<SummaryModel> Summaries { get; set; }
 
         public DbSet<CsvModel> Csvs { get; set; }
@@ -65,11 +63,7 @@ namespace keisoku.Data
         public DbSet<KoukaisakiCustomerModel> KoukaisakiCustomers { get; set; }
 
         public DbSet<PrintSetModel> PrintSets { get; set; }
-
-        public DbSet<PrintDetailModel> PrintDetails { get; set; }
-
-        public DbSet<PrintFormatModel> PrintFormats { get; set; }
-
+        
         public DbSet<SelectItemModel> SelectItems { get; set; }
 
         public DbSet<InitialSettingModel> InitialSettings { get; set; }
@@ -394,30 +388,9 @@ namespace keisoku.Data
                 i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId });
 
                 i.HasOne(j => j.Tunnel).WithMany(k => k.PrintSets).OnDelete(DeleteBehavior.Cascade);
-
-                i.HasMany(j => j.PrintDetails).WithOne(k => k.PrintSet).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => new { l.CustomerId, l.AnkenId, l.TunnelId });
-
+                
             });
-
-            builder.Entity<PrintDetailModel>(i =>
-            {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId, j.PrintFormatId });
-
-                i.HasOne(j => j.PrintSet).WithMany(k => k.PrintDetails).OnDelete(DeleteBehavior.Cascade);
-
-                i.HasOne(j => j.PrintFormat).WithMany(k => k.PrintDetails).OnDelete(DeleteBehavior.Cascade);
-
-            });
-
-            builder.Entity<PrintFormatModel>(i =>
-            {
-                i.HasKey(j => new { j.PrintFormatId });
-
-                i.Property(j => j.PrintFormatId).ValueGeneratedOnAdd();
-
-                i.HasMany(j => j.PrintDetails).WithOne(k => k.PrintFormat).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.PrintFormatId);
-
-            });
+            
 
             builder.Entity<SelectItemModel>(i =>
             {

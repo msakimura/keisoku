@@ -46,7 +46,68 @@ namespace keisoku.Models
                 context.Tankas.AddRange(
                     new TankaModel
                     {
-                        Tanka = 50,
+                        Tanka = 200,
+                        MmPix = 0.5M,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 144,
+                        MmPix = 1.0M,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 111,
+                        MmPix = 1.5M,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 100,
+                        MmPix = 2.0M,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 100,
+                        MmPix = 3.0M,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 100,
+                        MmPix = 4.0M,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    }
+                );
+
+                context.Tankas.AddRange(
+                    new TankaModel
+                    {
+                        Tanka = 100,
+                        MmPix = 5.0M,
                         CreatedAt = DateTime.Now,
                         UpdatedAt = DateTime.Now
                     }

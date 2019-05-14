@@ -90,7 +90,7 @@ export class ImageorderSettingService {
   /**
    *  convertImageOrderSetModel
    *
-   *  DBから取得したimageOrderSetを案件モデルに変換する
+   *  DBから取得したimageOrderSetを画像並び設定モデルに変換する
    *  
    *
    *  @param  {object}    imageOrderSet

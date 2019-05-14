@@ -13,6 +13,18 @@ namespace keisoku.Models
 
         public int TunnelId { get; set; }
 
+        public bool DnnAndGenImage { get; set; }
+
+        public bool DnnOnlyGenImage { get; set; }
+
+        public bool Cad { get; set; }
+
+        public bool CadAndImage { get; set; }
+
+        public bool Pdf { get; set; }
+
+        public bool PdfAndImage { get; set; }
+
         public decimal ImageCompressionRatio { get; set; }
         
         public DateTime CreatedAt { get; set; }
@@ -20,7 +32,6 @@ namespace keisoku.Models
         public DateTime UpdatedAt { get; set; }
 
         public TunnelModel Tunnel { get; set; }
-
-        public ICollection<PrintDetailModel> PrintDetails { get; set; }
+        
     }
 }

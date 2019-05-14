@@ -31,7 +31,6 @@ namespace keisoku
                     TankaModel.Initialize(services);
                     SelectItemModel.Initialize(services);
                     InitialSettingModel.Initialize(services);
-
                 }
                 catch (Exception ex)
                 {

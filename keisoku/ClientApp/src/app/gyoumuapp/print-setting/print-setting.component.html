@@ -12,20 +12,20 @@
 
 <div fxLayout="column" fxLayoutGap="10px">
 
-  <mat-slide-toggle>DNN+現画像</mat-slide-toggle>
+  <mat-slide-toggle [checked]="isSlideToggleDnnGenImage">DNN+現画像</mat-slide-toggle>
 
-  <mat-slide-toggle>DNNのみ現画像</mat-slide-toggle>
+  <mat-slide-toggle [checked]="isSlideToggleDnnOnly">DNNのみ現画像</mat-slide-toggle>
 
   <div fxLayout="row" fxLayoutGap="50px">
-    <mat-slide-toggle (change)="onChangeSlideToggleCad($event)">CAD</mat-slide-toggle>
+    <mat-slide-toggle (change)="onChangeSlideToggleCad($event)" [checked]="isSlideToggleCad">CAD</mat-slide-toggle>
 
-    <mat-checkbox (change)="onChangeCheckCad($event)" [disabled]="disabledCadCheck">CADに画像を埋め込む</mat-checkbox>
+    <mat-checkbox (change)="onChangeCheckCad($event)" [disabled]="disabledCadCheck" [checked]="isCheckCad">CADに画像を埋め込む</mat-checkbox>
   </div>
 
   <div fxLayout="row" fxLayoutGap="50px">
-    <mat-slide-toggle (change)="onChangeSlideTogglePdf($event)">PDF</mat-slide-toggle>
+    <mat-slide-toggle (change)="onChangeSlideTogglePdf($event)" [checked]="isSlideTogglePdf">PDF</mat-slide-toggle>
 
-    <mat-checkbox (change)="onChangeCheckPdf($event)" [disabled]="disabledPdfCheck">PDFに画像を埋め込む</mat-checkbox>
+    <mat-checkbox (change)="onChangeCheckPdf($event)" [disabled]="disabledPdfCheck" [checked]="isCheckPdf">PDFに画像を埋め込む</mat-checkbox>
   </div>
 
   <mat-form-field>

@@ -131,6 +131,8 @@ export class ImageorderSettingComponent implements OnInit {
    *  @return {void}
    */
   destroy() {
+    this.isInput = false;
+
     this.imageSelectFormControl.reset();
 
     this.lengthFormControl.reset();

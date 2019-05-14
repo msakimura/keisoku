@@ -75,16 +75,16 @@ export class PrintSettingService {
   convertPrintSetModel(printSet): PrintSetModel {
     
     var printSetModel: PrintSetModel = {
-      customerId: 0,
-      ankenId: 0,
-      tunnelId: 0,
-      dnnAndGenImage: false,
-      dnnOnlyGenImage: false,
-      cad: false,
-      cadAndImage: false,
-      pdf: false,
-      pdfAndImage:false,
-      imageCompressionRatio: 0
+      customerId: printSet.customerId,
+      ankenId: printSet.ankenId,
+      tunnelId: printSet.tunnelId,
+      dnnAndGenImage: printSet.dnnAndGenImage,
+      dnnOnlyGenImage: printSet.dnnOnlyGenImage,
+      cad: printSet.cad,
+      cadAndImage: printSet.cadAndImage,
+      pdf: printSet.pdf,
+      pdfAndImage: printSet.pdfAndImage,
+      imageCompressionRatio: printSet.imageCompressionRatio
     };
 
 

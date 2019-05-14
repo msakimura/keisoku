@@ -69,6 +69,8 @@ export class HibiwareshoriSettingComponent implements OnInit {
    *  @return {void}
    */
   destroy() {
+    this.isInput = false;
+
     this.shortLineRemoveFormControl.reset();
 
     this.kaikouhabaMojiSizeFormControl.reset();

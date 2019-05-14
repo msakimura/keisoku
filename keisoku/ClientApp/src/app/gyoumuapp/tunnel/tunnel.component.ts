@@ -17,6 +17,7 @@ import { SpinnerdialogComponent } from 'src/app/components/spinnerdialog/spinner
 import { SessionService } from 'src/app/services/session.service';
 import { ImageorderSettingComponent } from '../imageorder-setting/imageorder-setting.component';
 import { HibiwareshoriSettingComponent } from '../hibiwareshori-setting/hibiwareshori-setting.component';
+import { PrintSettingComponent } from '../print-setting/print-setting.component';
 
 
 @Component({
@@ -108,6 +109,8 @@ export class TunnelComponent implements OnInit {
   @ViewChild(ImageorderSettingComponent) imageorderSettingComponent: ImageorderSettingComponent;
 
   @ViewChild(HibiwareshoriSettingComponent) hibiwareshoriSettingComponent: HibiwareshoriSettingComponent;
+
+  @ViewChild(PrintSettingComponent) printSettingComponent: PrintSettingComponent;
 
 
   constructor(private router: Router,
@@ -763,6 +766,11 @@ export class TunnelComponent implements OnInit {
       this.initImageOrderSettingComponent();
 
     }
+    else if (this.isSideNavPrintSet) {
+
+      this.initPrintSettingComponent();
+
+    }
   }
 
 
@@ -894,6 +902,23 @@ export class TunnelComponent implements OnInit {
 
   }
 
+
+  /**
+   *  initPrintSettingComponent
+   *
+   *  サイドナビに表示するPrintSettingComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initPrintSettingComponent() {
+
+    if (this.printSettingComponent) {
+      this.printSettingComponent.initialize();
+    }
+
+  }
+
   /**
    *  destroySideNav
    *
@@ -927,6 +952,11 @@ export class TunnelComponent implements OnInit {
     else if (this.isSideNavImageOrderSet) {
 
       this.destroyImageOrderSettingComponent();
+
+    }
+    else if (this.isSideNavPrintSet) {
+
+      this.destroyPrintSettingComponent();
 
     }
   }
@@ -1014,6 +1044,20 @@ export class TunnelComponent implements OnInit {
   destroyImageOrderSettingComponent() {
 
     this.imageorderSettingComponent.destroy();
+
+  }
+
+  /**
+   *  destroyPrintSettingComponent
+   *
+   *  サイドナビに表示したPrintSettingComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyPrintSettingComponent() {
+
+    this.printSettingComponent.destroy();
 
   }
 

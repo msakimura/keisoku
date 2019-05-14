@@ -32,7 +32,7 @@ export class PrintSettingComponent implements OnInit {
 
   isCheckPdf: boolean = false;
 
-  compressionRateFormControl = new FormControl('', [Validators.required, Validators.max(100), ValidationModule.isOverZero]);
+  imageCompressionRateFormControl = new FormControl('', [Validators.required, Validators.max(100), ValidationModule.isOverZero]);
 
 
 
@@ -56,6 +56,18 @@ export class PrintSettingComponent implements OnInit {
 
 
   /**
+   *  initialize
+   *
+   *  出力設定を初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initialize() {
+    this.bindPrintSetting();
+  }
+
+  /**
    *  destroy
    *
    *  入力項目を破棄する
@@ -64,8 +76,25 @@ export class PrintSettingComponent implements OnInit {
    *  @return {void}
    */
   destroy() {
+    this.isInput = false;
 
-    this.compressionRateFormControl.reset();
+    this.disabledCadCheck = true;
+
+    this.disabledPdfCheck = true;
+
+    this.isSlideToggleDnnGenImage = false;
+
+    this.isSlideToggleDnnOnly = false;
+
+    this.isSlideToggleCad = false;
+
+    this.isSlideTogglePdf = false;
+
+    this.isCheckCad = false;
+
+    this.isCheckPdf = false;
+
+    this.imageCompressionRateFormControl.reset();
     
   }
 
@@ -84,12 +113,29 @@ export class PrintSettingComponent implements OnInit {
     this.printSettingService.getPrintSet(selectedTunnel.customerId, selectedTunnel.ankenId, selectedTunnel.tunnelId)
       .subscribe((response: any) => {
 
-        var printSetModels = this.printSettingService.convertPrintSetModel(response);
-        
-      },
-        error => {
+        var printSetModel = this.printSettingService.convertPrintSetModel(response);
 
-        });
+        this.isSlideToggleDnnGenImage = printSetModel.dnnAndGenImage;
+
+        this.isSlideToggleDnnOnly = printSetModel.dnnOnlyGenImage;
+
+        this.isSlideToggleCad = printSetModel.cad;
+
+        this.isSlideTogglePdf = printSetModel.pdf;
+
+        this.isCheckCad = printSetModel.cadAndImage;
+
+        this.isCheckPdf = printSetModel.pdfAndImage;
+
+        this.disabledCadCheck = !printSetModel.cad;
+
+        this.disabledPdfCheck = !printSetModel.pdf;
+
+        this.imageCompressionRateFormControl.setValue(printSetModel.imageCompressionRatio);
+      },
+      error => {
+
+      });
 
   }
 
@@ -118,7 +164,7 @@ export class PrintSettingComponent implements OnInit {
   savePrintSet() {
 
     // 必須入力チェック
-    if (this.compressionRateFormControl.invalid) {
+    if (this.imageCompressionRateFormControl.invalid) {
       this.isInput = true;
 
       return;
@@ -135,6 +181,36 @@ export class PrintSettingComponent implements OnInit {
       },
       error => {
       });
+  }
+
+
+  /**
+   *  onChangeSlideToggleDnnGenImage
+   *
+   *  DNN+現画像スライドトグルのON/OFFを変更する
+   *  
+   *
+   *  @return {void}
+   */
+  onChangeSlideToggleDnnGenImage(event: MatSlideToggleChange) {
+
+    this.isSlideToggleDnnGenImage = event.checked;
+
+  }
+
+
+  /**
+   *  onChangeSlideToggleDnnOnly
+   *
+   *  DNNのみ現画像スライドトグルのON/OFFを変更する
+   *  
+   *
+   *  @return {void}
+   */
+  onChangeSlideToggleDnnOnly(event: MatSlideToggleChange) {
+
+    this.isSlideToggleDnnOnly = event.checked;
+
   }
 
 
@@ -217,6 +293,10 @@ export class PrintSettingComponent implements OnInit {
 
     const selectedTunnel = this.tunnelService.selectedTunnel;
 
+    var cadAndImage = this.isSlideToggleCad ? this.isCheckCad : false;
+
+    var pdfAndImage = this.isSlideTogglePdf ? this.isCheckPdf : false;
+
     var printSetInfo: PrintSetModel = {
       customerId: selectedTunnel.customerId,
       ankenId: selectedTunnel.ankenId,
@@ -224,10 +304,10 @@ export class PrintSettingComponent implements OnInit {
       dnnAndGenImage: this.isSlideToggleDnnGenImage,
       dnnOnlyGenImage: this.isSlideToggleDnnOnly,
       cad: this.isSlideToggleCad,
-      cadAndImage: this.isCheckCad,
+      cadAndImage: cadAndImage,
       pdf: this.isSlideTogglePdf,
-      pdfAndImage: this.isCheckPdf,
-      imageCompressionRatio: this.compressionRateFormControl.value,
+      pdfAndImage: pdfAndImage,
+      imageCompressionRatio: this.imageCompressionRateFormControl.value,
       
     };
 

@@ -35,7 +35,7 @@ namespace keisoku.Controllers
         /// <returns>出力設定情報</returns>
         /// 
         [HttpGet("{customerId}/{ankenId}/{tunnelId}")]
-        public IActionResult Get([FromRoute] int customerId, int ankenId, int tunnelId)
+        public async Task<IActionResult> Get([FromRoute] int customerId, int ankenId, int tunnelId)
         {
             if (!ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace keisoku.Controllers
             }
 
 
-            return Ok(printSets);
+            return Ok(await printSets.SingleOrDefaultAsync());
         }
 
         /// <summary>

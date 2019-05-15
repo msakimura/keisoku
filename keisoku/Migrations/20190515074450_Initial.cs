@@ -12,22 +12,6 @@ namespace keisoku.Migrations
                 name: "keisoku");
 
             migrationBuilder.CreateTable(
-                name: "AiKaisekiCads",
-                schema: "keisoku",
-                columns: table => new
-                {
-                    AiKaisekiCadId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CadData = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AiKaisekiCads", x => x.AiKaisekiCadId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 schema: "keisoku",
                 columns: table => new
@@ -119,6 +103,21 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InitialSettings",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    InitialSetBunruiId = table.Column<string>(nullable: false),
+                    InitialValue = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InitialSettings", x => x.InitialSetBunruiId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Kengens",
                 schema: "keisoku",
                 columns: table => new
@@ -151,22 +150,6 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PreviewImages",
-                schema: "keisoku",
-                columns: table => new
-                {
-                    PreviewImageId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PreviewImageData = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PreviewImages", x => x.PreviewImageId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SeikahinImages",
                 schema: "keisoku",
                 columns: table => new
@@ -189,13 +172,30 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SelectItems",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    SelectItemBunruiId = table.Column<string>(nullable: false),
+                    SelectItemId = table.Column<int>(nullable: false),
+                    SelectItemName = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SelectItems", x => new { x.SelectItemBunruiId, x.SelectItemId });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tankas",
                 schema: "keisoku",
                 columns: table => new
                 {
                     TankaId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Tanka = table.Column<string>(nullable: true),
+                    Tanka = table.Column<int>(nullable: false),
+                    MmPix = table.Column<decimal>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
@@ -376,54 +376,20 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ImageAiKaisekis",
-                schema: "keisoku",
-                columns: table => new
-                {
-                    SeikahinImageId = table.Column<int>(nullable: false),
-                    AiKaisekiCadId = table.Column<int>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImageAiKaisekis", x => new { x.SeikahinImageId, x.AiKaisekiCadId });
-                    table.ForeignKey(
-                        name: "FK_ImageAiKaisekis_AiKaisekiCads_AiKaisekiCadId",
-                        column: x => x.AiKaisekiCadId,
-                        principalSchema: "keisoku",
-                        principalTable: "AiKaisekiCads",
-                        principalColumn: "AiKaisekiCadId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ImageAiKaisekis_SeikahinImages_SeikahinImageId",
-                        column: x => x.SeikahinImageId,
-                        principalSchema: "keisoku",
-                        principalTable: "SeikahinImages",
-                        principalColumn: "SeikahinImageId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Previews",
                 schema: "keisoku",
                 columns: table => new
                 {
                     SeikahinImageId = table.Column<int>(nullable: false),
-                    PreviewImageId = table.Column<int>(nullable: false),
+                    PreviewImageName = table.Column<string>(nullable: true),
+                    PreviewImageData = table.Column<string>(nullable: true),
+                    BlobContainerName = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Previews", x => new { x.SeikahinImageId, x.PreviewImageId });
-                    table.ForeignKey(
-                        name: "FK_Previews_PreviewImages_PreviewImageId",
-                        column: x => x.PreviewImageId,
-                        principalSchema: "keisoku",
-                        principalTable: "PreviewImages",
-                        principalColumn: "PreviewImageId",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Previews", x => x.SeikahinImageId);
                     table.ForeignKey(
                         name: "FK_Previews_SeikahinImages_SeikahinImageId",
                         column: x => x.SeikahinImageId,
@@ -440,7 +406,8 @@ namespace keisoku.Migrations
                 {
                     CustomerId = table.Column<int>(nullable: false),
                     AnkenId = table.Column<int>(nullable: false),
-                    Riyoubi = table.Column<DateTime>(nullable: false),
+                    Year = table.Column<int>(nullable: false),
+                    Month = table.Column<int>(nullable: false),
                     TunnelNumber = table.Column<int>(nullable: false),
                     SouEnchou = table.Column<int>(nullable: false),
                     TankaId = table.Column<int>(nullable: false),
@@ -449,7 +416,7 @@ namespace keisoku.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AiRiyouJoukyous", x => new { x.CustomerId, x.AnkenId, x.Riyoubi });
+                    table.PrimaryKey("PK_AiRiyouJoukyous", x => new { x.CustomerId, x.AnkenId, x.Year, x.Month });
                     table.ForeignKey(
                         name: "FK_AiRiyouJoukyous_Tankas_TankaId",
                         column: x => x.TankaId,
@@ -459,6 +426,62 @@ namespace keisoku.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AiRiyouJoukyous_Ankens_CustomerId_AnkenId",
+                        columns: x => new { x.CustomerId, x.AnkenId },
+                        principalSchema: "keisoku",
+                        principalTable: "Ankens",
+                        principalColumns: new[] { "CustomerId", "AnkenId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CadSets",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    CadSetId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CadVersion = table.Column<int>(nullable: false),
+                    CadPdfPrintPaperSize = table.Column<int>(nullable: false),
+                    PrintLayoutTopSpace = table.Column<decimal>(nullable: false),
+                    PrintLayoutBottomSpace = table.Column<decimal>(nullable: false),
+                    SpanMojiSize = table.Column<decimal>(nullable: false),
+                    SpanMojiPosition = table.Column<int>(nullable: false),
+                    SpanMojiDirection = table.Column<int>(nullable: false),
+                    CadUnit = table.Column<int>(nullable: false),
+                    ImageCreateOrder = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CadSets", x => new { x.CustomerId, x.AnkenId, x.CadSetId });
+                    table.ForeignKey(
+                        name: "FK_CadSets_Ankens_CustomerId_AnkenId",
+                        columns: x => new { x.CustomerId, x.AnkenId },
+                        principalSchema: "keisoku",
+                        principalTable: "Ankens",
+                        principalColumns: new[] { "CustomerId", "AnkenId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "KoukaisakiCustomers",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    KoukaisakiCustomerId = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KoukaisakiCustomers", x => new { x.CustomerId, x.AnkenId, x.KoukaisakiCustomerId });
+                    table.ForeignKey(
+                        name: "FK_KoukaisakiCustomers_Ankens_CustomerId_AnkenId",
                         columns: x => new { x.CustomerId, x.AnkenId },
                         principalSchema: "keisoku",
                         principalTable: "Ankens",
@@ -526,23 +549,23 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CadInputInfos",
+                name: "AiKaisekis",
                 schema: "keisoku",
                 columns: table => new
                 {
                     CustomerId = table.Column<int>(nullable: false),
                     AnkenId = table.Column<int>(nullable: false),
                     TunnelId = table.Column<int>(nullable: false),
-                    CadInputInfoId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AiKaisekiCadId = table.Column<int>(nullable: false),
+                    AiKaisekiPdfId = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CadInputInfos", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.CadInputInfoId });
+                    table.PrimaryKey("PK_AiKaisekis", x => new { x.CustomerId, x.AnkenId, x.TunnelId });
                     table.ForeignKey(
-                        name: "FK_CadInputInfos_Tunnels_CustomerId_AnkenId_TunnelId",
+                        name: "FK_AiKaisekis_Tunnels_CustomerId_AnkenId_TunnelId",
                         columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
                         principalSchema: "keisoku",
                         principalTable: "Tunnels",
@@ -592,6 +615,129 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FileShares",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    TunnelId = table.Column<int>(nullable: false),
+                    FileShareId = table.Column<int>(nullable: false),
+                    FileName = table.Column<string>(nullable: true),
+                    FileData = table.Column<string>(nullable: true),
+                    BlobContainerName = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileShares", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.FileShareId });
+                    table.ForeignKey(
+                        name: "FK_FileShares_Tunnels_CustomerId_AnkenId_TunnelId",
+                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "Tunnels",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HibiwareShoriSets",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    TunnelId = table.Column<int>(nullable: false),
+                    ShortLineRemove = table.Column<double>(nullable: false),
+                    KaikouhabaMojiSize = table.Column<decimal>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HibiwareShoriSets", x => new { x.CustomerId, x.AnkenId, x.TunnelId });
+                    table.ForeignKey(
+                        name: "FK_HibiwareShoriSets_Tunnels_CustomerId_AnkenId_TunnelId",
+                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "Tunnels",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ImageOrderSets",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    TunnelId = table.Column<int>(nullable: false),
+                    ImageOrderSetId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SeikahinImageId = table.Column<int>(nullable: false),
+                    WidthOrHeight = table.Column<int>(nullable: false),
+                    Length = table.Column<decimal>(nullable: false),
+                    KitenKirotei = table.Column<decimal>(nullable: false),
+                    SpanMoji = table.Column<string>(nullable: true),
+                    ImageAlignPosition = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageOrderSets", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.ImageOrderSetId });
+                    table.ForeignKey(
+                        name: "FK_ImageOrderSets_SeikahinImages_SeikahinImageId",
+                        column: x => x.SeikahinImageId,
+                        principalSchema: "keisoku",
+                        principalTable: "SeikahinImages",
+                        principalColumn: "SeikahinImageId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ImageOrderSets_Tunnels_CustomerId_AnkenId_TunnelId",
+                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "Tunnels",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Kakins",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    TunnelId = table.Column<int>(nullable: false),
+                    TunnelNumber = table.Column<int>(nullable: false),
+                    SouEnchou = table.Column<int>(nullable: false),
+                    TankaId = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Kakins", x => new { x.CustomerId, x.AnkenId, x.TunnelId });
+                    table.ForeignKey(
+                        name: "FK_Kakins_Tankas_TankaId",
+                        column: x => x.TankaId,
+                        principalSchema: "keisoku",
+                        principalTable: "Tankas",
+                        principalColumn: "TankaId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Kakins_Tunnels_CustomerId_AnkenId_TunnelId",
+                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "Tunnels",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "KanseiCads",
                 schema: "keisoku",
                 columns: table => new
@@ -599,15 +745,17 @@ namespace keisoku.Migrations
                     CustomerId = table.Column<int>(nullable: false),
                     AnkenId = table.Column<int>(nullable: false),
                     TunnelId = table.Column<int>(nullable: false),
-                    KanseiCadId = table.Column<int>(nullable: false)
+                    EditCadId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CadName = table.Column<string>(nullable: true),
                     CadData = table.Column<string>(nullable: true),
+                    BlobContainerName = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KanseiCads", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.KanseiCadId });
+                    table.PrimaryKey("PK_KanseiCads", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.EditCadId });
                     table.ForeignKey(
                         name: "FK_KanseiCads_Tunnels_CustomerId_AnkenId_TunnelId",
                         columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
@@ -618,27 +766,51 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prints",
+                name: "OtameshiKinous",
                 schema: "keisoku",
                 columns: table => new
                 {
                     CustomerId = table.Column<int>(nullable: false),
                     AnkenId = table.Column<int>(nullable: false),
                     TunnelId = table.Column<int>(nullable: false),
-                    PrintId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    YoushiSize = table.Column<int>(nullable: false),
-                    SpanNumber = table.Column<int>(nullable: false),
-                    ShukushakuRitsu = table.Column<int>(nullable: false),
-                    PrintDataKubun = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Prints", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.PrintId });
+                    table.PrimaryKey("PK_OtameshiKinous", x => new { x.CustomerId, x.AnkenId, x.TunnelId });
                     table.ForeignKey(
-                        name: "FK_Prints_Tunnels_CustomerId_AnkenId_TunnelId",
+                        name: "FK_OtameshiKinous_Tunnels_CustomerId_AnkenId_TunnelId",
+                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "Tunnels",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PrintSets",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    TunnelId = table.Column<int>(nullable: false),
+                    DnnAndGenImage = table.Column<bool>(nullable: false),
+                    DnnOnlyGenImage = table.Column<bool>(nullable: false),
+                    Cad = table.Column<bool>(nullable: false),
+                    CadAndImage = table.Column<bool>(nullable: false),
+                    Pdf = table.Column<bool>(nullable: false),
+                    PdfAndImage = table.Column<bool>(nullable: false),
+                    ImageCompressionRatio = table.Column<decimal>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PrintSets", x => new { x.CustomerId, x.AnkenId, x.TunnelId });
+                    table.ForeignKey(
+                        name: "FK_PrintSets_Tunnels_CustomerId_AnkenId_TunnelId",
                         columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
                         principalSchema: "keisoku",
                         principalTable: "Tunnels",
@@ -680,6 +852,86 @@ namespace keisoku.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AiKaisekiCads",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    AiKaisekiCadId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CadName = table.Column<string>(nullable: true),
+                    CadData = table.Column<string>(nullable: true),
+                    BlobContainerName = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
+                    AiKaisekiCustomerId = table.Column<int>(nullable: true),
+                    AiKaisekiAnkenId = table.Column<int>(nullable: true),
+                    AiKaisekiTunnelId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AiKaisekiCads", x => x.AiKaisekiCadId);
+                    table.ForeignKey(
+                        name: "FK_AiKaisekiCads_AiKaisekis_AiKaisekiCustomerId_AiKaisekiAnkenId_AiKaisekiTunnelId",
+                        columns: x => new { x.AiKaisekiCustomerId, x.AiKaisekiAnkenId, x.AiKaisekiTunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "AiKaisekis",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AiKaisekiPdfs",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    AiKaisekiPdfId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    PdfName = table.Column<string>(nullable: true),
+                    PdfData = table.Column<string>(nullable: true),
+                    BlobContainerName = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
+                    AiKaisekiCustomerId = table.Column<int>(nullable: true),
+                    AiKaisekiAnkenId = table.Column<int>(nullable: true),
+                    AiKaisekiTunnelId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AiKaisekiPdfs", x => x.AiKaisekiPdfId);
+                    table.ForeignKey(
+                        name: "FK_AiKaisekiPdfs_AiKaisekis_AiKaisekiCustomerId_AiKaisekiAnkenId_AiKaisekiTunnelId",
+                        columns: x => new { x.AiKaisekiCustomerId, x.AiKaisekiAnkenId, x.AiKaisekiTunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "AiKaisekis",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OtameshiPreviews",
+                schema: "keisoku",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false),
+                    AnkenId = table.Column<int>(nullable: false),
+                    TunnelId = table.Column<int>(nullable: false),
+                    SeikahinImageId = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OtameshiPreviews", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.SeikahinImageId });
+                    table.ForeignKey(
+                        name: "FK_OtameshiPreviews_OtameshiKinous_CustomerId_AnkenId_TunnelId",
+                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "OtameshiKinous",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TunnelImages",
                 schema: "keisoku",
                 columns: table => new
@@ -691,7 +943,10 @@ namespace keisoku.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     SeikahinImageId = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
+                    OtameshiKinouModelAnkenId = table.Column<int>(nullable: true),
+                    OtameshiKinouModelCustomerId = table.Column<int>(nullable: true),
+                    OtameshiKinouModelTunnelId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -710,32 +965,26 @@ namespace keisoku.Migrations
                         principalTable: "Tunnels",
                         principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TunnelImages_OtameshiKinous_OtameshiKinouModelCustomerId_OtameshiKinouModelAnkenId_OtameshiKinouModelTunnelId",
+                        columns: x => new { x.OtameshiKinouModelCustomerId, x.OtameshiKinouModelAnkenId, x.OtameshiKinouModelTunnelId },
+                        principalSchema: "keisoku",
+                        principalTable: "OtameshiKinous",
+                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
+                        onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "WebInputInfos",
+            migrationBuilder.CreateIndex(
+                name: "IX_AiKaisekiCads_AiKaisekiCustomerId_AiKaisekiAnkenId_AiKaisekiTunnelId",
                 schema: "keisoku",
-                columns: table => new
-                {
-                    CustomerId = table.Column<int>(nullable: false),
-                    AnkenId = table.Column<int>(nullable: false),
-                    TunnelId = table.Column<int>(nullable: false),
-                    WebInputInfoId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WebInputInfos", x => new { x.CustomerId, x.AnkenId, x.TunnelId, x.WebInputInfoId });
-                    table.ForeignKey(
-                        name: "FK_WebInputInfos_Tunnels_CustomerId_AnkenId_TunnelId",
-                        columns: x => new { x.CustomerId, x.AnkenId, x.TunnelId },
-                        principalSchema: "keisoku",
-                        principalTable: "Tunnels",
-                        principalColumns: new[] { "CustomerId", "AnkenId", "TunnelId" },
-                        onDelete: ReferentialAction.Cascade);
-                });
+                table: "AiKaisekiCads",
+                columns: new[] { "AiKaisekiCustomerId", "AiKaisekiAnkenId", "AiKaisekiTunnelId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AiKaisekiPdfs_AiKaisekiCustomerId_AiKaisekiAnkenId_AiKaisekiTunnelId",
+                schema: "keisoku",
+                table: "AiKaisekiPdfs",
+                columns: new[] { "AiKaisekiCustomerId", "AiKaisekiAnkenId", "AiKaisekiTunnelId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AiRiyouJoukyous_TankaId",
@@ -802,22 +1051,22 @@ namespace keisoku.Migrations
                 column: "KinsetsuTenkenPhotoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ImageAiKaisekis_AiKaisekiCadId",
+                name: "IX_ImageOrderSets_SeikahinImageId",
                 schema: "keisoku",
-                table: "ImageAiKaisekis",
-                column: "AiKaisekiCadId");
+                table: "ImageOrderSets",
+                column: "SeikahinImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Kakins_TankaId",
+                schema: "keisoku",
+                table: "Kakins",
+                column: "TankaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_KengenFuyos_KengenId",
                 schema: "keisoku",
                 table: "KengenFuyos",
                 column: "KengenId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Previews_PreviewImageId",
-                schema: "keisoku",
-                table: "Previews",
-                column: "PreviewImageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Summaries_CsvId",
@@ -830,10 +1079,24 @@ namespace keisoku.Migrations
                 schema: "keisoku",
                 table: "TunnelImages",
                 column: "SeikahinImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TunnelImages_OtameshiKinouModelCustomerId_OtameshiKinouModelAnkenId_OtameshiKinouModelTunnelId",
+                schema: "keisoku",
+                table: "TunnelImages",
+                columns: new[] { "OtameshiKinouModelCustomerId", "OtameshiKinouModelAnkenId", "OtameshiKinouModelTunnelId" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AiKaisekiCads",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "AiKaisekiPdfs",
+                schema: "keisoku");
+
             migrationBuilder.DropTable(
                 name: "AiRiyouJoukyous",
                 schema: "keisoku");
@@ -859,7 +1122,7 @@ namespace keisoku.Migrations
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
-                name: "CadInputInfos",
+                name: "CadSets",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
@@ -867,7 +1130,23 @@ namespace keisoku.Migrations
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
-                name: "ImageAiKaisekis",
+                name: "FileShares",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "HibiwareShoriSets",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "ImageOrderSets",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "InitialSettings",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "Kakins",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
@@ -879,11 +1158,23 @@ namespace keisoku.Migrations
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
+                name: "KoukaisakiCustomers",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "OtameshiPreviews",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
                 name: "Previews",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
-                name: "Prints",
+                name: "PrintSets",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "SelectItems",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
@@ -895,11 +1186,7 @@ namespace keisoku.Migrations
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
-                name: "WebInputInfos",
-                schema: "keisoku");
-
-            migrationBuilder.DropTable(
-                name: "Tankas",
+                name: "AiKaisekis",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
@@ -919,7 +1206,7 @@ namespace keisoku.Migrations
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
-                name: "AiKaisekiCads",
+                name: "Tankas",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
@@ -931,15 +1218,15 @@ namespace keisoku.Migrations
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
-                name: "PreviewImages",
-                schema: "keisoku");
-
-            migrationBuilder.DropTable(
                 name: "Csvs",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(
                 name: "SeikahinImages",
+                schema: "keisoku");
+
+            migrationBuilder.DropTable(
+                name: "OtameshiKinous",
                 schema: "keisoku");
 
             migrationBuilder.DropTable(

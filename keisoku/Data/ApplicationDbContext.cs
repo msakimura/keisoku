@@ -408,7 +408,9 @@ namespace keisoku.Data
 
             builder.Entity<CadSetModel>(i =>
             {
-                i.HasKey(j => new { j.CustomerId, j.AnkenId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.CadSetId });
+
+                i.Property(j => j.CadSetId).ValueGeneratedOnAdd();
 
                 i.HasOne(j => j.Anken).WithMany(k => k.CadSets).OnDelete(DeleteBehavior.Cascade);
 

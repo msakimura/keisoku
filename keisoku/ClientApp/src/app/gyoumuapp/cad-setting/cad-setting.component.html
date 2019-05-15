@@ -92,7 +92,7 @@
       <mat-hint>スパン文字の位置</mat-hint>
 
       <div>
-        <mat-button-toggle-group [value]="spanMojiPositionSelected" #group="matButtonToggleGroup" (change)="onChangeSpanMojiPosition(group.value)">
+        <mat-button-toggle-group [value]="spanMojiPositionSelected" #groupSpanMojiPosition="matButtonToggleGroup" (change)="onChangeSpanMojiPosition(groupSpanMojiPosition.value)">
           <mat-button-toggle value="1" matTooltip="左揃え"><mat-icon>format_align_left</mat-icon></mat-button-toggle>
           <mat-button-toggle value="2" matTooltip="中央揃え"><mat-icon>format_align_center</mat-icon></mat-button-toggle>
           <mat-button-toggle value="3" matTooltip="右揃え"><mat-icon>format_align_right</mat-icon></mat-button-toggle>
@@ -104,7 +104,7 @@
       <mat-hint>スパン文字の向き</mat-hint>
 
       <div>
-        <mat-button-toggle-group [value]="spanMojiDirectionSelected" #group="matButtonToggleGroup" (change)="onChangeSpanMojiDirection(group.value)">
+        <mat-button-toggle-group [value]="spanMojiDirectionSelected" #groupSpanMojiDirection="matButtonToggleGroup" (change)="onChangeSpanMojiDirection(groupSpanMojiDirection.value)">
           <mat-button-toggle value="1" matTooltip="横向き"><mat-icon>text_rotation_none</mat-icon></mat-button-toggle>
           <mat-button-toggle value="2" matTooltip="縦向き"><mat-icon>text_rotate_vertical</mat-icon></mat-button-toggle>
         </mat-button-toggle-group>
@@ -115,7 +115,7 @@
       <mat-hint>CADはm単位かmm単位か</mat-hint>
 
       <div>
-        <mat-button-toggle-group [value]="cadUnitSelected" #group="matButtonToggleGroup" (change)="onChangeCadUnit(group.value)">
+        <mat-button-toggle-group [value]="cadUnitSelected" #groupCadUnit="matButtonToggleGroup" (change)="onChangeCadUnit(groupCadUnit.value)">
           <mat-button-toggle value="1" matTooltip="m単位">m</mat-button-toggle>
           <mat-button-toggle value="2" matTooltip="mm単位">mm</mat-button-toggle>
         </mat-button-toggle-group>
@@ -126,7 +126,7 @@
       <mat-hint>画像作成並び(左から・右から)</mat-hint>
 
       <div>
-        <mat-button-toggle-group [value]="imageCreateOrderSelected" #group="matButtonToggleGroup" (change)="onChangeImageCreateOrder(group.value)">
+        <mat-button-toggle-group [value]="imageCreateOrderSelected" #groupImageCreateOrder="matButtonToggleGroup" (change)="onChangeImageCreateOrder(groupImageCreateOrder.value)">
           <mat-button-toggle value="1" matTooltip="左から"><mat-icon>format_textdirection_l_to_r</mat-icon></mat-button-toggle>
           <mat-button-toggle value="2" matTooltip="右から"><mat-icon>format_textdirection_r_to_l</mat-icon></mat-button-toggle>
         </mat-button-toggle-group>

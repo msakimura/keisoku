@@ -11,6 +11,7 @@ namespace keisoku.Models
 
         public int AnkenId { get; set; }
 
+        public int CadSetId { get; set; }
         public int CadVersion { get; set; }
 
         public int CadPdfPrintPaperSize { get; set; }

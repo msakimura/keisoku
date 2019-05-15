@@ -318,9 +318,9 @@ namespace keisoku.Migrations
 
                     b.Property<int>("AnkenId");
 
-                    b.Property<int>("AnkenCustomerId");
-
-                    b.Property<int>("AnkenId1");
+                    b.Property<int>("CadSetId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CadPdfPrintPaperSize");
 
@@ -344,9 +344,7 @@ namespace keisoku.Migrations
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("CustomerId", "AnkenId");
-
-                    b.HasIndex("AnkenCustomerId", "AnkenId1");
+                    b.HasKey("CustomerId", "AnkenId", "CadSetId");
 
                     b.ToTable("CadSets");
                 });
@@ -1011,7 +1009,7 @@ namespace keisoku.Migrations
                 {
                     b.HasOne("keisoku.Models.AnkenModel", "Anken")
                         .WithMany("CadSets")
-                        .HasForeignKey("AnkenCustomerId", "AnkenId1")
+                        .HasForeignKey("CustomerId", "AnkenId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

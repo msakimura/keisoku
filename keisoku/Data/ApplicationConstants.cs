@@ -16,14 +16,14 @@ namespace keisoku.Data
 
         public static readonly string SELECT_ID_CAD_VERSION = "CadVersion";
 
-        public static readonly string SELECT_ID_CAD_PDF_PAPER_SIZE = "CadPdfPaperSize";
+        public static readonly string SELECT_ID_CAD_PDF_PRINT_PAPER_SIZE = "CadPdfPrintPaperSize";
 
         public static readonly string SELECT_ID_VERTICAL_ALIGN = "VerticalAlign";
 
 
         public static readonly string[] SELECT_VALUE_CAD_VERSIONS = new string[9] { "2018", "2013", "2010", "2007", "2004", "2000", "R14", "R13", "R12" };
 
-        public static readonly string[] SELECT_VALUE_CAD_PDF_PAPER_SIZES = new string[2] { "A4", "A3" };
+        public static readonly string[] SELECT_VALUE_CAD_PDF_PRINT_PAPER_SIZES = new string[2] { "A4", "A3" };
 
         public static readonly string[] SELECT_VALUE_VERTICAL_ALIGN = new string[4] { "上端揃え", "中央揃え", "下端揃え", "マニュアル" };
 

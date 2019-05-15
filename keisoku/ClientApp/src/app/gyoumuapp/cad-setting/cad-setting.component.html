@@ -24,17 +24,97 @@
     </mat-error>
   </mat-form-field>
 
-
   <mat-form-field>
-    <mat-select placeholder="CAD・PDF印刷用紙サイズ" [formControl]="cadPdfPaperSizeFormControl" required>
-      <mat-option *ngFor="let cadPdfPaperSize of cadPdfPaperSizes" [value]="cadPdfPaperSize.selectItemId">
-        {{cadPdfPaperSize.selectItemName}}
+    <mat-select placeholder="CAD・PDF印刷用紙サイズ" [formControl]="cadPdfPrintPaperSizeFormControl" required>
+      <mat-option *ngFor="let cadPdfPrintPaperSize of cadPdfPrintPaperSizes" [value]="cadPdfPrintPaperSize.selectItemId">
+        {{cadPdfPrintPaperSize.selectItemName}}
       </mat-option>
     </mat-select>
 
-    <mat-error *ngIf="cadPdfPaperSizeFormControl.hasError('required')">
-      {{hissuCadPdfPaperSizeMessage}}
+    <mat-error *ngIf="cadPdfPrintPaperSizeFormControl.hasError('required')">
+      {{hissuCadPdfPrintPaperSizeMessage}}
     </mat-error>
   </mat-form-field>
 
+  <mat-form-field>
+    <input matInput type="number" placeholder="印刷レイアウト上余白(m)" [formControl]="printLayoutTopSpaceFormControl" required>
+
+    <mat-error *ngIf="printLayoutTopSpaceFormControl.hasError('required')">
+      {{hissuPrintLayoutTopSpaceMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="printLayoutTopSpaceFormControl.hasError('max')">
+      {{maxPrintLayoutTopSpaceMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="printLayoutTopSpaceFormControl.hasError('min')">
+      {{minPrintLayoutTopSpaceMessage}}
+    </mat-error>
+
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="印刷レイアウト下余白(m)" [formControl]="printLayoutBottomSpaceFormControl" required>
+
+    <mat-error *ngIf="printLayoutBottomSpaceFormControl.hasError('required')">
+      {{hissuPrintLayoutBottomSpaceMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="printLayoutBottomSpaceFormControl.hasError('max')">
+      {{maxPrintLayoutBottomSpaceMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="printLayoutBottomSpaceFormControl.hasError('min')">
+      {{minPrintLayoutBottomSpaceMessage}}
+    </mat-error>
+
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="スパン文字の大きさ" [formControl]="spanMojiSizeFormControl" required>
+
+    <mat-error *ngIf="spanMojiSizeFormControl.hasError('required')">
+      {{hissuSpanMojiSizeMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="spanMojiSizeFormControl.hasError('max')">
+      {{maxSpanMojiSizeMessage}}
+    </mat-error>
+
+    <mat-error *ngIf="spanMojiSizeFormControl.hasError('isOverZero')">
+      {{minSpanMojiSizeMessage}}
+    </mat-error>
+
+  </mat-form-field>
+
+
+  <p class="custom_label">スパン文字の位置</p>
+
+  <div>
+    <mat-button-toggle-group [value]="spanMojiPositionSelected" #group="matButtonToggleGroup" (change)="onChangeSpanMojiPosition(group.value)">
+      <mat-button-toggle value="1"><mat-icon>format_align_left</mat-icon></mat-button-toggle>
+      <mat-button-toggle value="2"><mat-icon>format_align_center</mat-icon></mat-button-toggle>
+      <mat-button-toggle value="3"><mat-icon>format_align_right</mat-icon></mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+
+  <p class="custom_label">スパン文字の向き</p>
+
+  <div>
+    <mat-button-toggle-group [value]="spanMojiDirectionSelected" #group="matButtonToggleGroup" (change)="onChangeSpanMojiDirection(group.value)">
+      <mat-button-toggle value="1"><mat-icon>text_rotation_none</mat-icon></mat-button-toggle>
+      <mat-button-toggle value="2"><mat-icon>text_rotate_vertical</mat-icon></mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+
+  <p class="custom_label">CADはm単位かmm単位か</p>
+
+  <div>
+    <mat-button-toggle-group [value]="cadUnitSelected" #group="matButtonToggleGroup" (change)="onChangeCadUnit(group.value)">
+      <mat-button-toggle value="1">m</mat-button-toggle>
+      <mat-button-toggle value="2">mm</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 </div>

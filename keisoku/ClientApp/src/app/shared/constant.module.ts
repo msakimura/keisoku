@@ -27,7 +27,10 @@ export class InputMessage {
   public static readonly HISSU_SPAN_MOJI = 'スパン文字は必須です';
   public static readonly HISSU_COMPRESSION_RATE = '画像圧縮率は必須です';
   public static readonly HISSU_CAD_VERSION = 'CADバージョンは必須です';
-  public static readonly HISSU_CAD_PDF_PAPER_SIZE = 'CAD・PDF印刷用紙サイズは必須です';
+  public static readonly HISSU_CAD_PDF_PRINT_PAPER_SIZE = 'CAD・PDF印刷用紙サイズは必須です';
+  public static readonly HISSU_PRINT_LAYOUT_TOP_SPACE = '印刷レイアウト上余白(m)は必須です';
+  public static readonly HISSU_PRINT_LAYOUT_BOTTOM_SPACE = '印刷レイアウト下余白(m)は必須です';
+  public static readonly HISSU_SPAN_MOJI_SIZE = 'スパン文字の大きさは必須です';
   public static readonly NUMERIC = '数値を入力してください';
   public static readonly MAX_DECIMAL = '7.9228 x 10^28以下の数値を入力してください';
   public static readonly MAX_DOUBLE = '1.7 x 10^308以下の数値を入力してください';
@@ -101,7 +104,7 @@ export class MaxValue {
 
 export class SelectItemBunruiId {
   public static readonly CAD_VERSION = "CadVersion";
-  public static readonly CAD_PDF_PAPER_SIZE = "CadPdfPaperSize";
+  public static readonly CAD_PDF_PRINT_PAPER_SIZE = "CadPdfPrintPaperSize";
   public static readonly VERTICAL_ALIGN = "VerticalAlign";
 }
 

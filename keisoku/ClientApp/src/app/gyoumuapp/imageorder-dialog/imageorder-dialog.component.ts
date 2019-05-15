@@ -68,7 +68,8 @@ export class ImageorderDialogComponent implements OnInit {
    *  onChangeImageAlignPos
    *
    *  画像揃え位置を変更した場合、imageAlignSelectedをvalueで更新する
-   *  
+   *
+   *  @param  {boolean}    value
    *
    *  @return {void}
    */

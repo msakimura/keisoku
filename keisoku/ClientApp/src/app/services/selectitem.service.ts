@@ -113,17 +113,17 @@ export class SelectitemService {
 
 
   /**
-   *  getCadPdfPaperSizeSelectItem
+   *  getCadPdfPrintPaperSizeSelectItem
    *
    *  CAD・PDF印刷用紙サイズの選択項目を取得する
    *
    *
    *  @return {SelectItemModel[]} 選択項目
    */
-  getCadPdfPaperSizeSelectItem(): SelectItemModel[] {
+  getCadPdfPrintPaperSizeSelectItem(): SelectItemModel[] {
 
     return this.selectItems.filter(function (element) {
-      return element.selectItemBunruiId === SelectItemBunruiId.CAD_PDF_PAPER_SIZE;
+      return element.selectItemBunruiId === SelectItemBunruiId.CAD_PDF_PRINT_PAPER_SIZE;
     });
 
   }

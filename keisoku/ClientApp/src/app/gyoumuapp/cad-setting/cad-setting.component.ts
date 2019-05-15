@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material';
-import { InputMessage } from 'src/app/shared/constant.module';
+import { InputMessage, MaxValue } from 'src/app/shared/constant.module';
 import { SelectItemModel, SelectitemService } from 'src/app/services/selectitem.service';
 import { FormControl, Validators } from '@angular/forms';
+import { ValidationModule } from 'src/app/shared/validation.module';
 
 @Component({
   selector: 'app-cad-setting',
@@ -15,17 +16,48 @@ export class CadSettingComponent implements OnInit {
 
   hissuCadVersionMessage = InputMessage.HISSU_CAD_VERSION;
 
-  hissuCadPdfPaperSizeMessage = InputMessage.HISSU_CAD_PDF_PAPER_SIZE;
+  hissuCadPdfPaperSizeMessage = InputMessage.HISSU_CAD_PDF_PRINT_PAPER_SIZE;
+
+  hissuPrintLayoutTopSpaceMessage = InputMessage.HISSU_PRINT_LAYOUT_TOP_SPACE;
+
+  hissuPrintLayoutBottomSpaceMessage = InputMessage.HISSU_PRINT_LAYOUT_BOTTOM_SPACE;
+
+  hissuSpanMojiSizeMessage = InputMessage.HISSU_SPAN_MOJI_SIZE;
+
+  maxPrintLayoutTopSpaceMessage = InputMessage.MAX_DECIMAL;
+
+  minPrintLayoutTopSpaceMessage = InputMessage.MIN_ZERO;
+
+  maxPrintLayoutBottomSpaceMessage = InputMessage.MAX_DECIMAL;
+
+  minPrintLayoutBottomSpaceMessage = InputMessage.MIN_ZERO;
+
+  maxSpanMojiSizeMessage = InputMessage.MAX_DECIMAL;
+
+  minSpanMojiSizeMessage = InputMessage.MIN_OVER_ZERO;
 
 
   cadVersionFormControl = new FormControl('', [Validators.required]);
 
-  cadPdfPaperSizeFormControl = new FormControl('', [Validators.required]);
+  cadPdfPrintPaperSizeFormControl = new FormControl('', [Validators.required]);
+
+  printLayoutTopSpaceFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL), Validators.min(0)]);
+
+  printLayoutBottomSpaceFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL), Validators.min(0)]);
+
+  spanMojiSizeFormControl = new FormControl('', [Validators.required, Validators.max(MaxValue.DECIMAL), ValidationModule.isOverZero]);
+
+
+  spanMojiPositionSelected: string;
+
+  spanMojiDirectionSelected: string;
+
+  cadUnitSelected: string;
 
 
   cadVersions: SelectItemModel[];
 
-  cadPdfPaperSizes: SelectItemModel[];
+  cadPdfPrintPaperSizes: SelectItemModel[];
 
 
   @Input('childToSidenav') sideNav: MatSidenav;
@@ -49,7 +81,13 @@ export class CadSettingComponent implements OnInit {
 
     this.bindCadVersions();
 
-    this.bindCadPdfPaperSizes();
+    this.bindCadPdfPrintPaperSizes();
+
+    this.spanMojiPositionSelected = '1';
+
+    this.spanMojiDirectionSelected = '1';
+
+    this.cadUnitSelected = '1';
   }
 
 
@@ -66,11 +104,23 @@ export class CadSettingComponent implements OnInit {
 
     this.cadVersions = [];
 
-    this.cadPdfPaperSizes = [];
+    this.cadPdfPrintPaperSizes = [];
 
     this.cadVersionFormControl.reset();
 
-    this.cadPdfPaperSizeFormControl.reset();
+    this.cadPdfPrintPaperSizeFormControl.reset();
+
+    this.printLayoutTopSpaceFormControl.reset();
+
+    this.printLayoutBottomSpaceFormControl.reset();
+
+    this.spanMojiSizeFormControl.reset();
+
+    this.spanMojiPositionSelected = '';
+
+    this.spanMojiDirectionSelected = '';
+
+    this.cadUnitSelected = '';
   }
 
 
@@ -78,7 +128,7 @@ export class CadSettingComponent implements OnInit {
   /**
    *  bindCadVersions
    *
-   *  CADバージョンコンボのcadVersionsに、選択項目テーブルのCadVersionキーに該当するデータをバインドする
+   *  CADバージョンのcadVersionsに、選択項目テーブルのCadVersionキーに該当するデータをバインドする
    *  
    *  
    *  @return {void}
@@ -90,13 +140,13 @@ export class CadSettingComponent implements OnInit {
   /**
    *  bindCadPdfPaperSizes
    *
-   *  CADバージョンコンボのcadPdfPrintPaperSizesに、選択項目テーブルのCadPdfPaperSizeキーに該当するデータをバインドする
+   *  CAD・PDF印刷用紙サイズのcadPdfPrintPaperSizesに、選択項目テーブルのCadPdfPaperSizeキーに該当するデータをバインドする
    *  
    *  
    *  @return {void}
    */
-  bindCadPdfPaperSizes() {
-    this.cadPdfPaperSizes = this.selectitemService.getCadPdfPaperSizeSelectItem();
+  bindCadPdfPrintPaperSizes() {
+    this.cadPdfPrintPaperSizes = this.selectitemService.getCadPdfPrintPaperSizeSelectItem();
   }
 
 
@@ -115,4 +165,51 @@ export class CadSettingComponent implements OnInit {
 
   saveCadSet() {}
 
+
+  /**
+   *  onChangeSpanMojiPosition
+   *
+   *  スパン文字の位置を変更した場合、spanMojiPositionSelectedをvalueで更新する
+   *
+   *  @param  {boolean}    value
+   *
+   *  @return {void}
+   */
+  onChangeSpanMojiPosition(value) {
+
+    this.spanMojiPositionSelected = value;
+
+  }
+
+
+   /**
+   *  onChangeSpanMojiDirection
+   *
+   *  スパン文字の向きを変更した場合、spanMojiDirectionSelectedをvalueで更新する
+   *
+   *  @param  {boolean}    value
+   *
+   *  @return {void}
+   */
+  onChangeSpanMojiDirection(value) {
+
+    this.spanMojiDirectionSelected = value;
+
+  }
+
+
+  /**
+  *  onChangeCadUnit
+  *
+  *  CADはm単位かmm単位かを変更した場合、cadUnitSelectedをvalueで更新する
+  *
+  *  @param  {boolean}    value
+  *
+  *  @return {void}
+  */
+  onChangeCadUnit(value) {
+
+    this.cadUnitSelected = value;
+
+  }
 }

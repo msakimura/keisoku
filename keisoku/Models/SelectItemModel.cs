@@ -51,14 +51,14 @@ namespace keisoku.Models
                     );
                 }
 
-                for (int i = 0; i < ApplicationConstants.SELECT_VALUE_CAD_PDF_PAPER_SIZES.Length; i++)
+                for (int i = 0; i < ApplicationConstants.SELECT_VALUE_CAD_PDF_PRINT_PAPER_SIZES.Length; i++)
                 {
                     context.SelectItems.AddRange(
                         new SelectItemModel
                         {
-                            SelectItemBunruiId = ApplicationConstants.SELECT_ID_CAD_PDF_PAPER_SIZE,
+                            SelectItemBunruiId = ApplicationConstants.SELECT_ID_CAD_PDF_PRINT_PAPER_SIZE,
                             SelectItemId = i + 1,
-                            SelectItemName = ApplicationConstants.SELECT_VALUE_CAD_PDF_PAPER_SIZES[i],
+                            SelectItemName = ApplicationConstants.SELECT_VALUE_CAD_PDF_PRINT_PAPER_SIZES[i],
                             CreatedAt = DateTime.Now,
                             UpdatedAt = DateTime.Now
                         }

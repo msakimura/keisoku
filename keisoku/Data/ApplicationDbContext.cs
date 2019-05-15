@@ -70,7 +70,7 @@ namespace keisoku.Data
 
         public DbSet<FileShareModel> FileShares { get; set; }
 
-        //public DbSet<CadSetModel> CadSets { get; set; }
+        public DbSet<CadSetModel> CadSets { get; set; }
 
         /// <summary>
         /// OnModelCreating
@@ -140,7 +140,7 @@ namespace keisoku.Data
 
                 i.HasMany(j => j.KoukaisakiCustomers).WithOne(k => k.Anken).OnDelete(DeleteBehavior.Cascade).HasPrincipalKey(l => new { l.CustomerId, l.AnkenId });
 
-                //i.HasMany(j => j.CadSets).WithOne(k => k.Anken).OnDelete(DeleteBehavior.Cascade).HasPrincipalKey(l => new { l.CustomerId, l.AnkenId });
+                i.HasMany(j => j.CadSets).WithOne(k => k.Anken).OnDelete(DeleteBehavior.Cascade).HasPrincipalKey(l => new { l.CustomerId, l.AnkenId });
 
             });
 
@@ -406,13 +406,13 @@ namespace keisoku.Data
 
             });
 
-            //builder.Entity<CadSetModel>(i =>
-            //{
-            //    i.HasKey(j => new { j.CustomerId, j.AnkenId });
+            builder.Entity<CadSetModel>(i =>
+            {
+                i.HasKey(j => new { j.CustomerId, j.AnkenId });
 
-            //    i.HasOne(j => j.Anken).WithMany(k => k.CadSets).OnDelete(DeleteBehavior.Cascade);
+                i.HasOne(j => j.Anken).WithMany(k => k.CadSets).OnDelete(DeleteBehavior.Cascade);
 
-            //});
+            });
 
             base.OnModelCreating(builder);
         }

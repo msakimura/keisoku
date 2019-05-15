@@ -354,7 +354,7 @@ namespace keisoku.Data
 
             builder.Entity<KoukaisakiCustomerModel>(i =>
             {
-                i.HasKey(j => new { j.KoukaisakiCustomerId, j.KoukaisakiAnkenId, j.CustomerId });
+                i.HasKey(j => new { j.CustomerId, j.AnkenId, j.KoukaisakiCustomerId });
 
                 i.HasOne(j => j.Anken).WithMany(k => k.KoukaisakiCustomers).OnDelete(DeleteBehavior.Cascade);
 

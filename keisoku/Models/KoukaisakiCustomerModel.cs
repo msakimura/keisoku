@@ -7,12 +7,13 @@ namespace keisoku.Models
 {
     public class KoukaisakiCustomerModel
     {
-        public int KoukaisakiCustomerId { get; set; }
-
-        public int KoukaisakiAnkenId { get; set; }
 
         public int CustomerId { get; set; }
-        
+
+        public int AnkenId { get; set; }
+
+        public int KoukaisakiCustomerId { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }

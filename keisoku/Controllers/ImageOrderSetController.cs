@@ -47,6 +47,7 @@ namespace keisoku.Controllers
             var query = from imageOrderSet in imageOrderSets
                         join seikahinImage in seikahinImages
                         on imageOrderSet.SeikahinImageId equals seikahinImage.SeikahinImageId
+                        where imageOrderSet.CustomerId == customerId && imageOrderSet.AnkenId == ankenId && imageOrderSet.TunnelId == tunnelId
                         select new
                         {
                             imageOrderSet,

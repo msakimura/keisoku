@@ -5,6 +5,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { ValidationModule } from 'src/app/shared/validation.module';
 import { TunnelService } from 'src/app/services/tunnel.service';
 import { PrintSettingService, PrintSetModel } from 'src/app/services/print-setting.service';
+import { InitialSettingService } from 'src/app/services/initial-setting.service';
 
 @Component({
   selector: 'app-print-setting',
@@ -49,7 +50,8 @@ export class PrintSettingComponent implements OnInit {
 
 
   constructor(private tunnelService: TunnelService,
-    private printSettingService: PrintSettingService) { }
+    private printSettingService: PrintSettingService,
+    private initialSettingService: InitialSettingService) { }
 
   ngOnInit() {
   }
@@ -64,6 +66,8 @@ export class PrintSettingComponent implements OnInit {
    *  @return {void}
    */
   initialize() {
+    this.initImageCompressionRate();
+
     this.bindPrintSetting();
   }
 
@@ -96,6 +100,26 @@ export class PrintSettingComponent implements OnInit {
 
     this.imageCompressionRateFormControl.reset();
     
+  }
+
+
+  /**
+   *  initImageCompressionRate
+   *
+   *  画像圧縮率を初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initImageCompressionRate() {
+
+    var model = this.initialSettingService.getImageCompressionRateInitialSetting();
+
+    if (model.length === 1) {
+
+      this.imageCompressionRateFormControl.setValue(model[0].initialValue);
+
+    }
   }
 
 

@@ -139,4 +139,106 @@ export class InitialSettingService {
     });
 
   }
+
+
+  /**
+   *  getShortLineRemoveInitialSetting
+   *
+   *  単線削除の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getShortLineRemoveInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.SHORT_LINE_REMOVE;
+    });
+
+  }
+
+
+  /**
+   *  getKaikouhabaMojiSizeInitialSetting
+   *
+   *  開口幅文字サイズの初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getKaikouhabaMojiSizeInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.KAIKOUHABA_MOJI_SIZE;
+    });
+
+  }
+
+
+  /**
+   *  getImageCompressionRateInitialSetting
+   *
+   *  画像圧縮率の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getImageCompressionRateInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.IMAGE_COMPRESSION_RATIO;
+    });
+
+  }
+
+
+  /**
+   *  getPrintLayoutTopSpaceInitialSetting
+   *
+   *  印刷レイアウト上余白の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getPrintLayoutTopSpaceInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.PRINT_LAYOUT_TOP_SPACE;
+    });
+
+  }
+
+
+  /**
+   *  getPrintLayoutBottompSpaceInitialSetting
+   *
+   *  印刷レイアウト下余白の初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getPrintLayoutBottompSpaceInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.PRINT_LAYOUT_BOTTOM_SPACE;
+    });
+
+  }
+
+
+  /**
+   *  getSpanMojiSizeInitialSetting
+   *
+   *  スパン文字の大きさの初期設定情報を取得する
+   *  
+   *
+   *  @return {InitialSettingModel[]} 初期値
+   */
+  getSpanMojiSizeInitialSetting(): InitialSettingModel[] {
+
+    return this.initialSettings.filter(function (element) {
+      return element.initialSetBunruiId === InitialSetBunruiId.SPAN_MOJI_SIZE;
+    });
+
+  }
 }

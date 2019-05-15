@@ -4,6 +4,10 @@ import { InputMessage, MaxValue } from 'src/app/shared/constant.module';
 import { SelectItemModel, SelectitemService } from 'src/app/services/selectitem.service';
 import { FormControl, Validators } from '@angular/forms';
 import { ValidationModule } from 'src/app/shared/validation.module';
+import { CadSetModel, CadSettingService } from 'src/app/services/cad-setting.service';
+import { TunnelService } from 'src/app/services/tunnel.service';
+import { InitialSettingService } from 'src/app/services/initial-setting.service';
+import { AnkenService } from 'src/app/services/anken.service';
 
 @Component({
   selector: 'app-cad-setting',
@@ -13,6 +17,8 @@ import { ValidationModule } from 'src/app/shared/validation.module';
 export class CadSettingComponent implements OnInit {
   isInput: boolean = false;
 
+
+  hissuMessage = InputMessage.HISUU;
 
   hissuCadVersionMessage = InputMessage.HISSU_CAD_VERSION;
 
@@ -54,6 +60,8 @@ export class CadSettingComponent implements OnInit {
 
   cadUnitSelected: string;
 
+  imageCreateOrderSelected: string;
+
 
   cadVersions: SelectItemModel[];
 
@@ -62,7 +70,10 @@ export class CadSettingComponent implements OnInit {
 
   @Input('childToSidenav') sideNav: MatSidenav;
 
-  constructor(private selectitemService: SelectitemService) { }
+  constructor(private selectitemService: SelectitemService,
+    private ankenService: AnkenService,
+    private cadSettingService: CadSettingService,
+    private initialSettingService: InitialSettingService) { }
 
   ngOnInit() {
   }
@@ -79,6 +90,12 @@ export class CadSettingComponent implements OnInit {
    */
   initialize() {
 
+    this.initPrintLayoutTopSpace();
+
+    this.initPrintLayoutBottomSpace();
+
+    this.initSpanMojiSizeSpace();
+
     this.bindCadVersions();
 
     this.bindCadPdfPrintPaperSizes();
@@ -88,6 +105,11 @@ export class CadSettingComponent implements OnInit {
     this.spanMojiDirectionSelected = '1';
 
     this.cadUnitSelected = '1';
+
+    this.imageCreateOrderSelected = '1';
+
+
+    this.bindCadSetting();
   }
 
 
@@ -121,9 +143,112 @@ export class CadSettingComponent implements OnInit {
     this.spanMojiDirectionSelected = '';
 
     this.cadUnitSelected = '';
+
+    this.imageCreateOrderSelected = '';
   }
 
 
+  /**
+   *  initPrintLayoutTopSpace
+   *
+   *  印刷レイアウト上余白を初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initPrintLayoutTopSpace() {
+
+    var model = this.initialSettingService.getPrintLayoutTopSpaceInitialSetting();
+
+    if (model.length === 1) {
+
+      this.printLayoutTopSpaceFormControl.setValue(model[0].initialValue);
+
+    }
+  }
+
+
+  /**
+   *  initPrintLayoutBottomSpace
+   *
+   *  印刷レイアウト下余白を初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initPrintLayoutBottomSpace() {
+
+    var model = this.initialSettingService.getPrintLayoutBottompSpaceInitialSetting();
+
+    if (model.length === 1) {
+
+      this.printLayoutBottomSpaceFormControl.setValue(model[0].initialValue);
+
+    }
+  }
+
+
+
+  /**
+   *  initSpanMojiSizeSpace
+   *
+   *  スパン文字の大きさを初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initSpanMojiSizeSpace() {
+
+    var model = this.initialSettingService.getSpanMojiSizeInitialSetting();
+
+    if (model.length === 1) {
+
+      this.spanMojiSizeFormControl.setValue(model[0].initialValue);
+
+    }
+  }
+
+
+  /**
+   *  bindCadSetting
+   *
+   *  customerId、ankenIdに紐付くCAD設定情報をバインドする
+   *  
+   *  
+   *  @return {void}
+   */
+  bindCadSetting() {
+    const selectedAnken = this.ankenService.selectedAnken;
+
+    this.cadSettingService.getCadSet(selectedAnken.customerId, selectedAnken.ankenId)
+      .subscribe((response: any) => {
+
+        var cadSetModel = this.cadSettingService.convertCadSetModel(response);
+
+        this.cadVersionFormControl.setValue(cadSetModel.cadVersion);
+
+        this.cadPdfPrintPaperSizeFormControl.setValue(cadSetModel.cadPdfPrintPaperSize);
+
+        this.printLayoutTopSpaceFormControl.setValue(cadSetModel.printLayoutTopSpace);
+
+        this.printLayoutBottomSpaceFormControl.setValue(cadSetModel.printLayoutBottomSpace);
+
+        this.spanMojiSizeFormControl.setValue(cadSetModel.spanMojiSize);
+
+        this.spanMojiPositionSelected = cadSetModel.spanMojiPosition.toString();
+
+        this.spanMojiDirectionSelected = cadSetModel.spanMojiDirection.toString();
+
+        this.cadUnitSelected = cadSetModel.cadUnit.toString();
+
+        this.imageCreateOrderSelected = cadSetModel.imageCreateOrder.toString();
+
+      },
+        error => {
+
+        });
+
+  }
 
   /**
    *  bindCadVersions
@@ -163,7 +288,40 @@ export class CadSettingComponent implements OnInit {
   }
 
 
-  saveCadSet() {}
+  /**
+   *  saveCadSet
+   *
+   *  入力したCAD設定情報をDBに保存する
+   *  
+   *
+   *  @return {void}
+   */
+  saveCadSet() {
+
+    // 必須入力チェック
+    if (this.cadVersionFormControl.invalid ||
+      this.cadPdfPrintPaperSizeFormControl.invalid ||
+      this.printLayoutTopSpaceFormControl.invalid ||
+      this.printLayoutBottomSpaceFormControl.invalid ||
+      this.spanMojiSizeFormControl.invalid) {
+
+      this.isInput = true;
+
+      return;
+    }
+
+    // CAD設定情報をDBに追加
+    var cadSetInfo = this.getInputCadSetModel();
+
+    this.cadSettingService.insertCadSet(cadSetInfo)
+      .subscribe((response: any) => {
+
+        this.sideNav.close();
+
+      },
+        error => {
+        });
+  }
 
 
   /**
@@ -211,5 +369,51 @@ export class CadSettingComponent implements OnInit {
 
     this.cadUnitSelected = value;
 
+  }
+
+
+  /**
+  *  onChangeImageCreateOrder
+  *
+  *  画像作成並び(左から・右から)を変更した場合、imageCreateOrderSelectedをvalueで更新する
+  *
+  *  @param  {boolean}    value
+  *
+  *  @return {void}
+  */
+  onChangeImageCreateOrder(value) {
+
+    this.imageCreateOrderSelected = value;
+
+  }
+
+
+  /**
+   *  getInputCadSetModel
+   *
+   *  入力項目のCAD設定情報を取得する
+   *  
+   *
+   *  @return {CadSetModel} CAD設定情報
+   */
+  getInputCadSetModel(): CadSetModel {
+
+    const selectedAnken = this.ankenService.selectedAnken;
+
+    var cadSetInfo: CadSetModel = {
+      customerId: selectedAnken.customerId,
+      ankenId: selectedAnken.ankenId,
+      cadVersion: this.cadVersionFormControl.value,
+      cadPdfPrintPaperSize: this.cadPdfPrintPaperSizeFormControl.value,
+      printLayoutTopSpace: this.printLayoutTopSpaceFormControl.value,
+      printLayoutBottomSpace: this.printLayoutBottomSpaceFormControl.value,
+      spanMojiSize: this.spanMojiSizeFormControl.value,
+      spanMojiPosition: Number(this.spanMojiPositionSelected),
+      spanMojiDirection: Number(this.spanMojiDirectionSelected),
+      cadUnit: Number(this.cadUnitSelected),
+      imageCreateOrder: Number(this.imageCreateOrderSelected)
+    };
+
+    return cadSetInfo;
   }
 }

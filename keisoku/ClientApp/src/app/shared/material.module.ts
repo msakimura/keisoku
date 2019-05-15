@@ -20,7 +20,8 @@ import {
   MatMenuModule,
   MatProgressBarModule,
   MatButtonToggleModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatTooltipModule
 } from "@angular/material";
 
 import { MatSortModule } from '@angular/material/sort';
@@ -47,7 +48,8 @@ const MAT_MODULES = [
   MatSortModule,
   MatProgressBarModule,
   MatButtonToggleModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatTooltipModule
 ];
 
 @NgModule({

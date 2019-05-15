@@ -18,14 +18,14 @@
 
     </mat-form-field>
 
-    <p class="custom_label">画像揃え位置</p>
+    <mat-hint>画像揃え位置</mat-hint>
 
     <div>
       <mat-button-toggle-group [value]="imageAlignSelected" #group="matButtonToggleGroup" (change)="onChangeImageAlignPos(group.value)">
-        <mat-button-toggle value="1"><mat-icon>vertical_align_top</mat-icon></mat-button-toggle>
-        <mat-button-toggle value="2"><mat-icon>vertical_align_center</mat-icon></mat-button-toggle>
-        <mat-button-toggle value="3"><mat-icon>vertical_align_bottom</mat-icon></mat-button-toggle>
-        <mat-button-toggle value="4">マニュアル</mat-button-toggle>
+        <mat-button-toggle value="1" matTooltip="上端揃え"><mat-icon>vertical_align_top</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="2" matTooltip="中央揃え"><mat-icon>vertical_align_center</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="3" matTooltip="下端揃え"><mat-icon>vertical_align_bottom</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="4" matTooltip="マニュアル">マニュアル</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
 

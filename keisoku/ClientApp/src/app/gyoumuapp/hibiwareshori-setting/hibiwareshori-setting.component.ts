@@ -5,6 +5,7 @@ import { MatSidenav } from '@angular/material';
 import { HibiwareshoriSettingService, HibiwareShoriSetModel } from 'src/app/services/hibiwareshori-setting.service';
 import { TunnelService } from 'src/app/services/tunnel.service';
 import { ValidationModule } from 'src/app/shared/validation.module';
+import { InitialSettingService } from 'src/app/services/initial-setting.service';
 
 @Component({
   selector: 'app-hibiwareshori-setting',
@@ -40,7 +41,8 @@ export class HibiwareshoriSettingComponent implements OnInit {
 
 
   constructor(private hibiwareshoriSettingService: HibiwareshoriSettingService,
-    private tunnelService: TunnelService) { }
+    private tunnelService: TunnelService,
+    private initialSettingService: InitialSettingService) { }
 
   ngOnInit() {
 
@@ -56,6 +58,11 @@ export class HibiwareshoriSettingComponent implements OnInit {
    *  @return {void}
    */
   initialize() {
+
+    this.initShortLineRemove();
+
+    this.initKaikouhabaMojiSizeRemove();
+
     this.bindHibiwareshoriSetting();
   }
 
@@ -75,6 +82,47 @@ export class HibiwareshoriSettingComponent implements OnInit {
 
     this.kaikouhabaMojiSizeFormControl.reset();
   }
+
+
+  /**
+   *  initShortLineRemove
+   *
+   *  単線削除を初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initShortLineRemove() {
+
+    var model = this.initialSettingService.getShortLineRemoveInitialSetting();
+
+    if (model.length === 1) {
+
+      this.shortLineRemoveFormControl.setValue(model[0].initialValue);
+
+    }
+  }
+
+  
+  /**
+   *  initKaikouhabaMojiSizeRemove
+   *
+   *  開口幅文字サイズを初期設定する
+   *  
+   *  
+   *  @return {void}
+   */
+  initKaikouhabaMojiSizeRemove() {
+
+    var model = this.initialSettingService.getKaikouhabaMojiSizeInitialSetting();
+
+    if (model.length === 1) {
+
+      this.kaikouhabaMojiSizeFormControl.setValue(model[0].initialValue);
+
+    }
+  }
+
 
   /**
    *  bindHibiwareshoriSetting

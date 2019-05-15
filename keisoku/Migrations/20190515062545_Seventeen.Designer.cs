@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using keisoku.Data;
 
 namespace keisoku.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190515062545_Seventeen")]
+    partial class Seventeen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,6 +314,45 @@ namespace keisoku.Migrations
                     b.ToTable("Ankens");
                 });
 
+            modelBuilder.Entity("keisoku.Models.CadSetModel", b =>
+                {
+                    b.Property<int>("CustomerId");
+
+                    b.Property<int>("AnkenId");
+
+                    b.Property<int>("AnkenCustomerId");
+
+                    b.Property<int>("AnkenId1");
+
+                    b.Property<int>("CadPdfPrintPaperSize");
+
+                    b.Property<int>("CadUnit");
+
+                    b.Property<int>("CadVersion");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<int>("ImageCreateOrder");
+
+                    b.Property<decimal>("PrintLayoutBottomSpace");
+
+                    b.Property<decimal>("PrintLayoutTopSpace");
+
+                    b.Property<int>("SpanMojiDirection");
+
+                    b.Property<int>("SpanMojiPosition");
+
+                    b.Property<decimal>("SpanMojiSize");
+
+                    b.Property<DateTime>("UpdatedAt");
+
+                    b.HasKey("CustomerId", "AnkenId");
+
+                    b.HasIndex("AnkenCustomerId", "AnkenId1");
+
+                    b.ToTable("CadSets");
+                });
+
             modelBuilder.Entity("keisoku.Models.CsvModel", b =>
                 {
                     b.Property<int>("CsvId")
@@ -606,17 +647,15 @@ namespace keisoku.Migrations
 
                     b.Property<int>("CustomerId");
 
-                    b.Property<int?>("AnkenCustomerId");
-
-                    b.Property<int?>("AnkenId");
+                    b.Property<int>("AnkenId");
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("KoukaisakiCustomerId", "KoukaisakiAnkenId", "CustomerId");
+                    b.HasKey("KoukaisakiCustomerId", "KoukaisakiAnkenId", "CustomerId", "AnkenId");
 
-                    b.HasIndex("AnkenCustomerId", "AnkenId");
+                    b.HasIndex("CustomerId", "AnkenId");
 
                     b.ToTable("KoukaisakiCustomers");
                 });
@@ -974,6 +1013,14 @@ namespace keisoku.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("keisoku.Models.CadSetModel", b =>
+                {
+                    b.HasOne("keisoku.Models.AnkenModel", "Anken")
+                        .WithMany("CadSets")
+                        .HasForeignKey("AnkenCustomerId", "AnkenId1")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("keisoku.Models.DaichouModel", b =>
                 {
                     b.HasOne("keisoku.Models.ExcelDaichouModel", "ExcelDaichou")
@@ -1059,7 +1106,7 @@ namespace keisoku.Migrations
                 {
                     b.HasOne("keisoku.Models.AnkenModel", "Anken")
                         .WithMany("KoukaisakiCustomers")
-                        .HasForeignKey("AnkenCustomerId", "AnkenId")
+                        .HasForeignKey("CustomerId", "AnkenId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

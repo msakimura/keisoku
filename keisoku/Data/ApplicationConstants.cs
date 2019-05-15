@@ -29,13 +29,13 @@ namespace keisoku.Data
 
 
         public static readonly string[,] INITIAL_SETTINGS = new string[14, 2] {
-            { "TashukuRemove", "0.4" },
+            { "ShortLineRemove", "0.4" },
             { "KaikouhabaMojiSize", "" },
             { "WidthOrHeight", "1" },
             { "LengthM", "" },
             { "ImageAlignPosition", "2" },
-            { "PrintLayoutTop"," 0.3" },
-            { "PrintLayoutBottom", "1.7" },
+            { "PrintLayoutTopSpace","0.3" },
+            { "PrintLayoutBottomSpace", "1.7" },
             { "SpanMojiSize", "1.0" },
             { "SpanMojiPosition", "2" },
             { "SpanMojiDirection", "1" },

@@ -12,8 +12,6 @@ namespace keisoku.Models
         public int KoukaisakiAnkenId { get; set; }
 
         public int CustomerId { get; set; }
-
-        public int AnkenId { get; set; }
         
         public DateTime CreatedAt { get; set; }
 

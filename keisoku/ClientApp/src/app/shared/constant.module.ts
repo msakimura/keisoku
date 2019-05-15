@@ -110,13 +110,13 @@ export class SelectItemBunruiId {
 
 
 export class InitialSetBunruiId {
-  public static readonly TANSHUKU_REMOVE = "TashukuRemove";
+  public static readonly SHORT_LINE_REMOVE = "ShortLineRemove";
   public static readonly KAIKOUHABA_MOJI_SIZE = "KaikouhabaMojiSize";
   public static readonly WIDTH_OR_HEIGHT = "WidthOrHeight";
   public static readonly LENGTH_M = "LengthM";
   public static readonly IMAGE_ALIGN_POSITION = "ImageAlignPosition";
-  public static readonly PRINT_LAYOUT_TOP = "PrintLayoutTop";
-  public static readonly PRINT_LAYOUT_BOTTOM = "PrintLayoutBottom";
+  public static readonly PRINT_LAYOUT_TOP_SPACE = "PrintLayoutTopSpace";
+  public static readonly PRINT_LAYOUT_BOTTOM_SPACE = "PrintLayoutBottomSpace";
   public static readonly SPAN_MOJI_SIZE = "SpanMojiSize";
   public static readonly SPAN_MOJI_POSITION = "SpanMojiPosition";
   public static readonly CAD_UNIT = "CadUnit";

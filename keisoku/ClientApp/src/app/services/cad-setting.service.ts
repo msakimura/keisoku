@@ -4,15 +4,15 @@ import { HttpClient } from '@angular/common/http';
 export interface CadSetModel {
   customerId: number;
   ankenId: number;
-  cadVersion: string;
-  cadPdfPrintPaperSize: string;
-  PrintLayoutTopSpace: number;
-  PrintLayoutBottomSpace: number;
-  SpanMojiSize: number;
-  SpanMojiPosition: number;
-  SpanMojiDirection: number;
-  CadUnit: number;
-  ImageCreateOrder: number;
+  cadVersion: number;
+  cadPdfPrintPaperSize: number;
+  printLayoutTopSpace: number;
+  printLayoutBottomSpace: number;
+  spanMojiSize: number;
+  spanMojiPosition: number;
+  spanMojiDirection: number;
+  cadUnit: number;
+  imageCreateOrder: number;
 }
 
 @Injectable({
@@ -36,7 +36,7 @@ export class CadSettingService {
    *  
    *  @return {Observable<Object>} フェッチ
    */
-  getPrintSet(customerId: number, ankenId: number) {
+  getCadSet(customerId: number, ankenId: number) {
     return this.http.get(this.routeUrl + '/' + customerId + '/' + ankenId);
   }
 
@@ -74,13 +74,13 @@ export class CadSettingService {
       ankenId: cadSet.ankenId,
       cadVersion: cadSet.cadVersion,
       cadPdfPrintPaperSize: cadSet.cadPdfPrintPaperSize,
-      PrintLayoutTopSpace: cadSet.PrintLayoutTopSpace,
-      PrintLayoutBottomSpace: cadSet.PrintLayoutBottomSpace,
-      SpanMojiSize: cadSet.SpanMojiSize,
-      SpanMojiPosition: cadSet.SpanMojiPosition,
-      SpanMojiDirection: cadSet.SpanMojiDirection,
-      CadUnit: cadSet.CadUnit,
-      ImageCreateOrder: cadSet.ImageCreateOrder
+      printLayoutTopSpace: cadSet.printLayoutTopSpace,
+      printLayoutBottomSpace: cadSet.printLayoutBottomSpace,
+      spanMojiSize: cadSet.spanMojiSize,
+      spanMojiPosition: cadSet.spanMojiPosition,
+      spanMojiDirection: cadSet.spanMojiDirection,
+      cadUnit: cadSet.cadUnit,
+      imageCreateOrder: cadSet.imageCreateOrder
     };
 
 

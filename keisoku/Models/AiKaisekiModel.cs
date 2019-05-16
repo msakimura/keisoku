@@ -26,9 +26,9 @@ namespace keisoku.Models
 
         public TunnelModel Tunnel { get; set; }
 
-        public ICollection<AiKaisekiCadModel> AiKaisekiCads { get; set; }
+        public AiKaisekiCadModel AiKaisekiCad { get; set; }
 
-        public ICollection<AiKaisekiPdfModel> AiKaisekiPdfs { get; set; }
+        public AiKaisekiPdfModel AiKaisekiPdf { get; set; }
 
 
         /// <summary>
@@ -53,10 +53,7 @@ namespace keisoku.Models
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 };
-
-                var aiKaisekiCads = new List<AiKaisekiCadModel>();
-                aiKaisekiCads.Add(aiKaisekiCad);
-
+                
 
                 var aiKaisekiPdf = new AiKaisekiPdfModel
                 {
@@ -64,10 +61,7 @@ namespace keisoku.Models
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 };
-
-                var aiKaisekiPdfs = new List<AiKaisekiPdfModel>();
-                aiKaisekiPdfs.Add(aiKaisekiPdf);
-
+                
 
                 context.AiKaisekis.AddRange(
                         new AiKaisekiModel
@@ -79,8 +73,8 @@ namespace keisoku.Models
                             AiKaisekiPdfId = 1,
                             CreatedAt = DateTime.Now,
                             UpdatedAt = DateTime.Now,
-                            AiKaisekiCads = aiKaisekiCads,
-                            AiKaisekiPdfs = aiKaisekiPdfs
+                            AiKaisekiCad = aiKaisekiCad,
+                            AiKaisekiPdf = aiKaisekiPdf
                         }
                     );
                 

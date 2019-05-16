@@ -224,14 +224,14 @@ namespace keisoku.Data
             {
                 i.HasKey(j => new { j.AiKaisekiCadId });
 
-                i.HasOne(j => j.AiKaiseki).WithMany(k => k.AiKaisekiCads).OnDelete(DeleteBehavior.Cascade);
+                i.HasMany(j => j.AiKaisekis).WithOne(k => k.AiKaisekiCad).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.AiKaisekiCadId);
             });
 
             builder.Entity<AiKaisekiPdfModel>(i =>
             {
                 i.HasKey(j => new { j.AiKaisekiPdfId });
 
-                i.HasOne(j => j.AiKaiseki).WithMany(k => k.AiKaisekiPdfs).OnDelete(DeleteBehavior.Cascade);
+                i.HasMany(j => j.AiKaisekis).WithOne(k => k.AiKaisekiPdf).OnDelete(DeleteBehavior.Cascade).HasForeignKey(l => l.AiKaisekiPdfId);
             });
 
             builder.Entity<AiRiyouJoukyouModel>(i =>
@@ -395,6 +395,10 @@ namespace keisoku.Data
                 i.HasKey(j => new { j.CustomerId, j.AnkenId, j.TunnelId });
 
                 i.HasOne(j => j.Tunnel).WithMany(k => k.AiKaisekis).OnDelete(DeleteBehavior.Cascade);
+
+                i.HasOne(j => j.AiKaisekiCad).WithMany(k => k.AiKaisekis).OnDelete(DeleteBehavior.Cascade);
+
+                i.HasOne(j => j.AiKaisekiPdf).WithMany(k => k.AiKaisekis).OnDelete(DeleteBehavior.Cascade);
 
             });
 

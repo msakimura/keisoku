@@ -19,7 +19,7 @@ namespace keisoku.Models
 
         public DateTime UpdatedAt { get; set; }
 
-        public AiKaisekiModel AiKaiseki { get; set; }
+        public ICollection<AiKaisekiModel> AiKaisekis { get; set; }
 
     }
 }

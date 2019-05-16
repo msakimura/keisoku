@@ -50,6 +50,20 @@ namespace keisoku.Controllers
 
             DbSet<TunnelImageModel> tunnelImages = _context.TunnelImages;
             DbSet<SeikahinImageModel> seikahinImages = _context.SeikahinImages;
+            DbSet<PreviewModel> previews = _context.Previews;
+
+            //var query = from tunnelImage in tunnelImages
+            //            join seikahinImage in seikahinImages
+            //            on tunnelImage.SeikahinImageId equals seikahinImage.SeikahinImageId
+            //            join preview in previews
+            //            on seikahinImage.SeikahinImageId equals preview.SeikahinImageId
+            //            where tunnelImage.CustomerId == customerId && tunnelImage.AnkenId == ankenId && tunnelImage.TunnelId == tunnelId
+            //            select new
+            //            {
+            //                tunnelImage,
+            //                seikahinImage,
+            //                preview
+            //            };
 
             var query =
                 tunnelImages.Join(

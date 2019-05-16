@@ -7,8 +7,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using keisoku.Data;
+using keisoku.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -19,7 +21,14 @@ namespace keisoku.Controllers
     [ApiController]
     public class DownloadController : ControllerBase
     {
+        private ApplicationDbContext _context;
 
+        public DownloadController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        
         [HttpGet("{filename}")]
         public async Task<FileContentResult> Download(string filename)
         {

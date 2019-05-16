@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 export interface DownloadModel {
   id: number;
@@ -12,5 +13,26 @@ export interface DownloadModel {
 })
 export class DownloadService {
 
-  constructor() { }
+  public downloadModel: DownloadModel[] = new Array();
+
+  private routeUrl: string = 'api/download';
+
+  constructor(private http: HttpClient) { }
+
+
+  /**
+   *  getDownload
+   *
+   *  customerId、ankenId、tunnelIdに一致するダウンロード情報をDBより取得する
+   *
+   *  @param  {number}    customerId
+   *  @param  {number}    ankenId
+   *  @param  {number}    tunnelId
+   *
+   *  @return {Observable<Object>} フェッチ
+   */
+  getDownload(customerId: number, ankenId: number, tunnelId: number) {
+    return this.http.get(this.routeUrl + '/' + customerId + '/' + ankenId + '/' + tunnelId);
+  }
+
 }

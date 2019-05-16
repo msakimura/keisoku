@@ -23,6 +23,7 @@ import { ImageorderDialogComponent } from './imageorder-dialog/imageorder-dialog
 import { PrintSettingComponent } from './print-setting/print-setting.component';
 import { CadSettingComponent } from './cad-setting/cad-setting.component';
 import { TunnelKanriComponent } from './tunnel-kanri/tunnel-kanri.component';
+import { DownloadComponent } from './download/download.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { TunnelKanriComponent } from './tunnel-kanri/tunnel-kanri.component';
     ImageorderDialogComponent,
     PrintSettingComponent,
     CadSettingComponent,
-    TunnelKanriComponent
+    TunnelKanriComponent,
+    DownloadComponent
   ],
 
   imports: [

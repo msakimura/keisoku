@@ -18,6 +18,7 @@ import { SessionService } from 'src/app/services/session.service';
 import { ImageorderSettingComponent } from '../imageorder-setting/imageorder-setting.component';
 import { HibiwareshoriSettingComponent } from '../hibiwareshori-setting/hibiwareshori-setting.component';
 import { PrintSettingComponent } from '../print-setting/print-setting.component';
+import { DownloadComponent } from '../download/download.component';
 
 
 @Component({
@@ -41,13 +42,13 @@ export class TunnelComponent implements OnInit {
 
   isSideNavPrintSet: boolean = false;
 
+  isSideNavDownload: boolean = false;
+
 
   isDeleteDisabled: boolean = true;
 
   isUploadDisabled: boolean = true;
-
-  isDownloadDisabled: boolean = true;
-
+  
   isDaichouDisabled: boolean = true;
 
   isPrintDisabled: boolean = true;
@@ -60,9 +61,7 @@ export class TunnelComponent implements OnInit {
   deleteIconColor = 'diabled';
 
   uploadIconColor = 'disabled';
-
-  downloadIconColor = 'disabled';
-
+  
   daichouIconColor = 'disabled';
 
   printIconColor = 'disabled';
@@ -111,6 +110,8 @@ export class TunnelComponent implements OnInit {
   @ViewChild(HibiwareshoriSettingComponent) hibiwareshoriSettingComponent: HibiwareshoriSettingComponent;
 
   @ViewChild(PrintSettingComponent) printSettingComponent: PrintSettingComponent;
+
+  @ViewChild(DownloadComponent) downloadComponent: DownloadComponent;
 
 
   constructor(private router: Router,
@@ -598,6 +599,24 @@ export class TunnelComponent implements OnInit {
 
 
   /**
+   *  displaySideNavDownload
+   *
+   *  ダウンロードのサイドナビを表示する
+   *  
+   *
+   *  @return {void}
+   */
+  displaySideNavDownload() {
+
+    this.clearSidenavFlag();
+
+    this.isSideNavDownload = true;
+
+    this.sideNav.open();
+  }
+
+
+  /**
    *  clearSideNavFormData
    *
    *  sideNavのフォームデータをクリアする
@@ -660,22 +679,7 @@ export class TunnelComponent implements OnInit {
 
     this.uploadIconColor = disabled ? 'diabled' : 'primary';
   }
-
-  /**
-   *  switchDisabledDownloadButton
-   *
-   *  ダウンロードボタンの活性/不活性を切り替える
-   *  
-   *  @param  {boolean}    disabled
-   *  
-   *  @return {void}
-   */
-  switchDisabledDownloadButton(disabled: boolean) {
-
-    this.isDaichouDisabled = disabled;
-
-    this.downloadIconColor = disabled ? 'diabled' : 'primary';
-  }
+  
 
   /**
    *  switchDisabledDaichouButton
@@ -769,6 +773,11 @@ export class TunnelComponent implements OnInit {
     else if (this.isSideNavPrintSet) {
 
       this.initPrintSettingComponent();
+
+    }
+    else if (this.isSideNavDownload) {
+
+      this.initDownloadComponent();
 
     }
   }
@@ -920,6 +929,22 @@ export class TunnelComponent implements OnInit {
   }
 
   /**
+   *  initDownloadComponent
+   *
+   *  サイドナビに表示するDownloadComponentを初期化する
+   *  
+   *  
+   *  @return {void}
+   */
+  initDownloadComponent() {
+
+    if (this.downloadComponent) {
+      this.downloadComponent.initialize();
+    }
+
+  }
+
+  /**
    *  destroySideNav
    *
    *  サイドナビに表示したコンポーネントの内容を破棄する
@@ -957,6 +982,11 @@ export class TunnelComponent implements OnInit {
     else if (this.isSideNavPrintSet) {
 
       this.destroyPrintSettingComponent();
+
+    }
+    else if (this.isSideNavDownload) {
+
+      this.destroyDownloadComponent();
 
     }
   }
@@ -1058,6 +1088,20 @@ export class TunnelComponent implements OnInit {
   destroyPrintSettingComponent() {
 
     this.printSettingComponent.destroy();
+
+  }
+
+  /**
+   *  destroyDownloadComponent
+   *
+   *  サイドナビに表示したDownloadComponentを破棄する
+   *  
+   *  
+   *  @return {void}
+   */
+  destroyDownloadComponent() {
+
+    this.downloadComponent.destroy();
 
   }
 
@@ -1211,5 +1255,7 @@ export class TunnelComponent implements OnInit {
     this.isSideNavImageOrderSet = false;
 
     this.isSideNavPrintSet = false;
+
+    this.isSideNavDownload = false;
   }
 }

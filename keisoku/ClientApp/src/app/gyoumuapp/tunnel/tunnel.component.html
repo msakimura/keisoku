@@ -27,28 +27,35 @@
       <div *ngIf="isSideNavOsirase">
 
         <app-osirase [childToSidenav]="sideNav"></app-osirase>
-        
+
       </div>
 
 
       <div *ngIf="isSideNavHibiwareShoriSet" class="hibiware_sidenav">
 
         <app-hibiwareshori-setting [childToSidenav]="sideNav"></app-hibiwareshori-setting>
-        
+
       </div>
 
 
       <div *ngIf="isSideNavImageOrderSet">
 
         <app-imageorder-setting [childToSidenav]="sideNav"></app-imageorder-setting>
-        
+
       </div>
 
 
       <div *ngIf="isSideNavPrintSet">
 
         <app-print-setting [childToSidenav]="sideNav"></app-print-setting>
-        
+
+      </div>
+
+
+      <div *ngIf="isSideNavDownload">
+
+        <app-download [childToSidenav]="sideNav"></app-download>
+
       </div>
 
     </div>
@@ -69,7 +76,7 @@
 
     <button mat-button (click)="displaySideNavAiRiyoujoukyou()" [disabled]="isUploadDisabled"><mat-icon color="{{uploadIconColor}}">cloud_upload</mat-icon>アップロード</button>
 
-    <button mat-button (click)="downloadFile()" [disabled]="isDownloadDisabled"><mat-icon color="{{downloadIconColor}}">cloud_download</mat-icon>ダウンロード</button>
+    <button mat-button (click)="displaySideNavDownload()"><mat-icon color="primary">cloud_download</mat-icon>ダウンロード</button>
 
     <button mat-button [disabled]="isDaichouDisabled"><mat-icon color="{{daichouIconColor}}">receipt</mat-icon>台帳</button>
 

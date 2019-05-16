@@ -1,0 +1,17 @@
+<div class="mat-headline">ダウンロード</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="closeSideNav()"><mat-icon color="primary">arrow_back</mat-icon>戻る</button>
+
+<button mat-button (click)="kakuteiDownload()"><mat-icon color="primary">save_alt</mat-icon>確定</button>
+
+<mat-divider></mat-divider>
+
+<div fxLayout="column">
+
+  <mat-form-field>
+    <input matInput (keyup)="applyFilterFileName($event.target.value)" placeholder="ファイル名でフィルタ">
+  </mat-form-field>
+
+</div>

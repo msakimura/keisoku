@@ -405,30 +405,6 @@ export class TunnelComponent implements OnInit {
   
 
   /**
-   *  downloadFile
-   *
-   *  
-   *  
-   *
-   *  @return {void}
-   */
-  async downloadFile() {
-    var filename: string = "DWG.dwg";
-
-    await this.http.get('/api/download/' + filename, { responseType: 'blob' })
-      .subscribe(res => {
-        var a = document.createElement("a");
-
-        a.href = URL.createObjectURL(res);
-        a.download = filename;
-        // start download
-        a.click();
-      });
-    
-  }
-
-
-  /**
    *  showHome
    *
    *  メインフレームに案件一覧画面を表示する

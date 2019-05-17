@@ -52,41 +52,19 @@ namespace keisoku.Controllers
             DbSet<SeikahinImageModel> seikahinImages = _context.SeikahinImages;
             DbSet<PreviewModel> previews = _context.Previews;
 
-            //var query = from tunnelImage in tunnelImages
-            //            join seikahinImage in seikahinImages
-            //            on tunnelImage.SeikahinImageId equals seikahinImage.SeikahinImageId
-            //            join preview in previews
-            //            on seikahinImage.SeikahinImageId equals preview.SeikahinImageId
-            //            where tunnelImage.CustomerId == customerId && tunnelImage.AnkenId == ankenId && tunnelImage.TunnelId == tunnelId
-            //            select new
-            //            {
-            //                tunnelImage,
-            //                seikahinImage,
-            //                preview
-            //            };
-
-            var query =
-                tunnelImages.Join(
-                    seikahinImages,
-                    tunnelImage => tunnelImage.SeikahinImageId,
-                    seikahinImage => seikahinImage.SeikahinImageId,
-                    (tunnelImage, seikahinImage) => new
-                    {
-                        tunnelImage.CustomerId,
-                        tunnelImage.AnkenId,
-                        tunnelImage.TunnelId,
-                        tunnelImage.TunnelImageId,
-                        tunnelImage.SeikahinImageId,
-                        seikahinImage.ImageName,
-                        seikahinImage.ImageData,
-                        seikahinImage.Width,
-                        seikahinImage.Height,
-                        seikahinImage.HibiChushutsu,
-                        seikahinImage.Sonshou,
-                        seikahinImage.HibiBunrui
-                    })
-                    .Where(x => x.CustomerId == customerId && x.AnkenId == ankenId && x.TunnelId == tunnelId)
-                    .OrderBy(x => x.ImageName);
+            var query = from tunnelImage in tunnelImages
+                        join seikahinImage in seikahinImages
+                        on tunnelImage.SeikahinImageId equals seikahinImage.SeikahinImageId
+                        join previewJ in previews
+                        on seikahinImage.SeikahinImageId equals previewJ.SeikahinImageId into previewJoin
+                        from preview in previewJoin.DefaultIfEmpty()
+                        where tunnelImage.CustomerId == customerId && tunnelImage.AnkenId == ankenId && tunnelImage.TunnelId == tunnelId
+                        select new
+                        {
+                            tunnelImage,
+                            seikahinImage,
+                            preview
+                        };
 
             if (!query.Any())
             {

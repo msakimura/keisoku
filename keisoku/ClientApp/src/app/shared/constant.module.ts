@@ -126,9 +126,11 @@ export class InitialSetBunruiId {
 }
 
 
-export class DataType {
-  public static readonly CAD = "CADファイル";
-  public static readonly PDF = "PDFファイル";
-  public static readonly IMAGE = "画像ファイル";
+export class FileAtribute {
+  public static readonly DOWNLOAD_FILE_NAME = "AI変状抽出データ.zip";
+  public static readonly TYPE_CAD = "CADファイル";
+  public static readonly TYPE_PDF = "PDFファイル";
+  public static readonly TYPE_IMAGE = "画像ファイル";
 }
+
 

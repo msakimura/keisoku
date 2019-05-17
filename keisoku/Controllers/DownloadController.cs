@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using keisoku.Data;
 using keisoku.Models;
@@ -42,7 +43,7 @@ namespace keisoku.Controllers
         /// <returns>CAD設定情報</returns>
         /// 
         [HttpGet]
-        public async Task<FileContentResult> Get(string param)
+        public async Task<IActionResult> Get(string param)
         {
             var deserialized = JsonConvert.DeserializeObject<IEnumerable<DownloadModel>>(param);
 
@@ -53,39 +54,38 @@ namespace keisoku.Controllers
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             //container
             CloudBlobContainer container = blobClient.GetContainerReference(ApplicationConstants.AZURE_BLOB_STORAGE_CONTAINER);
-            
+;
+            byte[] fileBytes = null;
 
-            using (MemoryStream zipStream = new MemoryStream())
+            using (var zipMemoryStream = new System.IO.MemoryStream())
             {
-
-                using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                // メモリストリーム上にZipArchiveを作成する
+                using (var zipArchive = new ZipArchive(zipMemoryStream, ZipArchiveMode.Create, true))
                 {
-
                     foreach (var data in deserialized)
                     {
-                        //ダウンロードするファイル名を指定
+                        // ダウンロードするファイル名を指定
                         CloudBlockBlob blockBlob_download = container.GetBlockBlobReference(data.FileName);
 
-                        //ダウンロード処理
-                        var memory = new MemoryStream();
+                        // ダウンロード処理
+                        var fileMemoryStream = new MemoryStream();
 
-                        await blockBlob_download.DownloadToStreamAsync(memory);
+                        await blockBlob_download.DownloadToStreamAsync(fileMemoryStream);
 
-
-                        var entry = zip.CreateEntry(data.FileName);
+                        // ファイルを追加していく。
+                        var entry = zipArchive.CreateEntry(data.FileName);
                         using (var entryStream = entry.Open())
                         {
-                            await memory.CopyToAsync(entryStream);
+                            // エントリにバイナリを書き込む
+                            await entryStream.WriteAsync(fileMemoryStream.GetBuffer(), 0, fileMemoryStream.GetBuffer().Length);
                         }
                     }
                 }
 
-                //zipStream.Position = 0;
-                
-
-                return new FileContentResult(zipStream.GetBuffer(), "application/octet-stream");
+                fileBytes = zipMemoryStream.ToArray();
             }
 
+            return File(fileBytes, "application/zip");
             
         }
 

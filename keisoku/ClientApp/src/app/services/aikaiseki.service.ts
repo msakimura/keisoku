@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DownloadModel } from './download.service';
-import { DataType } from '../shared/constant.module';
+import { FileAtribute } from '../shared/constant.module';
 
 export interface AiKaisekiModel {
   customerId: number;
@@ -60,7 +60,7 @@ export class AikaisekiService {
 
 
   /**
-   *  convertDownloadModel
+   *  convertDownloadModelFromAiKaiseki
    *
    *  DBから取得したaiKaisekiをダウンロードモデルに変換する
    *  
@@ -69,14 +69,14 @@ export class AikaisekiService {
    *
    *  @return {DownloadModel[]} ダウンロードモデル
    */
-  convertDownloadModel(aiKaiseki): DownloadModel[] {
+  convertDownloadModelFromAiKaiseki(aiKaiseki): DownloadModel[] {
 
     var downloadModels: DownloadModel[] = new Array();
 
     var cadDownloadModel: DownloadModel = {
       id: aiKaiseki.aiKaisekiCad.aiKaisekiCadId,
       fileName: aiKaiseki.aiKaisekiCad.cadName,
-      fileType: DataType.CAD,
+      fileType: FileAtribute.TYPE_CAD,
       fileData: aiKaiseki.aiKaisekiCad.cadData,
       createdAt: aiKaiseki.aiKaisekiCad.createdAt
     };
@@ -86,7 +86,7 @@ export class AikaisekiService {
     var pdfDownloadModel: DownloadModel = {
       id: aiKaiseki.aiKaisekiPdf.aiKaisekiPdfId,
       fileName: aiKaiseki.aiKaisekiPdf.pdfName,
-      fileType: DataType.PDF,
+      fileType: FileAtribute.TYPE_PDF,
       fileData: aiKaiseki.aiKaisekiPdf.pdfData,
       createdAt: aiKaiseki.aiKaisekiPdf.createdAt
     };
@@ -95,4 +95,53 @@ export class AikaisekiService {
 
     return downloadModels;
   }
+
+
+
+  /**
+   *  convertDownloadModelFromTunnelImages
+   *
+   *  DBから取得したtunnelImagesをダウンロードモデルに変換する
+   *  
+   *
+   *  @param  {object}    tunnelImages
+   *
+   *  @return {DownloadModel[]} ダウンロードモデル
+   */
+  convertDownloadModelFromTunnelImages(tunnelImages): DownloadModel[] {
+
+    var downloadModels: DownloadModel[] = new Array();
+
+    tunnelImages.forEach(image => {
+
+      downloadModels.push(this.convertDownloadModelFromTunnelImage(image));
+    });
+
+    return downloadModels;
+  }
+
+
+  /**
+   *  convertDownloadModelFromTunnelImage
+   *
+   *  DBから取得したtunnelImageをダウンロードモデルに変換する
+   *  
+   *
+   *  @param  {object}    tunnelImage
+   *
+   *  @return {DownloadModel} ダウンロードモデル
+   */
+  convertDownloadModelFromTunnelImage(tunnelImage): DownloadModel {
+    
+    var downloadModel: DownloadModel = {
+      id: tunnelImage.seikahinImage.seikahinImageId,
+      fileName: tunnelImage.seikahinImage.imageName,
+      fileType: FileAtribute.TYPE_IMAGE,
+      fileData: tunnelImage.seikahinImage.ImageData,
+      createdAt: tunnelImage.seikahinImage.createdAt
+    };
+    
+    return downloadModel;
+  }
+
 }

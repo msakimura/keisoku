@@ -4,6 +4,8 @@ import { DownloadModel, DownloadService } from 'src/app/services/download.servic
 import { AikaisekiService } from 'src/app/services/aikaiseki.service';
 import { TunnelService } from 'src/app/services/tunnel.service';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FileAtribute } from 'src/app/shared/constant.module';
+import { TunnelImageService } from 'src/app/services/tunnel-image.service';
 
 @Component({
   selector: 'app-download',
@@ -32,7 +34,8 @@ export class DownloadComponent implements OnInit {
 
   constructor(private aikaisekiService: AikaisekiService,
     private tunnelService: TunnelService,
-    private downloadService: DownloadService) { }
+    private downloadService: DownloadService,
+    private tunnelImageService: TunnelImageService) { }
 
   ngOnInit() {
     const sortingDataAccessor = (data: DownloadModel, sortHeaderId: string): string | number => {
@@ -124,6 +127,16 @@ export class DownloadComponent implements OnInit {
   initialize() {
 
     this.bindAiKaiseki();
+
+    this.bindTunnelImage();
+
+    this.dataSource.data.sort(function (a, b) {
+
+      if (a.createdAt < b.createdAt) return -1;
+      if (a.createdAt > b.createdAt) return 1;
+
+      return 0;
+    });
   }
 
 
@@ -158,7 +171,7 @@ export class DownloadComponent implements OnInit {
     this.aikaisekiService.getAiKaiseki(selectedTunnel.customerId, selectedTunnel.ankenId, selectedTunnel.tunnelId)
       .subscribe((response: any) => {
         
-        var aikaisekiDownloadModels = this.aikaisekiService.convertDownloadModel(response);
+        var aikaisekiDownloadModels = this.aikaisekiService.convertDownloadModelFromAiKaiseki(response);
 
         aikaisekiDownloadModels.forEach(model => {
           this.downloadModels.push(model);
@@ -171,6 +184,36 @@ export class DownloadComponent implements OnInit {
 
       });
     
+  }
+
+  /**
+   *  bindTunnelImage
+   *
+   *  customerId、ankenId、tunnelIdに紐付くトンネル画像情報をdataSourceにバインドする
+   *  
+   *  
+   *  @return {void}
+   */
+  bindTunnelImage() {
+
+    const selectedTunnel = this.tunnelService.selectedTunnel;
+
+    this.tunnelImageService.getAllTunnelImage(selectedTunnel.customerId, selectedTunnel.ankenId, selectedTunnel.tunnelId)
+      .subscribe((response: any) => {
+
+        var aikaisekiDownloadModels = this.aikaisekiService.convertDownloadModelFromTunnelImages(response);
+
+        aikaisekiDownloadModels.forEach(model => {
+          this.downloadModels.push(model);
+        });
+
+        this.dataSource.data = this.downloadModels;
+
+      },
+        error => {
+
+        });
+
   }
 
 
@@ -205,15 +248,13 @@ export class DownloadComponent implements OnInit {
         var a = document.createElement("a");
 
         a.href = URL.createObjectURL(response);
-        a.download = "download.zip";
+        a.download = FileAtribute.DOWNLOAD_FILE_NAME;
         // start download
         a.click();
 
       },
       error => {
-
-        var a = 0;
-
+        
       });
   }
 

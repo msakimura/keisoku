@@ -108,25 +108,25 @@ export class TunnelImageService {
   convertTunnelImageModel(tunnelImage): TunnelImageModel {
 
     var seikahinImage: SeikahinImageModel = {
-      seikahinImageId: tunnelImage.seikahinImageId,
-      imageName: tunnelImage.imageName,
-      imageData: tunnelImage.imageData,
-      width: tunnelImage.width,
-      height: tunnelImage.height,
-      hibiChushutsu: tunnelImage.hibiChushutsu,
-      sonshou: tunnelImage.sonshou,
-      hibiBunrui: tunnelImage.hibiBunrui,
-      imageUrl: tunnelImage.imageData
+      seikahinImageId: tunnelImage.seikahinImage.seikahinImageId,
+      imageName: tunnelImage.seikahinImage.imageName,
+      imageData: tunnelImage.seikahinImage.imageData,
+      width: tunnelImage.seikahinImage.width,
+      height: tunnelImage.seikahinImage.height,
+      hibiChushutsu: tunnelImage.seikahinImage.hibiChushutsu,
+      sonshou: tunnelImage.seikahinImage.sonshou,
+      hibiBunrui: tunnelImage.seikahinImage.hibiBunrui,
+      imageUrl: tunnelImage.seikahinImage.imageData
     };
 
     var tunnelImageModel: TunnelImageModel = {
-      customerId: tunnelImage.customerId,
-      ankenId: tunnelImage.ankenId,
-      tunnelId: tunnelImage.tunnelId,
-      tunnelImageId: tunnelImage.tunnelImageId,
-      seikahinImageId: tunnelImage.seikahinImageId,
+      customerId: tunnelImage.tunnelImage.customerId,
+      ankenId: tunnelImage.tunnelImage.ankenId,
+      tunnelId: tunnelImage.tunnelImage.tunnelId,
+      tunnelImageId: tunnelImage.tunnelImage.tunnelImageId,
+      seikahinImageId: tunnelImage.tunnelImage.seikahinImageId,
       seikahinImage: seikahinImage,
-      innerId: tunnelImage.tunnelImageId
+      innerId: tunnelImage.tunnelImage.tunnelImageId
     };
 
 

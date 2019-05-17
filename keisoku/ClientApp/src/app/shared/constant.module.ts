@@ -125,3 +125,10 @@ export class InitialSetBunruiId {
   public static readonly IMAGE_COMPRESSION_RATIO = "ImageCompressionRatio";
 }
 
+
+export class DataType {
+  public static readonly CAD = "CADファイル";
+  public static readonly PDF = "PDFファイル";
+  public static readonly IMAGE = "画像ファイル";
+}
+

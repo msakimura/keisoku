@@ -30,10 +30,10 @@ namespace keisoku.Controllers
         /// <param name="ankenId">案件ID</param>
         /// <param name="tunnelId">トンネルID</param>
         /// 
-        /// <returns>ダウンロード情報</returns>
+        /// <returns>AI解析情報</returns>
         /// 
         [HttpGet("{customerId}/{ankenId}/{tunnelId}")]
-        public IActionResult Get([FromRoute] int customerId, int ankenId, int tunnelId)
+        public async Task<IActionResult> Get([FromRoute] int customerId, int ankenId, int tunnelId)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +58,12 @@ namespace keisoku.Controllers
                             aiKaisekiPdf
                         };
 
-            return Ok(query);
+            if (!query.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(await query.SingleOrDefaultAsync());
 
         }
     }

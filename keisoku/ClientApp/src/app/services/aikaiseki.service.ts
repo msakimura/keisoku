@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DownloadModel } from './download.service';
+import { DataType } from '../shared/constant.module';
 
 export interface AiKaisekiModel {
   customerId: number;
@@ -56,4 +58,41 @@ export class AikaisekiService {
     return this.http.get(this.routeUrl + '/' + customerId + '/' + ankenId + '/' + tunnelId);
   }
 
+
+  /**
+   *  convertDownloadModel
+   *
+   *  DBから取得したaiKaisekiをダウンロードモデルに変換する
+   *  
+   *
+   *  @param  {object}    aiKaiseki
+   *
+   *  @return {DownloadModel[]} ダウンロードモデル
+   */
+  convertDownloadModel(aiKaiseki): DownloadModel[] {
+
+    var downloadModels: DownloadModel[] = new Array();
+
+    var cadDownloadModel: DownloadModel = {
+      id: aiKaiseki.aiKaisekiCad.aiKaisekiCadId,
+      fileName: aiKaiseki.aiKaisekiCad.cadName,
+      fileType: DataType.CAD,
+      fileData: aiKaiseki.aiKaisekiCad.cadData,
+      createdAt: aiKaiseki.aiKaisekiCad.createdAt
+    };
+
+    downloadModels.push(cadDownloadModel);
+
+    var pdfDownloadModel: DownloadModel = {
+      id: aiKaiseki.aiKaisekiPdf.aiKaisekiPdfId,
+      fileName: aiKaiseki.aiKaisekiPdf.pdfName,
+      fileType: DataType.PDF,
+      fileData: aiKaiseki.aiKaisekiPdf.pdfData,
+      createdAt: aiKaiseki.aiKaisekiPdf.createdAt
+    };
+
+    downloadModels.push(pdfDownloadModel);
+
+    return downloadModels;
+  }
 }
